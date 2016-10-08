@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "daacda18516348380de6"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "9348c01f5505b1f26c8f"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -9412,7 +9412,7 @@
 	                    _react2.default.createElement(
 	                        _reactRouter.Link,
 	                        { to: '/' },
-	                        _react2.default.createElement('img', { className: 'logo', src: 'img/node.svg' })
+	                        _react2.default.createElement('img', { className: 'logo', src: '/node.svg' })
 	                    )
 	                ),
 	                _react2.default.createElement(

@@ -7,7 +7,7 @@ export default class Layout extends React.Component {
             <div className="app-container">
                 <header>
                     <Link to="/">
-                        <img className="logo" src="img/node.svg"/>
+                        <img className="logo" src="/node.svg"/>
                     </Link>
                 </header>
                 <div className="app-content">{this.props.children}</div>
