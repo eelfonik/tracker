@@ -7,7 +7,7 @@ var isProd = process.env.NODE_ENV === 'production';
 var styles = 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader?sourceMap=inline';
 
 module.exports = {
-    entry: isProd?['./src/app']:[
+    entry: isProd?['react-hot-loader/patch', './src/app']:[
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
         './src/app'
