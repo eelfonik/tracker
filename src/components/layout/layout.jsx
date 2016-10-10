@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import style from './layout.css';
 
 export default class Layout extends React.Component {
     render() {
@@ -7,7 +8,7 @@ export default class Layout extends React.Component {
             <div className="app-container">
                 <header>
                     <Link to="/">
-                        <img className="logo" src="/node.svg"/>
+                        <img className={style.logo} src="/node.svg"/>
                     </Link>
                 </header>
                 <div className="app-content">{this.props.children}</div>

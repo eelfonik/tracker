@@ -1,8 +1,12 @@
 var webpack = require('webpack');
 var path = require('path');
+//this one is for using css modules, which will output a specified css file in output destination
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: [
+        'react-hot-loader/patch',
+        'webpack-hot-middleware/client',
         './src/app'
     ],
     module: {
@@ -10,16 +14,17 @@ module.exports = {
             {
                 test: /\.jsx?$/,         // Match both .js and .jsx files
                 exclude: /node_modules/,
-                loader: "babel",
-                query: {
-                    presets: ['es2015', 'react']
-                }
+                loaders: ['babel?presets[]=es2015,presets[]=react'],
+                include: path.join(__dirname, 'src')
             },
-            { test: /\.s?css$/, loader: 'style!css!sass' },
+            {
+                test:   /\.css$/,
+                loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader?sourceMap=inline')
+            }
         ]
     },
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx','.css']
     },
     output: {
         path: path.join(__dirname, '/dist'),
@@ -33,6 +38,7 @@ module.exports = {
     plugins: [
         new webpack.optimize.OccurenceOrderPlugin(),
         new webpack.HotModuleReplacementPlugin(),
-        new webpack.NoErrorsPlugin()
+        new webpack.NoErrorsPlugin(),
+        new ExtractTextPlugin('style.css', { allChunks: true })
     ]
 };
