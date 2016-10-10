@@ -65,7 +65,7 @@
 /******/ 	}
 /******/ 	
 /******/ 	var hotApplyOnUpdate = true;
-/******/ 	var hotCurrentHash = "d3ac83f67328c8941c78"; // eslint-disable-line no-unused-vars
+/******/ 	var hotCurrentHash = "08626e31d4a6f53df04d"; // eslint-disable-line no-unused-vars
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentParents = []; // eslint-disable-line no-unused-vars
 /******/ 	
@@ -6784,7 +6784,7 @@
 
 
 	// module
-	exports.push([module.id, ".layout__logo___1e_T_ {\n    max-width:50px;\n    /*display: flex;*/\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxheW91dC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxlQUFlO0lBQ2Ysa0JBQWtCO0NBQ3JCIiwiZmlsZSI6ImxheW91dC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubG9nbyB7XG4gICAgbWF4LXdpZHRoOjUwcHg7XG4gICAgLypkaXNwbGF5OiBmbGV4OyovXG59Il19 */", ""]);
+	exports.push([module.id, ".layout__logo___1e_T_ {\n    max-width:50px;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImxheW91dC5jc3MiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IkFBQUE7SUFDSSxlQUFlO0NBQ2xCIiwiZmlsZSI6ImxheW91dC5jc3MiLCJzb3VyY2VzQ29udGVudCI6WyIubG9nbyB7XG4gICAgbWF4LXdpZHRoOjUwcHg7XG59Il19 */", ""]);
 
 	// exports
 	exports.locals = {
