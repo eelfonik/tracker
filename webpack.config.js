@@ -7,7 +7,7 @@ var isProd = process.env.NODE_ENV === 'production';
 var styles = 'style-loader!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader?sourceMap=inline';
 
 module.exports = {
-    entry: [
+    entry: isProd?['./src/app']:[
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
         './src/app'
@@ -22,7 +22,7 @@ module.exports = {
             },
             {
                 test:   /\.css$/,
-                loader:isProd?ExtractTextPlugin.extract(styles):styles
+                loader: isProd?ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader?sourceMap=inline'):styles
             }
         ]
     },
