@@ -8,13 +8,13 @@ export default class Layout extends React.Component {
             <div className="app-container">
                 <header>
                     <Link to="/">
-                        <img className={style.logo} src="/node.svg"/>
+                        <img className={style.logo} src="/img/node.svg"/>
                     </Link>
                 </header>
                 <div className="app-content">{this.props.children}</div>
-                <footer>
+                <footer className={style.footer}>
                     <p>
-                        This is a demo app to showcase universal rendering and routing with <strong>React</strong> and <strong>Express</strong>.
+                        <a href="http://mern.io/" target="_blank" rel="noopener noreferrer">MERN</a> build by hand.
                     </p>
                 </footer>
             </div>

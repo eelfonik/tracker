@@ -1,8 +1,11 @@
 var cool = require('cool-ascii-faces');
 var express = require('express');
+var bodyParser = require("body-parser");
+var mongodb = require("mongodb");
+var ObjectID = mongodb.ObjectID;
 var app = express();
 
-var path = require('path');
+var path = require("path");
 
 // using webpack-dev-server and middleware in development environment
 if(process.env.NODE_ENV !== 'production') {
@@ -15,14 +18,6 @@ if(process.env.NODE_ENV !== 'production') {
     app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
     app.use(webpackHotMiddleware(compiler));
 }
-// import { Server } from 'http';
-// import Express from 'express';
-// import React from 'react';
-// import { renderToString } from 'react-dom/server';
-// import { match, RouterContext } from 'react-router';
-// import routes from 'src/routes';
-// import IndexPage from 'src/components/indexPage';
-//import NotFoundPage from './components/NotFoundPage';
 
 //const app = new Express();
 
@@ -40,14 +35,12 @@ if(process.env.NODE_ENV !== 'production') {
 //     console.log("listening at port 3000");
 // });
 
+app.use(express.static(__dirname + '/public'));
+//app.use(express.static(path.resolve(__dirname, 'public/img')));
+app.use(express.static(__dirname + '/dist'));
+//app.use(express.static(path.resolve(__dirname, 'dist')));
 
-
-app.set('port', (process.env.PORT || 5000));
-
-//app.use(express.static(__dirname + '/public'));
-app.use(express.static(path.resolve(__dirname, 'public/img')));
-//app.use(express.static(path.resolve(__dirname, 'public/stylesheets')));
-app.use(express.static(path.resolve(__dirname, 'dist')));
+app.use(bodyParser.json());
 
 
 // views is directory for all template files
@@ -59,18 +52,32 @@ app.use(express.static(path.resolve(__dirname, 'dist')));
 // });
 
 
-app.get('/', function(request, response) {
-    response.sendFile(__dirname + '/dist/index.html')
-});
+// app.get('/', function(request, response) {
+//     response.sendFile(__dirname + '/dist/index.html')
+// });
 
 // app.get('/cool', function(request, response) {
 //   response.send(cool());
 // });
 
+// Create a database variable outside of the database connection callback to reuse the connection pool in your app.
+var db;
+var uri = process.env.MONGODB_URI || 'mongodb://localhost/tacker';
 
-app.listen(app.get('port'), function(err) {
-    if(err) {
-        conole.log(err);
+// Connect to the database before starting the application server.
+mongodb.MongoClient.connect(uri, function (err, database) {
+    if (err) {
+        console.log(err);
+        process.exit(1);
     }
-  console.log('Node app is running on port', app.get('port'));
+
+    // Save database object from the callback for reuse.
+    db = database;
+    console.log("Database connection ready");
+
+    // Initialize the app.
+    var server = app.listen(process.env.PORT || 5000, function () {
+        var port = server.address().port;
+        console.log("App now running on port", port);
+    });
 });

@@ -21,6 +21,8 @@ module.exports = {
                 include: path.join(__dirname, 'src')
             },
             {
+                // as ExtractTextPlugin will prevent HMR working, we only use it on production, not development
+                // see https://github.com/webpack/extract-text-webpack-plugin/issues/30#issuecomment-125757853
                 test:   /\.css$/,
                 loader: isProd?ExtractTextPlugin.extract('style-loader', 'css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!postcss-loader?sourceMap=inline'):styles
             }
