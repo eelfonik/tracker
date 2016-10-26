@@ -13,21 +13,27 @@ export default class IndexPage extends React.Component {
             number: '',
             date:'',
             sum:'',
-            client:'',
+            client:{
+                name:'',
+                address:'',
+                siret:''
+            },
             desc:''
         };
         this.submitData = this.submitData.bind(this);
         this.maybeRenderNotif = this.maybeRenderNotif.bind(this);
     }
 
+    componentDidMount(){
+
+    }
+
     submitData(data){
-        //alert("wooooo");
-        console.log(data);
         this.setState({
             number: data.number,
             date:data.date,
             sum:data.sum,
-            client:data.client,
+            client: Object.assign({}, this.state.client, data.client),
             desc:data.desc
         });
     }

@@ -10,19 +10,31 @@ export default class NewInvoiceForm extends React.Component {
             invoiceNumValid:true,
             date:'',
             sum:'',
-            client:'',
+            sumValid:true,
+            client:{
+                name:'',
+                address:'',
+                siret:''
+            },
             desc:'',
-            focused: false
+            focused: false,
+            showSubmitError: false,
+            userIsTyping: false
         };
         this.changeNumber = this.changeNumber.bind(this);
         this.changeDate = this.changeDate.bind(this);
         this.changeSum = this.changeSum.bind(this);
-        this.changeClient = this.changeClient.bind(this);
+        this.changeClientName = this.changeClientName.bind(this);
+        this.changeClientAddress = this.changeClientAddress.bind(this);
+        this.changeClientSiret = this.changeClientSiret.bind(this);
         this.changeDesc = this.changeDesc.bind(this);
         this.submitForm = this.submitForm.bind(this);
         this.resetStates= this.resetStates.bind(this);
         this.isNumber = this.isNumber.bind(this);
+        this.formValidated = this.formValidated.bind(this);
         this.maybeRenderInvoiceNumError = this.maybeRenderInvoiceNumError.bind(this);
+        this.maybeRenderSumError = this.maybeRenderSumError.bind(this);
+        this.maybeRenderSubmitError = this.maybeRenderSubmitError.bind(this);
     }
 
     resetStates(){
@@ -31,9 +43,16 @@ export default class NewInvoiceForm extends React.Component {
             invoiceNumValid:true,
             date:'',
             sum:'',
-            client:'',
+            sumValid: true,
+            client:{
+                name:'',
+                address:'',
+                siret:''
+            },
             desc:'',
-            focused: false
+            focused: false,
+            showSubmitError: false,
+            userIsTyping: false
         });
     }
 
@@ -41,6 +60,10 @@ export default class NewInvoiceForm extends React.Component {
         //test only numbers
         //see http://stackoverflow.com/a/10713754/6849186
         return !/\D/.test(value);
+    }
+
+    formValidated(){
+        return this.state.sumValid && this.state.invoiceNumValid && !!this.state.date && !!this.state.client.name && !!this.state.client.address;
     }
 
     changeNumber(event) {
@@ -64,15 +87,39 @@ export default class NewInvoiceForm extends React.Component {
 
     changeSum(event) {
         if (this.isNumber(event.target.value)) {
-            console.debug("numbers!");
-            this.setState({sum: event.target.value});
+            this.setState({
+                sum: event.target.value,
+                sumValid: true
+            });
         } else {
-            console.debug("not number");
+            this.setState({
+                sumValid :false
+            });
         }
     }
 
-    changeClient(event) {
-        this.setState({client: event.target.value});
+    changeClientName(event) {
+        const copy = Object.assign({}, this.state.client, {name:event.target.value});
+        this.setState({
+            //client: { ...this.state.client, name:event.target.value}
+            client: copy
+        });
+    }
+
+    changeClientAddress(event) {
+        const copy = Object.assign({}, this.state.client, {address:event.target.value});
+        this.setState({
+            //client: { ...this.state.client, adress:event.target.value}
+            client: copy
+        });
+    }
+
+    changeClientSiret(event) {
+        const copy = Object.assign({}, this.state.client, {siret:event.target.value});
+        this.setState({
+            //client: {...this.state.client, siret:event.target.value}
+            client: copy
+        });
     }
 
     changeDesc(event) {
@@ -80,15 +127,36 @@ export default class NewInvoiceForm extends React.Component {
     }
 
     submitForm(){
-        this.props.submitData(this.state);
-        this.resetStates();
-        //alert("success@@@");
+        if (this.formValidated()) {
+            this.props.submitData(this.state);
+            this.resetStates();
+        } else {
+            this.setState({
+                showSubmitError: true
+            });
+        }
     }
 
     maybeRenderInvoiceNumError(){
         if (!this.state.invoiceNumValid) {
             return (
                 <div className={style.error}>Don't put letters in Invoice NO</div>
+            );
+        }
+    }
+
+    maybeRenderSumError(){
+        if (!this.state.sumValid) {
+            return (
+                <div className={style.error}>Don't put letters in Sum</div>
+            );
+        }
+    }
+
+    maybeRenderSubmitError(){
+        if (this.state.showSubmitError) {
+            return (
+                <div className={style.error}>Please fill all required fields :-)</div>
             );
         }
     }
@@ -107,36 +175,58 @@ export default class NewInvoiceForm extends React.Component {
                     />
                     {this.maybeRenderInvoiceNumError()}
                 </div>
-                <input
-                    className={style.input}
-                    type="date"
-                    value={this.state.date}
-                    placeholder="Choose a date"
-                    onChange={this.changeDate}
-                />
-                <input
-                    className={style.input}
-                    type="number"
-                    value={this.state.sum}
-                    placeholder="income without tax"
-                    onChange={this.changeSum}
-                />
-                <input
-                    className={style.input}
-                    type="text"
-                    value={this.state.client}
-                    placeholder="client name"
-                    onChange={this.changeClient}
-                />
+                <div className={style.input}>
+                    <input
+                        type="date"
+                        value={this.state.date}
+                        placeholder="Choose a date"
+                        onChange={this.changeDate}
+                    />
+                </div>
+                <div className={style.input}>
+                    <input
+                        type="text"
+                        value={this.state.sum}
+                        placeholder="income without tax"
+                        onChange={this.changeSum}
+                    />
+                    {this.maybeRenderSumError()}
+                </div>
+
+                <div className={style.input}>
+                    <input
+                        className={style.onelineInput}
+                        type="text"
+                        value={this.state.client.name}
+                        placeholder="client name"
+                        onChange={this.changeClientName}
+                    />
+                    <input
+                        className={style.onelineInput}
+                        type="text"
+                        value={this.state.client.address}
+                        placeholder="client address"
+                        onChange={this.changeClientAddress}
+                    />
+                    <input
+                        className={style.onelineInput}
+                        type="text"
+                        value={this.state.client.siret}
+                        placeholder="client siret (optional)"
+                        onChange={this.changeClientSiret}
+                    />
+                </div>
+
                 <textarea
                     className={style.input}
                     rows="4"
-                    placeholder="add desc"
+                    placeholder="add descriptions (optional)"
                     onChange={this.changeDesc}
                     value={this.state.desc}
                 >
                 </textarea>
             <button onClick={this.submitForm}>submit</button>
+                {this.maybeRenderSubmitError()}
             </div>
         )
     }

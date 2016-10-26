@@ -1,14 +1,17 @@
 .formContainer {
-    background-color: color(yellow alpha(50%));
+    background-color: rgba(0, 234, 107,0.5);
     padding: 20px;
     /*border: 1px dashed black;*/
     border-radius: 5px;
-    box-shadow: 0 0 2px 2px #888;
+    box-shadow: 3px 3px 2px #888888;
 }
 .input {
     display: block;
     width: 100%;
     margin-bottom: 20px;
+    & .onelineInput {
+        margin:0 10px 0 0;
+    }
 }
 
 .error {
