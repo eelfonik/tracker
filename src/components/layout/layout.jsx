@@ -1,6 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router';
 import style from './layout.css';
+// This imported styles globally without running through CSS Modules
+// see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
+import '!style!css!../../commonStyles/reset.css';
 
 export default class Layout extends React.Component {
     render() {
