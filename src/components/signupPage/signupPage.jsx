@@ -1,0 +1,129 @@
+import React from 'react';
+import { render } from 'react-dom';
+import axios from 'axios';
+//import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
+//import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
+import style from './signupPage.css';
+import formStyle from '../../commonStyles/form.css';
+
+export default class SignupPage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            name: '',
+            email:'',
+            emailValid: true,
+            pass:''
+        };
+        this.changeName = this.changeName.bind(this);
+        this.changeMail = this.changeMail.bind(this);
+        this.changePass = this.changePass.bind(this);
+        this.submitData = this.submitData.bind(this);
+        this.isEmail = this.isEmail.bind(this);
+        this.formValidated = this.formValidated.bind(this);
+        this.maybeRenderNotif = this.maybeRenderNotif.bind(this);
+    }
+
+    componentDidMount(){
+
+    }
+
+    isEmail(value){
+        //test emails
+        //see http://stackoverflow.com/a/1373724/6849186
+        var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(value);
+    }
+
+    formValidated(){
+        return !!this.state.name && !!this.state.email && this.state.emailValid && !!this.state.pass;
+    }
+
+    changeName(e){
+        this.setState({
+            name: e.target.value
+        });
+    }
+
+    changeMail(e){
+        if (this.isEmail(e.target.value)) {
+            this.setState({
+                email: e.target.value,
+                emailValid: true
+            });
+        } else {
+            this.setState({
+                email: e.target.value,
+                emailValid: false
+            });
+        }
+    }
+
+    changePass(e){
+        this.setState({
+            pass: e.target.value
+        });
+    }
+
+    submitData(){
+        // if (this.formValidated()) {
+        //     axios.post('http://localhost:5000/signup', {
+        //         name: this.state.name,
+        //         email: this.state.email,
+        //         pass: this.state.pass
+        //     })
+        //         .then(function (response) {
+        //             console.log(response);
+        //         })
+        //         .catch(function (error) {
+        //             console.log(error);
+        //         });
+        // } else {
+        //     console.debug("The signUp is not correct");
+        // }
+    }
+
+    maybeRenderNotif(){
+        if (this.state.name !== '') {
+            return(
+                <div>User <span>{this.state.name}</span> created!</div>
+            );
+        }
+    }
+
+
+
+    render() {
+        return (
+            <div className="signup">
+                <div>
+                    Start the tracker
+                </div>
+                <div className={formStyle.input}>
+                    <input
+                        className={formStyle.onelineInput}
+                        type="text"
+                        value={this.state.name}
+                        placeholder="your name"
+                        onChange={this.changeName}
+                    />
+                    <input
+                        className={formStyle.onelineInput}
+                        type="text"
+                        value={this.state.email}
+                        placeholder="your email"
+                        onChange={this.changeMail}
+                    />
+                    <input
+                        className={formStyle.onelineInput}
+                        type="text"
+                        value={this.state.pass}
+                        placeholder="your password"
+                        onChange={this.changePass}
+                    />
+                </div>
+                <button onClick = {this.submitData}>submit!</button>
+            </div>
+        );
+    }
+}

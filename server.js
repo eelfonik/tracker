@@ -2,6 +2,7 @@
 var express = require('express');
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
+var mongoose = require ("mongoose");
 var ObjectID = mongodb.ObjectID;
 var INVOICES_COLLECTION = "invoices";
 var app = express();
@@ -18,13 +19,6 @@ if(process.env.NODE_ENV !== 'production') {
 
     app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
     app.use(webpackHotMiddleware(compiler));
-    app.use(function(err, req, res, next) {
-        res.status(err.status || 500);
-        res.render('error', {
-            message: err.message,
-            error: err
-        });
-    });
 }
 
 //const app = new Express();
@@ -50,13 +44,31 @@ app.use(express.static(__dirname + '/dist'));
 
 app.use(bodyParser.json());
 
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-        message: err.message,
-        error: {}
-    });
-});
+// app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//         message: err.message,
+//         error: {}
+//     });
+// });
+
+//
+// router.use('*', function(req, res) {
+//     // Note that req.url here should be the full URL path from
+//     // the original request, including the query string.
+//     match({ routes, location: req.url }, (error, redirectLocation, renderProps) => {
+//         if (error) {
+//             res.status(500).send(error.message)
+//         } else if (redirectLocation) {
+//             res.redirect(302, redirectLocation.pathname + redirectLocation.search)
+//         } else if (renderProps) {
+//             res.status(200).send(renderToString(React.createElement(RoutingContext, renderProps)))
+//         } else {
+//             res.status(404).send('Not found')
+//         }
+//     });
+// });
+
 // views is directory for all template files
 // app.set('views', path.join(__dirname, 'dist/views'));
 // app.set('view engine', 'ejs');
@@ -65,10 +77,11 @@ app.use(function(err, req, res, next) {
 //   response.render('pages/index');
 // });
 
-
-// app.get('/', function(request, response) {
-//     response.sendFile(__dirname + '/dist/index.html')
-// });
+//should use wild card selector(*) instead of (/) to make react router handle all routers
+//see https://github.com/ReactTraining/react-router/issues/1047#issuecomment-89611557
+app.get('*', function(request, response) {
+    response.sendFile(__dirname + '/dist/index.html');
+});
 
 // app.get('/cool', function(request, response) {
 //   response.send(cool());
@@ -81,7 +94,7 @@ var db;
 var uri = process.env.MONGODB_URI || 'mongodb://localhost/tacker';
 
 // Connect to the database before starting the application server.
-mongodb.MongoClient.connect(uri, function (err, database) {
+mongoose.connect(uri, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -98,6 +111,95 @@ mongodb.MongoClient.connect(uri, function (err, database) {
     });
 });
 
+// user registration
+
+var RegSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    pass: {
+        type: String,
+        required: true
+    }
+}, {
+    timestamps: true
+});
+
+var UserRegs = mongoose.model('UserReg', RegSchema);
+
+app.post('/signup', function (req, res, next) {
+    console.log("Request body is:",req.body);
+    const name = req.body.name;
+    const email = req.body.email;
+    const pass = req.body.pass;
+    if (!name) {
+        return res.status(422).send({ error: 'You must enter a name!'});
+    }
+
+    if (!email) {
+        return res.status(422).send({ error: 'You must enter your email!'});
+    }
+
+    if (!pass) {
+        return res.status(422).send({ error: 'You must enter a password!'});
+    }
+
+    let newUser = new UserRegs({
+        name: name,
+        email: email,
+        pass: pass
+    });
+
+    newUser.save(function(err, user) {
+        if(err) {return next(err);}
+
+        res.status(201).json({ message: "Thanks! Created!" });
+        next();
+    });
+
+    // var user = {
+    //     name: req.body.name,
+    //     email: req.body.email,
+    //     pass: req.body.pass
+    // };
+    //
+    //
+    // UserReg.create(user, function(err, newUser) {
+    //     if(err) return next(err);
+    //     req.session.user = email;
+    //     return res.send('Logged In!');
+    // });
+});
+
+app.post('/login', function (req, res, next) {
+    var email = req.body.email;
+    var pass = req.body.pass;
+
+    User.findOne({email: email, pass: pass}, function(err, user) {
+        if(err) return next(err);
+        if(!user) return res.send('Not logged in!');
+
+        req.session.user = email;
+        return res.send('Logged In!');
+    });
+});
+
+app.get('/logout', function (req, res) {
+    req.session.user = null;
+});
+
+function isLoggedIn (req, res, next) {
+    if (!(req.session && req.session.user)) {
+        return res.send('Not logged in!');
+    }
+    next();
+}
+
 // INVOICES API ROUTES BELOW
 
 // Generic error handler used by all endpoints.
@@ -111,7 +213,7 @@ function handleError(res, reason, message, code) {
  *    POST: creates a new invoice
  */
 
-app.get("/invoices", function(req, res) {
+app.get("/invoices", isLoggedIn, function(req, res) {
     db.collection(INVOICES_COLLECTION).find({}).toArray(function(err, docs) {
         if (err) {
             handleError(res, err.message, "Failed to get contacts.");

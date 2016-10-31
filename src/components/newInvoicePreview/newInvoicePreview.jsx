@@ -50,7 +50,7 @@ export default class NewInvoicePreview extends React.Component {
 
                     <div className={style.incomeInfo}>
                         {this.maybeRenderDesc()}
-                        <div>
+                        <div className={style.incomeSum}>
                             <span className={style.smallHeader}>Montant HT</span>
                             <hr />
                             {this.props.data.sum}

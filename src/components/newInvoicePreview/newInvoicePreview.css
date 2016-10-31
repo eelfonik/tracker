@@ -38,4 +38,8 @@
 .incomeInfo {
     composes: verticalBase;
     align-items: flex-start;
+    & .incomeSum {
+        min-width: 8em;
+        margin-left: 10px;
+    }
 }

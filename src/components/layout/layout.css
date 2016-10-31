@@ -1,4 +1,23 @@
+.appContainer {
+    margin: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    & .signupLink {
+        text-decoration: none;
+        color: rgba(0, 234, 107,1);
+        border-bottom: 1px solid transparent;
+        &:hover {
+
+            border-bottom: 1px solid rgba(0, 234, 107,1);
+        }
+    }
+}
 .logo {
+    height:50px;
     max-width:50px;
     &:hover {
          max-width: 100px;
@@ -6,7 +25,12 @@
     transition: max-width 0.5s ease;
 }
 
+.appContent {
+    margin: 20px 0;
+}
+
 .footer {
+    font-size: 0.7em;
     & a {
         text-decoration: none;
         color: color(black alpha(50%));

@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import style from './newInvoiceForm.css';
+import formStyle from '../../commonStyles/form.css';
 
 export default class NewInvoiceForm extends React.Component {
     constructor(props) {
@@ -140,7 +141,7 @@ export default class NewInvoiceForm extends React.Component {
     maybeRenderInvoiceNumError(){
         if (!this.state.invoiceNumValid) {
             return (
-                <div className={style.error}>Don't put letters in Invoice NO</div>
+                <div className={formStyle.error}>Don't put letters in Invoice NO</div>
             );
         }
     }
@@ -148,7 +149,7 @@ export default class NewInvoiceForm extends React.Component {
     maybeRenderSumError(){
         if (!this.state.sumValid) {
             return (
-                <div className={style.error}>Don't put letters in Sum</div>
+                <div className={formStyle.error}>Don't put letters in Sum</div>
             );
         }
     }
@@ -156,7 +157,7 @@ export default class NewInvoiceForm extends React.Component {
     maybeRenderSubmitError(){
         if (this.state.showSubmitError) {
             return (
-                <div className={style.error}>Please fill all required fields :-)</div>
+                <div className={formStyle.error}>Please fill all required fields :-)</div>
             );
         }
     }
@@ -166,7 +167,7 @@ export default class NewInvoiceForm extends React.Component {
             <div className={style.formContainer}>
                 {/*use html5 input type number in react will lost control*/}
                 {/*see https://github.com/facebook/react/issues/1549*/}
-                <div className={style.input}>
+                <div className={formStyle.input}>
                     <input
                         type="text"
                         value={this.state.number}
@@ -175,7 +176,7 @@ export default class NewInvoiceForm extends React.Component {
                     />
                     {this.maybeRenderInvoiceNumError()}
                 </div>
-                <div className={style.input}>
+                <div className={formStyle.input}>
                     <input
                         type="date"
                         value={this.state.date}
@@ -183,7 +184,7 @@ export default class NewInvoiceForm extends React.Component {
                         onChange={this.changeDate}
                     />
                 </div>
-                <div className={style.input}>
+                <div className={formStyle.input}>
                     <input
                         type="text"
                         value={this.state.sum}
@@ -193,38 +194,38 @@ export default class NewInvoiceForm extends React.Component {
                     {this.maybeRenderSumError()}
                 </div>
 
-                <div className={style.input}>
+                <div className={formStyle.input}>
                     <input
-                        className={style.onelineInput}
+                        className={formStyle.onelineInput}
                         type="text"
                         value={this.state.client.name}
                         placeholder="client name"
                         onChange={this.changeClientName}
                     />
                     <input
-                        className={style.onelineInput}
+                        className={formStyle.onelineInput}
                         type="text"
                         value={this.state.client.address}
                         placeholder="client address"
                         onChange={this.changeClientAddress}
                     />
                     <input
-                        className={style.onelineInput}
+                        className={formStyle.onelineInput}
                         type="text"
                         value={this.state.client.siret}
                         placeholder="client siret (optional)"
                         onChange={this.changeClientSiret}
                     />
                 </div>
-
-                <textarea
-                    className={style.input}
-                    rows="4"
-                    placeholder="add descriptions (optional)"
-                    onChange={this.changeDesc}
-                    value={this.state.desc}
-                >
-                </textarea>
+                <div className={formStyle.input}>
+                    <textarea
+                        rows="4"
+                        placeholder="add descriptions (optional)"
+                        onChange={this.changeDesc}
+                        value={this.state.desc}
+                    >
+                    </textarea>
+                </div>
             <button onClick={this.submitForm}>submit</button>
                 {this.maybeRenderSubmitError()}
             </div>
