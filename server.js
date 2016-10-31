@@ -44,13 +44,13 @@ app.use(express.static(__dirname + '/dist'));
 
 app.use(bodyParser.json());
 
-// app.use(function(err, req, res, next) {
-//     res.status(err.status || 500);
-//     res.render('error', {
-//         message: err.message,
-//         error: {}
-//     });
-// });
+app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+        message: err.message,
+        error: {}
+    });
+});
 
 //
 // router.use('*', function(req, res) {
