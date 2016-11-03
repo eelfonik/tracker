@@ -38,8 +38,15 @@
 .incomeInfo {
     composes: verticalBase;
     align-items: flex-start;
+    & .incomeDesc {
+        margin-right:10px;
+    }
     & .incomeSum {
         min-width: 8em;
-        margin-left: 10px;
     }
+}
+
+.taxAdditionalText {
+    font-size: 0.6em;
+    margin: 10px 0;
 }

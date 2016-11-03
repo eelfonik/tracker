@@ -13,6 +13,8 @@ export default class IndexPage extends React.Component {
             number: '',
             date:'',
             sum:'',
+            taxRate:'',
+            currency:'',
             client:{
                 name:'',
                 address:'',
@@ -33,6 +35,8 @@ export default class IndexPage extends React.Component {
             number: data.number,
             date:data.date,
             sum:data.sum,
+            taxRate:data.taxRate,
+            currency:!!data.currentCurrency?data.currentCurrency:data.defaultCurrency,
             client: Object.assign({}, this.state.client, data.client),
             desc:data.desc
         });

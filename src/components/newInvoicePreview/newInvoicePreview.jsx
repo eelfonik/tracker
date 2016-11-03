@@ -18,13 +18,42 @@ export default class NewInvoicePreview extends React.Component {
     maybeRenderDesc(){
         if (!!this.props.data.desc) {
             return (
-                <div>
+                <div className={style.incomeDesc}>
                     <span className={style.smallHeader}>Designation</span>
                     <hr />
                     {this.props.data.desc}
                 </div>
             );
         }
+    }
+
+    taxIsZeroOrUndefined(){
+        return parseFloat(this.props.data.taxRate) === 0 || this.props.data.taxRate ==='';
+    }
+
+    maybeRenderAdditionalTaxText(){
+        if (this.taxIsZeroOrUndefined()) {
+            return (
+                <div className={style.taxAdditionalText}>TVA non applicable, article 239B du code général des impôts</div>
+            );
+        } else {
+            return (
+                <div className={style.taxAdditionalText}>
+                    TVA {this.props.data.taxRate}% : {parseFloat(this.props.data.sum)*parseFloat(this.props.data.taxRate)/100} {this.props.data.currency}
+                </div>
+            );
+        }
+    }
+
+    renderTotal(){
+            const total = this.taxIsZeroOrUndefined()?parseFloat(this.props.data.sum):parseFloat(this.props.data.sum)*(1 + parseFloat(this.props.data.taxRate)/100);
+            return (
+                <div>
+                    <span className={style.smallHeader}>TOTAL</span>
+                    <hr />
+                    {total} {this.props.data.currency}
+                </div>
+            );
     }
 
     render(){
@@ -53,8 +82,13 @@ export default class NewInvoicePreview extends React.Component {
                         <div className={style.incomeSum}>
                             <span className={style.smallHeader}>Montant HT</span>
                             <hr />
-                            {this.props.data.sum}
+                            {invoice.sum} {invoice.currency}
+                            {this.maybeRenderAdditionalTaxText()}
                         </div>
+                    </div>
+
+                    <div>
+                        {this.renderTotal()}
                     </div>
 
                 </div>
