@@ -3,14 +3,13 @@ import { render } from 'react-dom';
 import axios from 'axios';
 //import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
 //import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
-import style from './signupPage.css';
+import style from './loginPage.css';
 import formStyle from '../../commonStyles/form.css';
 
 export default class SignupPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
             email:'',
             emailValid: true,
             pass:'',
@@ -18,7 +17,6 @@ export default class SignupPage extends React.Component {
             renderSuccessNotif:false,
             notif:''
         };
-        this.changeName = this.changeName.bind(this);
         this.changeMail = this.changeMail.bind(this);
         this.changePass = this.changePass.bind(this);
         this.submitData = this.submitData.bind(this);
@@ -39,7 +37,7 @@ export default class SignupPage extends React.Component {
     }
 
     formValidated(){
-        return !!this.state.name && !!this.state.email && this.state.emailValid && !!this.state.pass;
+        return !!this.state.email && this.state.emailValid && !!this.state.pass;
     }
 
     changeName(e){
@@ -110,19 +108,12 @@ export default class SignupPage extends React.Component {
 
     submitData(){
         if (this.formValidated()) {
-            axios.post('/api/account/signup', {
-                username: this.state.name,
+            axios.post('/api/account/login', {
                 email: this.state.email,
-                password: this.state.pass,
-                //normally should make user confirm again, but don't bother for instant
-                passwordConfirm : this.state.pass
+                password: this.state.pass
             })
                 .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-                    console.log("success!",response);
-                    //the response.data is what we defined at controllers/account.js as callback function
-                    //in the case of signup,
-                    //if data.success === false, the data.extras will have a msg to identify the problem
-                    //if data.success === true, data.extras will contain a userProfileModel with email and username
+                    // console.log("success!",response);
                     if (response.data.success) {
                         console.log(response.data.extras.userProfileModel);
                         this.setState({
@@ -141,7 +132,7 @@ export default class SignupPage extends React.Component {
                     console.log("error!",error);
                 });
         } else {
-            console.debug("The signUp is not correct");
+            console.debug("The login is not correct");
         }
     }
 
@@ -152,7 +143,7 @@ export default class SignupPage extends React.Component {
             );
         } else if (this.state.renderSuccessNotif) {
             return(
-                <div>User {this.state.name} Created!</div>
+                <div>User {this.state.name} Login!</div>
             );
         }
     }
@@ -163,16 +154,9 @@ export default class SignupPage extends React.Component {
         return (
             <div className="signup">
                 <div>
-                    Start the tracker
+                    Peek what you've got
                 </div>
                 <div className={formStyle.input}>
-                    <input
-                        className={formStyle.onelineInput}
-                        type="text"
-                        value={this.state.name}
-                        placeholder="your name"
-                        onChange={this.changeName}
-                    />
                     <input
                         className={formStyle.onelineInput}
                         type="text"

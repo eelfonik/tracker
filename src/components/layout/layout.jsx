@@ -15,6 +15,7 @@ export default class Layout extends React.Component {
                         <img className={style.logo} src="/img/node.svg"/>
                     </Link>
                     <Link className={style.signupLink} to="/signup">sign up</Link>
+                    <Link className={style.signupLink} to="/login">Login</Link>
                 </header>
                 <div className={style.appContent}>{this.props.children}</div>
                 <footer className={style.footer}>
