@@ -80,7 +80,7 @@ export default class SignupPage extends React.Component {
                 this.setState({notif:"Error with database"});
                 break;
             case 3:
-                this.setState({notif:"The famous not found"});
+                this.setState({notif:"nothing found"});
                 break;
             case 4:
                 this.setState({notif:"Email already exists!"});
@@ -182,7 +182,7 @@ export default class SignupPage extends React.Component {
                     />
                     <input
                         className={formStyle.onelineInput}
-                        type="text"
+                        type="password"
                         value={this.state.pass}
                         placeholder="your password"
                         onChange={this.changePass}

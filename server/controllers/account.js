@@ -1,3 +1,5 @@
+//the whole implementation is using the code from https://github.com/MiamiCoder/jquerymobile-tutorial-user-reg-end-to-end/tree/master/conf-rooms-step2/server
+//It's a tutorial here http://jorgeramon.me/the-meeting-room-booking-app-tutorial/
 var AccountController = function (userModel, session, mailer) {
 
     this.crypto = require('crypto');

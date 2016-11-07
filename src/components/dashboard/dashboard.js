@@ -4,7 +4,7 @@ import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
 import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
 //import AthletePreview from './AthletePreview';
 //import athletes from '../data/athletes';
-import style from './indexPage.css';
+import style from './dashboard.css';
 
 export default class IndexPage extends React.Component {
     constructor(props) {
@@ -54,7 +54,12 @@ export default class IndexPage extends React.Component {
         //console.debug(this.props);
         return (
             <div className="home">
-                WELCOME!
+                <div className={style.header}>
+                    Feed me a new invoice!
+                </div>
+                <NewInvoiceForm submitData={this.submitData}/>
+                {this.maybeRenderNotif()}
+                <NewInvoicePreview data={this.state}/>
             </div>
         );
     }

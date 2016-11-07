@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router';
-import style from './layout.css';
+import style from './homepageLayout.css';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 import '!style!css!../../commonStyles/reset.css';
 import '!style!css!../../commonStyles/font.css';
 
-export default class Layout extends React.Component {
+export default class HomeLayout extends React.Component {
     render() {
         return (
             <div className={style.appContainer}>

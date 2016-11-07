@@ -25,6 +25,14 @@ export default class SignupPage extends React.Component {
         this.maybeRenderNotif = this.maybeRenderNotif.bind(this);
     }
 
+    //direct router on front-end after success login using react-router
+    //see http://stackoverflow.com/a/39608907/6849186
+    static get contextTypes() {
+        return {
+            router: React.PropTypes.object.isRequired,
+        };
+    }
+
     componentDidMount(){
 
     }
@@ -120,6 +128,7 @@ export default class SignupPage extends React.Component {
                             renderSuccessNotif: true,
                             renderFailNotif: false
                         });
+                        this.context.router.push('/me');
                     } else {
                         this.setState({
                             renderSuccessNotif: false,
@@ -166,7 +175,7 @@ export default class SignupPage extends React.Component {
                     />
                     <input
                         className={formStyle.onelineInput}
-                        type="text"
+                        type="password"
                         value={this.state.pass}
                         placeholder="your password"
                         onChange={this.changePass}

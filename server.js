@@ -1,10 +1,11 @@
-//var cool = require('cool-ascii-faces');
 var express = require('express');
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var mongoose = require ("mongoose");
 var app = express();
 var session = require('express-session');
+
+//https://github.com/jdesboeufs/connect-mongo
 const MongoStore = require('connect-mongo')(session);
 var accountRoutes = require('./server/routes/account');
 
@@ -63,7 +64,6 @@ if(process.env.NODE_ENV !== 'production') {
 // });
 
 app.use(session({
-    secret: 'foo',
     store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
@@ -113,9 +113,6 @@ app.get('*', function(request, response) {
     response.sendFile(__dirname + '/dist/index.html');
 });
 
-// app.get('/cool', function(request, response) {
-//   response.send(cool());
-// });
 
 
 
