@@ -1,6 +1,8 @@
 import { AppContainer } from 'react-hot-loader';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+import store from './store/appStore';
 import AppRoutes from './components/appRoutes';
 
 // window.onload = () => {
@@ -14,7 +16,9 @@ import AppRoutes from './components/appRoutes';
 const rootEl = document.getElementById('root');
 ReactDOM.render(
     <AppContainer>
-        <AppRoutes />
+        <Provider store={store}>
+            <AppRoutes />
+        </Provider>
     </AppContainer>,
     rootEl
 );
@@ -26,7 +30,9 @@ if (module.hot) {
         const NextApp = require('./components/appRoutes').default;
         ReactDOM.render(
             <AppContainer>
-                <NextApp />
+                <Provider store={store}>
+                    <NextApp />
+                </Provider>
             </AppContainer>,
             rootEl
         );

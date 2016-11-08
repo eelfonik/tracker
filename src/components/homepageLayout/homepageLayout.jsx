@@ -1,12 +1,25 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { Link, browserHistory } from 'react-router';
+import {connect} from 'react-redux';
 import style from './homepageLayout.css';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 import '!style!css!../../commonStyles/reset.css';
 import '!style!css!../../commonStyles/font.css';
 
-export default class HomeLayout extends React.Component {
+class HomeLayout extends React.Component {
+
+    componentDidMount() {
+        const { dispatch, currentURL } = this.props;
+
+        if (this.props.isLoggedIn) {
+            // set the current url/path for future redirection (we use a Redux action)
+            // then redirect (we use a React Router method)
+            //dispatch(setRedirectUrl(currentURL))
+            browserHistory.replace("/me")
+        }
+    }
+
     render() {
         return (
             <div className={style.appContainer}>
@@ -27,3 +40,13 @@ export default class HomeLayout extends React.Component {
         );
     }
 }
+
+function mapStateToProps(state, ownProps) {
+    console.log('homepage',state);
+    return {
+        isLoggedIn: state.isLoggedIn,
+        currentURL: ownProps.location.pathname
+    }
+}
+
+export default connect(mapStateToProps)(HomeLayout);

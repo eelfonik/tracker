@@ -1,12 +1,14 @@
 import React from 'react';
 import { render } from 'react-dom';
+import {connect} from 'react-redux';
+import {logIn} from '../../store/actions';
 import axios from 'axios';
 //import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
 //import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
 import style from './loginPage.css';
 import formStyle from '../../commonStyles/form.css';
 
-export default class SignupPage extends React.Component {
+class LoginPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -123,11 +125,14 @@ export default class SignupPage extends React.Component {
                 .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
                     // console.log("success!",response);
                     if (response.data.success) {
-                        console.log(response.data.extras.userProfileModel);
+                        console.log(response.data.extras.userProfileModel, response.data.extras.sessionId);
                         this.setState({
                             renderSuccessNotif: true,
                             renderFailNotif: false
                         });
+                        //set up a session in browser use jwt?
+                        // then check if inside given sessionId, the userProfile exists?
+                        this.props.onLoginClick();
                         this.context.router.push('/me');
                     } else {
                         this.setState({
@@ -187,3 +192,21 @@ export default class SignupPage extends React.Component {
         );
     }
 }
+
+// const mapStateToProps = (state, ownProps) => {
+//     console.log(state); // state
+//     console.log(ownProps); // ownProps
+//     return {
+//         number: state
+//     }
+// }
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        onLoginClick: () => {
+            dispatch(logIn())
+        }
+    }
+}
+
+export default connect(null,mapDispatchToProps)(LoginPage);

@@ -64,6 +64,7 @@ if(process.env.NODE_ENV !== 'production') {
 // });
 
 app.use(session({
+    secret:'foo',
     store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
