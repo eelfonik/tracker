@@ -1,10 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
-import {logIn} from '../../store/actions';
-import axios from 'axios';
-//import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
-//import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
+import {userLogin} from '../../store/actions';
 import style from './loginPage.css';
 import formStyle from '../../commonStyles/form.css';
 
@@ -15,25 +12,17 @@ class LoginPage extends React.Component {
             email:'',
             emailValid: true,
             pass:'',
-            renderFailNotif:false,
-            renderSuccessNotif:false,
-            notif:''
         };
         this.changeMail = this.changeMail.bind(this);
         this.changePass = this.changePass.bind(this);
         this.submitData = this.submitData.bind(this);
         this.isEmail = this.isEmail.bind(this);
         this.formValidated = this.formValidated.bind(this);
-        this.maybeRenderNotif = this.maybeRenderNotif.bind(this);
     }
 
     //direct router on front-end after success login using react-router
     //see http://stackoverflow.com/a/39608907/6849186
-    static get contextTypes() {
-        return {
-            router: React.PropTypes.object.isRequired,
-        };
-    }
+    //moving this part to parent component
 
     componentDidMount(){
 
@@ -48,12 +37,6 @@ class LoginPage extends React.Component {
 
     formValidated(){
         return !!this.state.email && this.state.emailValid && !!this.state.pass;
-    }
-
-    changeName(e){
-        this.setState({
-            name: e.target.value
-        });
     }
 
     changeMail(e){
@@ -76,92 +59,14 @@ class LoginPage extends React.Component {
         });
     }
 
-    mapApiMessagesToNotif(msg){
-        switch(msg) {
-            case 0:
-                this.setState({notif:"Email not found"});
-                break;
-            case 1:
-                this.setState({notif:"Invalid Password"});
-                break;
-            case 2:
-                this.setState({notif:"Error with database"});
-                break;
-            case 3:
-                this.setState({notif:"The famous not found"});
-                break;
-            case 4:
-                this.setState({notif:"Email already exists!"});
-                break;
-            case 5:
-                this.setState({notif:"Can't create user"});
-                break;
-            case 6:
-                this.setState({notif:"Password reset expired :-("});
-                break;
-            case 7:
-                this.setState({notif:"Password reset failed"});
-                break;
-            case 8:
-                this.setState({notif:"Password rest email incorrect"});
-                break;
-            case 9:
-                this.setState({notif:"Can't reset password"});
-                break;
-            case 10:
-                this.setState({notif:"Please enter the same password to confirm"});
-                break;
-            default:
-                this.setState({notif:''});
-        }
-    }
 
     submitData(){
         if (this.formValidated()) {
-            axios.post('/api/account/login', {
-                email: this.state.email,
-                password: this.state.pass
-            })
-                .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-                    // console.log("success!",response);
-                    if (response.data.success) {
-                        console.log(response.data.extras.userProfileModel, response.data.extras.sessionId);
-                        this.setState({
-                            renderSuccessNotif: true,
-                            renderFailNotif: false
-                        });
-                        //set up a session in browser use jwt?
-                        // then check if inside given sessionId, the userProfile exists?
-                        this.props.onLoginClick();
-                        this.context.router.push('/me');
-                    } else {
-                        this.setState({
-                            renderSuccessNotif: false,
-                            renderFailNotif: true
-                        });
-                        this.mapApiMessagesToNotif(response.data.extras.msg);
-                    }
-                })
-                .catch((error)=> {
-                    console.log("error!",error);
-                });
+            this.props.onLoginClick(this.state);
         } else {
             console.debug("The login is not correct");
         }
     }
-
-    maybeRenderNotif(){
-        if (this.state.renderFailNotif) {
-            return(
-                <div>{this.state.notif}</div>
-            );
-        } else if (this.state.renderSuccessNotif) {
-            return(
-                <div>User {this.state.name} Login!</div>
-            );
-        }
-    }
-
 
 
     render() {
@@ -187,7 +92,6 @@ class LoginPage extends React.Component {
                     />
                 </div>
                 <button onClick = {this.submitData}>submit!</button>
-                {this.maybeRenderNotif()}
             </div>
         );
     }
@@ -203,10 +107,11 @@ class LoginPage extends React.Component {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        onLoginClick: () => {
-            dispatch(logIn())
+        onLoginClick: (value) => {
+            dispatch(userLogin(value))
         }
     }
 }
-
+//if we don't use mapStateToProps, we should pass null as 1st argument
+//see http://stackoverflow.com/a/38708606/6849186
 export default connect(null,mapDispatchToProps)(LoginPage);

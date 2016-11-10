@@ -10,13 +10,29 @@ import '!style!css!../../commonStyles/font.css';
 class HomeLayout extends React.Component {
 
     componentDidMount() {
-        const { dispatch, currentURL } = this.props;
+        const { dispatch, currentURL, isLoggedIn, redirectUrl, } = this.props;
 
-        if (this.props.isLoggedIn) {
+        if (isLoggedIn) {
+            //see https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1#.lcuolmcpq
             // set the current url/path for future redirection (we use a Redux action)
             // then redirect (we use a React Router method)
             //dispatch(setRedirectUrl(currentURL))
-            browserHistory.replace("/me")
+            browserHistory.replace(redirectUrl)
+        }
+    }
+
+    componentDidUpdate() {
+        const { dispatch, currentURL, isLoggedIn, redirectUrl, } = this.props;
+        if (isLoggedIn) {
+            browserHistory.replace(redirectUrl)
+        }
+    }
+
+    maybeRenderNotif(){
+        if (!this.props.isLoggedIn) {
+            return(
+                <div>{this.props.notif}</div>
+            );
         }
     }
 
@@ -31,6 +47,7 @@ class HomeLayout extends React.Component {
                     <Link className={style.signupLink} to="/login">Login</Link>
                 </header>
                 <div className={style.appContent}>{this.props.children}</div>
+                {this.maybeRenderNotif()}
                 <footer className={style.footer}>
                     <p>
                         <a href="http://mern.io/" target="_blank" rel="noopener noreferrer">MERN</a> build by hand.
@@ -42,10 +59,12 @@ class HomeLayout extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    console.log('homepage',state);
+    console.log('homepage', state);
     return {
-        isLoggedIn: state.isLoggedIn,
-        currentURL: ownProps.location.pathname
+        isLoggedIn: state.login.isLoggedIn,
+        currentURL: ownProps.location.pathname,
+        notif: state.login.notif,
+        redirectUrl: state.login.redirectUrl
     }
 }
 

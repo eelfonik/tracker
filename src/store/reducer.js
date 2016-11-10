@@ -12,17 +12,30 @@
  * project.
  */
 
-export function login(state = {}, action) {
+import { combineReducers } from 'redux';
+
+export function loginReducer(state = {}, action) {
     switch (action.type) {
         case 'LOGIN':
-            return {
-                isLoggedIn: true
-            };
+        case 'SIGNUP':
+            return Object.assign({}, state, {
+                isLoggedIn: action.isLoggedIn,
+                redirectUrl: action.redirectUrl,
+                notif:action.notif,
+            });
         case 'LOGOUT':
-            return {
-                isLoggedIn: false
-            };
+            return Object.assign({}, state, {
+                isLoggedIn: action.isLoggedIn,
+                redirectUrl: action.redirectUrl,
+            });
         default:
             return state
     }
 }
+
+const reducer = combineReducers({
+    login: loginReducer,
+    // counter
+})
+
+export default reducer;

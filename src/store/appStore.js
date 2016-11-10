@@ -1,5 +1,6 @@
-import { createStore } from 'redux';
-import {login} from './reducer';
+import { createStore, applyMiddleware } from 'redux';
+import thunk from 'redux-thunk';
+import reducer from './reducer';
 
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
@@ -9,11 +10,16 @@ import {login} from './reducer';
 // Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
 // However it can also be handy to persist the current state in the localStorage.
 //see http://stackoverflow.com/a/37690899/6849186
+//TODO: need to use cookie fallback for safari private mode
 const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : {}
 
+
+console.debug('persisted state', persistedState);
+
 const store = createStore(
-    login,
+    reducer,
     persistedState,
+    applyMiddleware(thunk)
     /* any middleware... */
 )
 
@@ -25,7 +31,3 @@ export default store;
 
 // The only way to mutate the internal state is to dispatch an action.
 // The actions can be serialized, logged or stored and later replayed.
-//store.dispatch({ type: 'INCREMENT' })
-// 1
-//store.dispatch({ type: 'INCREMENT' })
-// 2
