@@ -7,6 +7,7 @@ import IndexPage from './components/indexPage/indexPage';
 import SignupPage from './components/signupPage/signupPage';
 import LoginPage from './components/loginPage/loginPage';
 import Dashboard from './components/dashboard/dashboard';
+import UserInfo from './components/userInfo/userInfo';
 //import AthletePage from './components/AthletePage';
 //import NotFoundPage from './components/NotFoundPage';
 
@@ -24,6 +25,7 @@ const routes = (
         </Route>
         <Route path="/me" component={AppLayout}>
             <IndexRoute component={Dashboard}/>
+            <Route path="/me/info" component={UserInfo}/>
         </Route>
     </Route>
 );

@@ -33,20 +33,25 @@ export const signUp = (resSuccess,resData)=>({
     type: 'SIGNUP',
     isLoggedIn: resSuccess,
     notif: resSuccess?'':mapApiMessagesToNotif(resData.msg),
-    redirectUrl: resSuccess?'/me':'/signup'
+    redirectUrl: resSuccess?'/me':'/signup',
+    extras: resData
 })
 
 export const logIn = (resSuccess,resData) => ({
         type: 'LOGIN',
         isLoggedIn: resSuccess,
         notif: resSuccess?'':mapApiMessagesToNotif(resData.msg),
-        redirectUrl: resSuccess?'/me':'/login'
+        redirectUrl: resSuccess?'/me':'/login',
+        extras: resData
 })
 
 export const logout = () => ({
-        type: 'LOGOUT',
-        isLoggedIn:false,
-        redirectUrl: '/'
+        type: 'LOGOUT'
+})
+
+export const resetNotif = ()=>({
+    type: 'RESET_NOTIF',
+    notif:''
 })
 
 export function userLogin(value) {
@@ -78,11 +83,11 @@ export function userSignup(value) {
 
         axios.post('/api/account/signup', data)
             .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-                //the response.data is what we defined at controllers/account.js as callback function
+                //the response.data is what we defined at controllers/appRoutes.js as callback function
                 //in the case of signup,
                 //if data.success === false, the data.extras will have a msg to identify the problem
                 //if data.success === true, data.extras will contain a userProfileModel with email and username
-                dispatch(signUp(response.data.success,response.data.extras ))
+                dispatch(signUp(response.data.success,response.data.extras ));
             })
             .catch((error)=> {
                 console.log("signup error!",error);
@@ -98,6 +103,52 @@ export function userLogOut() {
             })
             .catch((error)=> {
                 console.log("logout error!",error);
+            });
+    }
+}
+
+export const getInfo = (resData)=>({
+    type: 'GET_INFO',
+    name: resData.name,
+    address: resData.address,
+    siret:resData.siret,
+    phone: resData.phone
+})
+
+export const updateInfo = (resData)=>({
+    type: 'UPDATE_INFO',
+    name: resData.name,
+    address: resData.address,
+    siret:resData.siret,
+    phone: resData.phone
+})
+
+export function getUserInfo() {
+    return (dispatch,getState)=>{
+        axios.get('/api/user/info')
+            .then((res) => {
+                dispatch(getInfo(res.data.extras.userInfoModel));
+            })
+            .catch((error)=>{
+                console.log("get user info error!",error);
+            })
+    }
+}
+
+export function updateUserInfo(value) {
+    return(dispatch,getState)=>{
+        const userInfo = {
+            name: value.name,
+            address: value.address,
+            siret:value.siret,
+            phone: value.phone
+        }
+        axios.post('/api/user/info',userInfo)
+            .then((res)=>{
+                dispatch(updateInfo(res.data.extras.userInfoModel))
+            })
+            .catch((error)=>{
+                console.log("update user info error!",error);
             });
     }
 }

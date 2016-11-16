@@ -102,7 +102,7 @@ AccountController.prototype.login = function(email, password, callback) {
 
                     var userProfileModel = new me.UserProfile({
                         email: user.email,
-                        username: user.username
+                        username: user.username,
                     });
 
                     me.session.userProfileModel = userProfileModel;
@@ -112,7 +112,10 @@ AccountController.prototype.login = function(email, password, callback) {
                         success: true,
                         extras: {
                             userProfileModel: userProfileModel,
-                            sessionId: me.session.id
+                            sessionId: me.session.id,
+                            //should also return the info of user
+                            //if it's empty, redirect to fill info page
+                            //else go to dashboard
                         }
                     }));
                 } else {
@@ -133,6 +136,8 @@ AccountController.prototype.login = function(email, password, callback) {
 };
 
 AccountController.prototype.logout = function () {
+    //fuck it why I thought the delete here was to set on client side-_-
+    //it's used to delete the sessions collection in mongoDB...
     if (this.session.userProfileModel) delete this.session.userProfileModel;
     if (this.session.id) delete this.session.id;
     return;
@@ -238,8 +243,8 @@ AccountController.prototype.getUserFromUserRegistration = function(userRegistrat
     var user = new this.User({
         email: userRegistrationModel.email,
         username: userRegistrationModel.username,
-        passwordHash: this.crypto.pbkdf2Sync(userRegistrationModel.password, passwordSaltIn, cryptoIterations, cryptoKeyLen),
-        passwordSalt: passwordSaltIn
+        passwordHash: this.crypto.pbkdf2Sync(userRegistrationModel.password, passwordSaltIn, cryptoIterations, cryptoKeyLen,'sha512'),
+        passwordSalt: passwordSaltIn,
     });
 
     return new me.ApiResponse({ success: true, extras: { user: user } });

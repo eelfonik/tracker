@@ -13,8 +13,17 @@
  */
 
 import { combineReducers } from 'redux';
+import axios from 'axios';
 
-export function loginReducer(state = {}, action) {
+
+const initialLoginState = {
+    isLoggedIn: false,
+    redirectUrl: '/',
+    notif:'',
+    extras: {}
+}
+
+export function loginReducer(state = initialLoginState, action) {
     switch (action.type) {
         case 'LOGIN':
         case 'SIGNUP':
@@ -22,11 +31,37 @@ export function loginReducer(state = {}, action) {
                 isLoggedIn: action.isLoggedIn,
                 redirectUrl: action.redirectUrl,
                 notif:action.notif,
+                extras: action.extras
             });
         case 'LOGOUT':
+            return Object.assign({}, state, initialLoginState);
+        case 'RESET_NOTIF':
             return Object.assign({}, state, {
-                isLoggedIn: action.isLoggedIn,
-                redirectUrl: action.redirectUrl,
+                notif:action.notif
+            });
+        default:
+            return state
+    }
+}
+
+//here the initial state should get from server
+// const initialUserInfoState = {
+//     name:"",
+//     address:"",
+//     siret:"",
+//     phone:""
+// }
+
+
+export function UserInfoReducer(state = {}, action) {
+    switch (action.type) {
+        case 'GET_INFO':
+        case 'UPDATE_INFO':
+            return Object.assign({}, state, {
+                name: action.name,
+                address: action.address,
+                siret:action.siret,
+                phone: action.phone
             });
         default:
             return state
@@ -35,7 +70,7 @@ export function loginReducer(state = {}, action) {
 
 const reducer = combineReducers({
     login: loginReducer,
-    // counter
+    userInfo: UserInfoReducer,
 })
 
 export default reducer;

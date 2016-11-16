@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
-import {userLogin} from '../../store/actions';
+import {userLogin,resetNotif,getUserInfo} from '../../store/actions';
 import style from './loginPage.css';
 import formStyle from '../../commonStyles/form.css';
 
@@ -24,8 +24,11 @@ class LoginPage extends React.Component {
     //see http://stackoverflow.com/a/39608907/6849186
     //moving this part to parent component
 
-    componentDidMount(){
-
+    // componentDidMount(){
+    //     this.props.resetNotif();
+    // }
+    componentWillUnmount() {
+        this.props.resetNotif();
     }
 
     isEmail(value){
@@ -109,7 +112,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onLoginClick: (value) => {
             dispatch(userLogin(value))
-        }
+        },
+        resetNotif: ()=>{dispatch(resetNotif())}
     }
 }
 //if we don't use mapStateToProps, we should pass null as 1st argument

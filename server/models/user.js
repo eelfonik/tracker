@@ -1,9 +1,10 @@
 // ./server/models/user.js
+const Invoice = require('./invoice');
+const Client = require('./client');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-var UserSchema = new Schema({
+const UserSchema = new Schema({
     username: {
         type: String,
         required: true
@@ -13,7 +14,23 @@ var UserSchema = new Schema({
         required: true
     },
     passwordHash: String,
-    passwordSalt: String
+    passwordSalt: String,
+    info: {
+        name: {
+            type: String
+        },
+        address: {
+            type: String
+        },
+        siret: {
+            type: String
+        },
+        phone: {
+            type: String
+        }
+    },
+    invoices: [{ type: Schema.Types.ObjectId, ref: 'Invoice' }],
+    clients: [{ type: Schema.Types.ObjectId, ref: 'Client' }],
 }, {
     timestamps: true
 });

@@ -1,10 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
-import {userSignup} from '../../store/actions';
-import axios from 'axios';
-//import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
-//import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
+import {userSignup,resetNotif} from '../../store/actions';
 import style from './signupPage.css';
 import formStyle from '../../commonStyles/form.css';
 
@@ -16,9 +13,6 @@ class SignupPage extends React.Component {
             email:'',
             emailValid: true,
             pass:'',
-            renderFailNotif:false,
-            renderSuccessNotif:false,
-            notif:''
         };
         this.changeName = this.changeName.bind(this);
         this.changeMail = this.changeMail.bind(this);
@@ -28,8 +22,11 @@ class SignupPage extends React.Component {
         this.formValidated = this.formValidated.bind(this);
     }
 
-    componentDidMount(){
-
+    // componentDidMount(){
+    //     this.props.resetNotif();
+    // }
+    componentWillUnmount() {
+        this.props.resetNotif();
     }
 
     isEmail(value){
@@ -118,7 +115,8 @@ const mapDispatchToProps = (dispatch) => {
     return {
         onSignupClick: (value) => {
             dispatch(userSignup(value))
-        }
+        },
+        resetNotif: ()=>{dispatch(resetNotif())}
     }
 }
 //if we don't use mapStateToProps, we should pass null as 1st argument

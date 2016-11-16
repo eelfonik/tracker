@@ -10,7 +10,7 @@ import '!style!css!../../commonStyles/font.css';
 class HomeLayout extends React.Component {
 
     componentDidMount() {
-        const { dispatch, currentURL, isLoggedIn, redirectUrl, } = this.props;
+        const { dispatch, currentURL, isLoggedIn, redirectUrl} = this.props;
 
         if (isLoggedIn) {
             //see https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1#.lcuolmcpq
@@ -22,7 +22,7 @@ class HomeLayout extends React.Component {
     }
 
     componentDidUpdate() {
-        const { dispatch, currentURL, isLoggedIn, redirectUrl, } = this.props;
+        const { dispatch, currentURL, isLoggedIn, redirectUrl} = this.props;
         if (isLoggedIn) {
             browserHistory.replace(redirectUrl)
         }
@@ -64,7 +64,8 @@ function mapStateToProps(state, ownProps) {
         isLoggedIn: state.login.isLoggedIn,
         currentURL: ownProps.location.pathname,
         notif: state.login.notif,
-        redirectUrl: state.login.redirectUrl
+        redirectUrl: state.login.redirectUrl,
+        extras: state.login.extras
     }
 }
 
