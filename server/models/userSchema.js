@@ -1,6 +1,6 @@
 // ./server/models/user.js
-const Invoice = require('./invoice');
-const Client = require('./client');
+const Invoice = require('./invoiceSchema');
+const Client = require('./clientSchema');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 

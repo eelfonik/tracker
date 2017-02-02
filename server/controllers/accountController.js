@@ -10,7 +10,7 @@ var AccountController = function (userModel, session, mailer) {
     this.userModel = userModel;
     this.session = session;
     this.mailer = mailer;
-    this.User = require('../models/user.js');
+    this.User = require('../models/userSchema.js');
 };
 
 AccountController.prototype.getSession = function () {
@@ -25,7 +25,7 @@ AccountController.prototype.hashPassword = function (password, salt, callback) {
     // We use pbkdf2 to hash and iterate 10k times by default
     var iterations = 10000,
         keyLen = 64; // 64 bit.
-    this.crypto.pbkdf2(password, salt, iterations, keyLen, callback);
+    this.crypto.pbkdf2(password, salt, iterations, keyLen, 'sha512',callback);
 };
 
 AccountController.prototype.signup = function (newUser, callback) {
@@ -106,6 +106,7 @@ AccountController.prototype.login = function(email, password, callback) {
                     });
 
                     me.session.userProfileModel = userProfileModel;
+                    me.session.userId = user._id;
                     me.session.id = me.uuid.v4();
 
                     return callback(err, new me.ApiResponse({
@@ -113,6 +114,7 @@ AccountController.prototype.login = function(email, password, callback) {
                         extras: {
                             userProfileModel: userProfileModel,
                             sessionId: me.session.id,
+                            userId:me.session.userId,
                             //should also return the info of user
                             //if it's empty, redirect to fill info page
                             //else go to dashboard
@@ -140,6 +142,7 @@ AccountController.prototype.logout = function () {
     //it's used to delete the sessions collection in mongoDB...
     if (this.session.userProfileModel) delete this.session.userProfileModel;
     if (this.session.id) delete this.session.id;
+    if (this.session.userId) delete this.session.userId;
     return;
 };
 

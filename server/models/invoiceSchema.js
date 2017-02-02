@@ -1,12 +1,17 @@
 // ./server/models/invoice.js
-const User = require('./user');
-const Client = require('./client');
+const User = require('./userSchema');
+const Client = require('./clientSchema');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const InvoiceSchema = new Schema({
     _creator : {
-        type: Number, ref: 'User'
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    _client: {
+        type: Schema.Types.ObjectId,
+        ref: 'Client'
     },
     number: {
         type: String,

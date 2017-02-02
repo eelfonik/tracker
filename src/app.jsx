@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from './store/appStore';
-import AppRoutes from './components/appRoutes';
+import AppRoutes from './appRoutes';
 
 // window.onload = () => {
 //     ReactDOM.render(<AppRoutes/>, document.getElementById('main'));
@@ -24,10 +24,10 @@ ReactDOM.render(
 );
 
 if (module.hot) {
-    module.hot.accept('./components/appRoutes', () => {
+    module.hot.accept('./appRoutes', () => {
         // If you use Webpack 2 in ES modules mode, you can
         // use <App /> here rather than require() a <NextApp />.
-        const NextApp = require('./components/appRoutes').default;
+        const NextApp = require('./appRoutes').default;
         ReactDOM.render(
             <AppContainer>
                 <Provider store={store}>

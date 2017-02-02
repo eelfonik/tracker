@@ -1,12 +1,13 @@
 import React from 'react';
 import { render } from 'react-dom';
+import {connect} from 'react-redux';
 import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
 import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
 //import AthletePreview from './AthletePreview';
 //import athletes from '../data/athletes';
 import style from './dashboard.css';
 
-export default class IndexPage extends React.Component {
+class Dashboard extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -51,7 +52,7 @@ export default class IndexPage extends React.Component {
     }
 
     render() {
-        //console.debug(this.props);
+        console.debug(this.props);
         return (
             <div className="home">
                 <div className={style.header}>
@@ -64,3 +65,30 @@ export default class IndexPage extends React.Component {
         );
     }
 }
+
+function mapStateToProps(state, ownProps) {
+    return {
+        isLoggedIn: state.login.isLoggedIn,
+        currentURL: ownProps.location.pathname,
+        redirectUrl: state.login.redirectUrl,
+        extras: state.login.extras
+    }
+}
+
+// const mapDispatchToProps = (dispatch) => ({
+//         onLogoutClick(){
+//             dispatch(userLogOut());
+//         }
+// });
+//rather than pass a mapDispatchToProps function to connect,
+//we can pass a **configuration object**
+//that maps the name of callback function(here is `onLogoutClick`), and the action creator function(`userLogout` in this case)
+
+export default connect(
+    mapStateToProps,
+    // {
+    //     onStartUp: getUserInfo,
+    //     onLogoutClick : userLogOut
+    // }
+    //mapDispatchToProps
+)(Dashboard);

@@ -24,12 +24,16 @@ function mapApiMessagesToNotif(msg){
             return "Can't reset password";
         case 10:
             return "Please enter the same password to confirm";
+        case 11:
+            return "Invoice with same number already exists";
+        case 12:
+            return "Can't create invoice";
         default:
             return "";
     }
 }
 
-export const signUp = (resSuccess,resData)=>({
+const signUp = (resSuccess,resData)=>({
     type: 'SIGNUP',
     isLoggedIn: resSuccess,
     notif: resSuccess?'':mapApiMessagesToNotif(resData.msg),
@@ -37,7 +41,7 @@ export const signUp = (resSuccess,resData)=>({
     extras: resData
 })
 
-export const logIn = (resSuccess,resData) => ({
+const logIn = (resSuccess,resData) => ({
         type: 'LOGIN',
         isLoggedIn: resSuccess,
         notif: resSuccess?'':mapApiMessagesToNotif(resData.msg),
@@ -45,13 +49,12 @@ export const logIn = (resSuccess,resData) => ({
         extras: resData
 })
 
-export const logout = () => ({
+const logout = () => ({
         type: 'LOGOUT'
 })
 
 export const resetNotif = ()=>({
-    type: 'RESET_NOTIF',
-    notif:''
+    type: 'RESET_NOTIF'
 })
 
 export function userLogin(value) {
@@ -60,7 +63,6 @@ export function userLogin(value) {
             email: value.email,
             password: value.pass,
         }
-
         axios.post('/api/account/login', data)
             .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
                 dispatch(logIn(response.data.success,response.data.extras));
@@ -77,13 +79,13 @@ export function userSignup(value) {
             username:value.name,
             email:value.email,
             password: value.pass,
-            //normally should make user confirm again, but don't bother for instant
+            //normally should make user confirm again, but don't bother for now
             passwordConfirm: value.pass
         }
 
         axios.post('/api/account/signup', data)
             .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-                //the response.data is what we defined at controllers/appRoutes.js as callback function
+                //the response.data is what we defined at controllers/serverRoutes.js as callback function
                 //in the case of signup,
                 //if data.success === false, the data.extras will have a msg to identify the problem
                 //if data.success === true, data.extras will contain a userProfileModel with email and username
@@ -97,9 +99,10 @@ export function userSignup(value) {
 
 export function userLogOut() {
     return (dispatch, getState)=>{
-        axios.post('/api/account/logout',{})
+        axios.get('/api/account/logout',{})
             .then((response) =>{
                 dispatch(logout());
+                dispatch(removeInfo());
             })
             .catch((error)=> {
                 console.log("logout error!",error);
@@ -107,15 +110,16 @@ export function userLogOut() {
     }
 }
 
-export const getInfo = (resData)=>({
+const getInfo = (resData)=>({
     type: 'GET_INFO',
-    name: resData.name,
-    address: resData.address,
-    siret:resData.siret,
-    phone: resData.phone
+    name: resData.userInfoModel.name,
+    address: resData.userInfoModel.address,
+    siret:resData.userInfoModel.siret,
+    phone: resData.userInfoModel.phone,
+    invoices: resData.invoices,
 })
 
-export const updateInfo = (resData)=>({
+const updateInfo = (resData)=>({
     type: 'UPDATE_INFO',
     name: resData.name,
     address: resData.address,
@@ -123,11 +127,21 @@ export const updateInfo = (resData)=>({
     phone: resData.phone
 })
 
+const removeInfo = ()=>({
+    type: 'REMOVE_INFO',
+})
+
+const isFetchingUser = ()=>({
+    type: "FETCHING_USER_INFO"
+})
+
 export function getUserInfo() {
     return (dispatch,getState)=>{
-        axios.get('/api/user/info')
+        dispatch(isFetchingUser());
+        return axios.get('/api/user/info')
             .then((res) => {
-                dispatch(getInfo(res.data.extras.userInfoModel));
+                dispatch(getInfo(res.data.extras));
+                console.debug("let's see what is the data returned", res.data.extras);
             })
             .catch((error)=>{
                 console.log("get user info error!",error);

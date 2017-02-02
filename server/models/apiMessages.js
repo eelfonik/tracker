@@ -11,4 +11,7 @@ ApiMessages.PASSWORD_RESET_EMAIL_MISMATCH = 8;
 ApiMessages.COULD_NOT_RESET_PASSWORD = 9;
 ApiMessages.PASSWORD_CONFIRM_MISMATCH = 10;
 
+ApiMessages.INVOICE_ALREADY_EXISTS = 11;
+ApiMessages.COULD_NOT_CREATE_INVOICE = 12;
+
 module.exports = ApiMessages;

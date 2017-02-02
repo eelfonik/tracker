@@ -34,7 +34,7 @@
     line-height:1.5;
     & .currencyUnit {
           max-height: 0;
-            text-align: center;
+          text-align: center;
           overflow: hidden;
           cursor: pointer;
           border-bottom: 1px solid transparent;

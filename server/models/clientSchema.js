@@ -1,11 +1,11 @@
 // ./server/models/client.js
-const User = require('./user');
+const User = require('./userSchema');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const ClientSchema = new Schema({
     _creator : {
-        type: Number, ref: 'User'
+        type: Schema.Types.ObjectId, ref: 'User'
     },
     clientName: {
         type: String,

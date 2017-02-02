@@ -13,14 +13,13 @@
  */
 
 import { combineReducers } from 'redux';
-import axios from 'axios';
 
 
 const initialLoginState = {
     isLoggedIn: false,
     redirectUrl: '/',
     notif:'',
-    extras: {}
+    extras: {},
 }
 
 export function loginReducer(state = initialLoginState, action) {
@@ -34,10 +33,10 @@ export function loginReducer(state = initialLoginState, action) {
                 extras: action.extras
             });
         case 'LOGOUT':
-            return Object.assign({}, state, initialLoginState);
+            return initialLoginState;
         case 'RESET_NOTIF':
             return Object.assign({}, state, {
-                notif:action.notif
+                notif:''
             });
         default:
             return state
@@ -53,18 +52,36 @@ export function loginReducer(state = initialLoginState, action) {
 // }
 
 
-export function UserInfoReducer(state = {}, action) {
+export function UserInfoReducer(state = {isFetching:false}, action) {
     switch (action.type) {
+        case 'FETCHING_USER_INFO':
+        case 'UPDATING_USER_INFO':
+            return Object.assign({},state,{
+                isFetching: true
+            });
         case 'GET_INFO':
         case 'UPDATE_INFO':
             return Object.assign({}, state, {
+                isFetching:false,
                 name: action.name,
                 address: action.address,
                 siret:action.siret,
-                phone: action.phone
+                phone: action.phone,
+                invoices: action.invoices
             });
+        case 'REMOVE_INFO':
+            return {isFetching:false};
         default:
             return state
+    }
+}
+
+export function InvoiceInfoReducer(state={}, action) {
+    switch (action.type) {
+        case 'GET_INVOICE_INFO':
+            return Object.assign({}, state, {
+
+            });
     }
 }
 

@@ -20,6 +20,7 @@ class AppLayout extends React.Component {
             // set the current url/path for future redirection (we use a Redux action)
             // then redirect (we use a React Router method)
             //dispatch(setRedirectUrl(currentURL))
+            console.debug("?? redirectUrl", this.props.redirectUrl);
             browserHistory.replace(this.props.redirectUrl)
         }
         //here said it's a bad way to get data from server
@@ -40,11 +41,16 @@ class AppLayout extends React.Component {
         }
     }
 
+    componentWillUnmount(){
+        browserHistory.replace(this.props.redirectUrl);
+    }
+
     capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
     render() {
+        console.debug('app page props',this.props);
         const children = this.props.isLoggedIn? this.props.children: <div>please login</div>;
         const mayLogout = this.props.isLoggedIn? <div className={style.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
         const userName = this.props.extras.userProfileModel? this.props.extras.userProfileModel.username:'';
@@ -69,12 +75,14 @@ class AppLayout extends React.Component {
     }
 }
 
-const mapStateToProps = (state, ownProps) => ({
+function mapStateToProps(state, ownProps) {
+    return {
         isLoggedIn: state.login.isLoggedIn,
         currentURL: ownProps.location.pathname,
         redirectUrl: state.login.redirectUrl,
-        extras:state.login.extras
-});
+        extras: state.login.extras
+    }
+}
 
 // const mapDispatchToProps = (dispatch) => ({
 //         onLogoutClick(){

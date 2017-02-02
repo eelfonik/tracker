@@ -59,7 +59,6 @@ class HomeLayout extends React.Component {
 }
 
 function mapStateToProps(state, ownProps) {
-    console.log('homepage', state);
     return {
         isLoggedIn: state.login.isLoggedIn,
         currentURL: ownProps.location.pathname,

@@ -1,12 +1,16 @@
 const express = require('express');
 const router = express.Router();
 
-const User = require('../models/user.js');
+//3 schemas
+const User = require('../models/userSchema.js');
+const Client = require('../models/clientSchema');
+const Invoice = require('../models/invoiceSchema');
+
 const ApiResponse = require('../models/apiResponse.js');
 // =========================================
 // account
 // ==========================================
-const AccountController = require('../controllers/account.js');
+const AccountController = require('../controllers/accountController.js');
 const UserSignup = require('../models/userSignup.js');
 const UserLogin = require('../models/userLogin.js');
 const UserPasswordReset = require('../models/userPwdReset.js');
@@ -17,8 +21,18 @@ const mailer = new MailerMock();
 // =========================================
 // user
 // ==========================================
-const UserController = require('../controllers/user.js');
+const UserController = require('../controllers/userController.js');
 const UserInfo = require('../models/userInfo.js');
+// =========================================
+// invoice
+// ==========================================
+const InvoiceController = require('../controllers/invoiceController.js');
+const InvoiceInfo = require('../models/invoiceInfo.js');
+// =========================================
+// client
+// ==========================================
+//const ClientController = require('../controllers/clientSchema.js');
+//const ClientProfile = require('../models/clientProfile.js');
 
 
 
@@ -99,6 +113,10 @@ router.route('/account/resetpasswordfinal')
 router.route('/user/info')
 
     .get(function (req, res) {
+        //get user info
+        // const accountController = new AccountController(User, req.session);
+        // const session = accountController.getSession();
+
         const userController = new UserController(User, req.session);
 
         userController.getInfo(function (error,response) {
@@ -106,11 +124,51 @@ router.route('/user/info')
         });
     })
     .post(function (req, res) {
+        //update user info
         const userController = new UserController(User, req.session);
         const userInfo = new UserInfo(req.body);
         userController.updateInfo(userInfo,function (error,response) {
             res.send(response);
         });
+    });
+
+// --------------invoices--------------------
+
+router.route('/user/invoices')
+
+    .get(function (req, res) {
+        //Get all the invoices.(there's a place inside user schema to store all related invoices id)
+        const userController = new UserController(User, req.session);
+
+        userController.getInfo(function (error,response) {
+            res.send(response);
+        });
+    })
+    .post(function (req, res) {
+        //create a new invoice
+        //const userController = new UserController(User, req.session);
+
+        const accountController = new AccountController(User, req.session);
+        const session = accountController.getSession();
+
+        const invoiceController= new InvoiceController(Invoice, User, session);
+        //const userInfo = new UserInfo(req.body);
+
+
+        const invoiceInfo = new InvoiceInfo(req.body);
+
+        const apiResponseStep1 = invoiceController.getInvoiceFromUserInput(invoiceInfo);
+        res.set("Access-Control-Allow-Origin", "http://localhost:5000");   // Enable CORS in dev environment.
+
+        if (apiResponseStep1.success) {
+            invoiceController.addNewInvoice(apiResponseStep1.extras.invoice, function (err, apiResponseStep2) {
+                return res.send(apiResponseStep2);
+            });
+        } else {
+            res.send(apiResponseStep1);
+        }
+
+
     });
 
 

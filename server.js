@@ -7,7 +7,7 @@ var session = require('express-session');
 
 //https://github.com/jdesboeufs/connect-mongo
 const MongoStore = require('connect-mongo')(session);
-const appRoutes = require('./server/routes/appRoutes');
+const serverRoutes = require('./server/routes/serverRoutes');
 
 var path = require("path");
 
@@ -107,7 +107,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', appRoutes);
+app.use('/api', serverRoutes);
 
 //need to use wild card(*) here to let react-router handle all front-end routing
 //see https://github.com/ReactTraining/react-router/issues/1047#issuecomment-89611557

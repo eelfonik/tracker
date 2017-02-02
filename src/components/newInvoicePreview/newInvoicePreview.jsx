@@ -120,14 +120,16 @@ NewInvoicePreview.propTypes = {
     data: React.PropTypes.object
 };
 
-const mapStateToProps = (state, ownProps) => ({
-    name: state.userInfo.name,
-    address: state.userInfo.address,
-    siret: state.userInfo.siret,
-    phone: state.userInfo.phone,
-    email: state.login.extras.userProfileModel.email
-});
+// const mapStateToProps = (state, ownProps) => ({
+//     name: state.userInfo.name,
+//     address: state.userInfo.address,
+//     siret: state.userInfo.siret,
+//     phone: state.userInfo.phone,
+//     email: state.login.extras.userProfileModel.email
+// });
 
-export default connect(
-    mapStateToProps,
-)(NewInvoicePreview);
+// export default connect(
+//     mapStateToProps,
+// )(NewInvoicePreview);
+
+export default NewInvoicePreview;
