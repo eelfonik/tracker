@@ -5,7 +5,7 @@ import NewInvoiceForm from './newInvoiceForm/newInvoiceForm';
 import NewInvoicePreview from './newInvoicePreview/newInvoicePreview';
 //import AthletePreview from './AthletePreview';
 //import athletes from '../data/athletes';
-import style from './dashboard.css';
+import dashboardStyle from './dashboard.css';
 
 
 class Dashboard extends React.Component {
@@ -37,7 +37,7 @@ class Dashboard extends React.Component {
     render() {
         return (
             <div className="home">
-                <div className={style.header}>
+                <div className={dashboardStyle.header}>
                     Feed me a new invoice!
                 </div>
                 <NewInvoiceForm />

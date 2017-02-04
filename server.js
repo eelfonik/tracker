@@ -40,10 +40,14 @@ if(process.env.NODE_ENV !== 'production') {
     var webpackDevMiddleware = require('webpack-dev-middleware');
     var webpackHotMiddleware = require('webpack-hot-middleware');
     var webpack = require('webpack');
-    var config = require('./webpack.config');
-    var compiler = webpack(config);
+    var webpackConfig = require('./webpack.config');
+    const compiler = webpack(webpackConfig);
+    const middleware = webpackDevMiddleware(compiler, {
+        noInfo: true,
+        publicPath: webpackConfig.output.publicPath
+    });
 
-    app.use(webpackDevMiddleware(compiler, { noInfo: true, publicPath: config.output.publicPath }));
+    app.use(middleware);
     app.use(webpackHotMiddleware(compiler));
 }
 

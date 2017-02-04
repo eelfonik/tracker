@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
 import {userSignup,resetNotif} from '../../../../store/actions';
-import style from './signupPage.css';
+import signupPageStyle from './signupPage.css';
 import formStyle from '../../../../commonStyles/form.css';
 
 class SignupPage extends React.Component {

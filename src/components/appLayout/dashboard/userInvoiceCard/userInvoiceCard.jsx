@@ -4,14 +4,14 @@ import { render } from 'react-dom';
 import {connect} from 'react-redux';
 //import style from './userInfo.css';
 import formStyle from '../../../../commonStyles/form.css';
-import style from './userInvoiceCard.css';
+import userInvoiceCardStyle from './userInvoiceCard.css';
 
 class UserInvoiceCard extends React.Component {
 
     render(){
         const data = this.props.invoiceData;
         return(
-            <div className={style.wrap}>
+            <div className={userInvoiceCardStyle.wrap}>
                 {data.number}
                 {data.date}
                 {data.sum}

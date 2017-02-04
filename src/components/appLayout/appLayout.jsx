@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import {connect} from 'react-redux';
-import style from './appLayout.css';
+import appStyle from './appLayout.css';
 import {userLogOut,getUserInfo} from '../../store/actions';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
-import '!style!css!../../commonStyles/reset.css';
-import '!style!css!../../commonStyles/font.css';
+//import '!style!css!../../commonStyles/reset.css';
+//import '!style!css!../../commonStyles/font.css';
 
 class AppLayout extends React.Component {
     constructor(props) {
@@ -50,23 +50,23 @@ class AppLayout extends React.Component {
 
     render() {
         const children = this.props.isLoggedIn? this.props.children: <div>please login</div>;
-        const mayLogout = this.props.isLoggedIn? <div className={style.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
+        const mayLogout = this.props.isLoggedIn? <div className={appStyle.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
         const userName = this.props.extras.userProfileModel? this.props.extras.userProfileModel.username:'';
         return (
-            <div className={style.appContainer}>
-                <header className={style.header}>
+            <div className={appStyle.appContainer}>
+                <header className={appStyle.header}>
                     <Link to="/">
-                        <img className={style.logo} src="/img/node.svg"/>
+                        <img className={appStyle.logo} src="/img/node.svg"/>
                     </Link>
                     <Link to="/me">Hello {this.capitalizeFirstLetter(userName)}</Link>
                     <Link to="/me/invoices">My invoices</Link>
                     <Link to="/me/info">Profile</Link>
                     {mayLogout}
                 </header>
-                <div className={style.appContent}>
+                <div className={appStyle.appContent}>
                     {children}
                 </div>
-                <footer className={style.footer}>
+                <footer className={appStyle.footer}>
 
                 </footer>
             </div>

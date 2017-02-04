@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {connect} from 'react-redux';
 import { render } from 'react-dom';
 import classNames from 'classnames';
-import style from './newInvoiceForm.css';
+import newInvoiceFormStyle from './newInvoiceForm.css';
 import formStyle from '../../../../commonStyles/form.css';
 
 import {addNewInvoiceForUser} from '../../../../store/actions';
@@ -238,22 +238,22 @@ class NewInvoiceForm extends React.Component {
 
     renderCurrencyPicker() {
         const currencyUnitClasses = classNames(
-            style.currencyUnit,
-            this.state.currencyUnitsVisibility?style.currencyVisible:""
+            newInvoiceFormStyle.currencyUnit,
+            this.state.currencyUnitsVisibility?newInvoiceFormStyle.currencyVisible:""
         );
         // see useful currency signs here:
         // https://gist.github.com/Gibbs/3920259
         // and http://htmlarrows.com/currency/
         return (
-            <div className={style.currencyPicker}>
+            <div className={newInvoiceFormStyle.currencyPicker}>
                 <div
-                    className={style.currentCurrency}
+                    className={newInvoiceFormStyle.currentCurrency}
                     onClick={this.toggleCurrencyUnits}
                 >
                     <span>{!!this.state.currentCurrency?this.state.currentCurrency:this.state.defaultCurrency}</span>
-                    <span className={style.arrow}>&#8893;</span>
+                    <span className={newInvoiceFormStyle.arrow}>&#8893;</span>
                 </div>
-                <ul className={style.currencyUnitContainer}>
+                <ul className={newInvoiceFormStyle.currencyUnitContainer}>
                     <li
                         className={currencyUnitClasses}
                         onClick={()=>this.updateCurrencyUnit('euro')}
@@ -285,7 +285,7 @@ class NewInvoiceForm extends React.Component {
 
     render(){
         return(
-            <div className={style.formContainer}>
+            <div className={newInvoiceFormStyle.formContainer}>
                 {/*use html5 input type number in react will lost control*/}
                 {/*see https://github.com/facebook/react/issues/1549*/}
                 <div className={formStyle.input}>
@@ -318,7 +318,7 @@ class NewInvoiceForm extends React.Component {
                         value={this.state.taxRate}
                         placeholder="tax rate"
                         onChange={this.changeTaxRate}
-                    /><span className={style.taxPercentageSign}>%</span>
+                    /><span className={newInvoiceFormStyle.taxPercentageSign}>%</span>
                     {this.maybeRenderSumError()}
                 </div>
 
