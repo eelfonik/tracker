@@ -1,4 +1,4 @@
-const InvoiceController = function(invoiceModel, userModel,session) {
+var InvoiceController = function(invoiceModel, userModel,session) {
 
     this.ApiResponse = require('../models/apiResponse.js');
     this.ApiMessages = require('../models/apiMessages.js');

@@ -1,4 +1,4 @@
-function UserController(userModel, session) {
+var UserController = function (userModel, session) {
 
     this.ApiResponse = require('../models/apiResponse.js');
     this.ApiMessages = require('../models/apiMessages.js');
@@ -39,9 +39,9 @@ UserController.prototype.getInfo = function (callback) {
                     phone:user.info.phone,
                 });
 
-                const invoicesIds = user.invoices;
-                const clientsIds = user.clients;
-                const userId = user._id;
+                var invoicesIds = user.invoices;
+                var clientsIds = user.clients;
+                var userId = user._id;
 
                 return callback(err, new me.ApiResponse({
                     success: true,

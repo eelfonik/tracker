@@ -34,7 +34,7 @@ const styleLoader = isProd?ExtractTextPlugin.extract({
 }):styles;
 
 module.exports = {
-    entry: isProd?['react-hot-loader/patch', './src/app']:[
+    entry: isProd?['./src/app']:[
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
         './src/app'
