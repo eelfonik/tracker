@@ -58,9 +58,9 @@ class AppLayout extends React.Component {
                     <Link to="/">
                         <img className={appStyle.logo} src="/img/node.svg"/>
                     </Link>
-                    <Link to="/me">Hello {this.capitalizeFirstLetter(userName)}</Link>
-                    <Link to="/me/invoices">My invoices</Link>
-                    <Link to="/me/info">Profile</Link>
+                    <Link to="/me"><div>Hello {this.capitalizeFirstLetter(userName)}</div></Link>
+                    <Link to="/me/invoices"><div>My invoices</div></Link>
+                    <Link to="/me/info"><div>Profile</div></Link>
                     {mayLogout}
                 </header>
                 <div className={appStyle.appContent}>
