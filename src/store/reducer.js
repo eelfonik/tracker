@@ -12,17 +12,19 @@
  * project.
  */
 
+//here the initial state should get from server right after create store
+//see http://stackoverflow.com/a/33924707/6849186
+
+// const initialUserInfoState = {
+//     name:"",
+//     address:"",
+//     siret:"",
+//     phone:""
+// }
+
 import { combineReducers } from 'redux';
 
-
-const initialLoginState = {
-    isLoggedIn: false,
-    redirectUrl: '/',
-    notif:'',
-    extras: {},
-}
-
-export function loginReducer(state = initialLoginState, action) {
+export function loginReducer(state = {}, action) {
     switch (action.type) {
         case 'LOGIN':
         case 'SIGNUP':
@@ -33,7 +35,12 @@ export function loginReducer(state = initialLoginState, action) {
                 extras: action.extras
             });
         case 'LOGOUT':
-            return initialLoginState;
+            return Object.assign({}, state, {
+                isLoggedIn: false,
+                redirectUrl: '/',
+                notif:'',
+                extras: {},
+            });
         case 'RESET_NOTIF':
             return Object.assign({}, state, {
                 notif:''
@@ -42,15 +49,6 @@ export function loginReducer(state = initialLoginState, action) {
             return state
     }
 }
-
-//here the initial state should get from server
-// const initialUserInfoState = {
-//     name:"",
-//     address:"",
-//     siret:"",
-//     phone:""
-// }
-
 
 export function UserInfoReducer(state = {isFetching:false}, action) {
     switch (action.type) {
@@ -79,15 +77,36 @@ export function UserInfoReducer(state = {isFetching:false}, action) {
 export function InvoiceInfoReducer(state={}, action) {
     switch (action.type) {
         case 'GET_INVOICE_INFO':
+        case 'ADD_NEW_INVOICE':
             return Object.assign({}, state, {
-
+                number :action.number,
+                date :action.date,
+                sum :action.sum,
+                taxRate :action.taxRate,
+                currency :action.currency,
+                description :action.description,
             });
+        default:
+            return state
+    }
+}
+
+export function UserInvoicesReducer(state={}, action){
+    switch (action.type) {
+        case 'GET_USER_INVOICES':
+            return Object.assign({}, state, {
+                invoices :action.invoices,
+            });
+        default:
+            return state
     }
 }
 
 const reducer = combineReducers({
     login: loginReducer,
     userInfo: UserInfoReducer,
+    invoiceInfo: InvoiceInfoReducer,
+    userInvoices: UserInvoicesReducer,
 })
 
 export default reducer;

@@ -28,6 +28,7 @@ const UserInfo = require('../models/userInfo.js');
 // ==========================================
 const InvoiceController = require('../controllers/invoiceController.js');
 const InvoiceInfo = require('../models/invoiceInfo.js');
+const InvoiceNumber =require('../models/invoiceNumber');
 // =========================================
 // client
 // ==========================================
@@ -114,9 +115,6 @@ router.route('/user/info')
 
     .get(function (req, res) {
         //get user info
-        // const accountController = new AccountController(User, req.session);
-        // const session = accountController.getSession();
-
         const userController = new UserController(User, req.session);
 
         userController.getInfo(function (error,response) {
@@ -137,38 +135,52 @@ router.route('/user/info')
 router.route('/user/invoices')
 
     .get(function (req, res) {
-        //Get all the invoices.(there's a place inside user schema to store all related invoices id)
-        const userController = new UserController(User, req.session);
+        //Get all the invoices.
+        const invoiceController = new InvoiceController(Invoice, User, req.session);
+        invoiceController.getUserInvoices(function (error,response) {
+            res.send(response);
+        });
+    });
 
-        userController.getInfo(function (error,response) {
+
+router.route('/user/invoice')
+
+    .get(function (req, res) {
+        //get a single invoice by number
+        const invoiceController= new InvoiceController(Invoice, User, req.session);
+        //here the req.body should send from actions that returns an id/or invoice number
+        const invoiceNumber = new InvoiceNumber(req.body);
+
+        invoiceController.getSingleInvoice(invoiceNumber,function (error,response) {
             res.send(response);
         });
     })
     .post(function (req, res) {
         //create a new invoice
-        //const userController = new UserController(User, req.session);
-
-        const accountController = new AccountController(User, req.session);
-        const session = accountController.getSession();
-
-        const invoiceController= new InvoiceController(Invoice, User, session);
-        //const userInfo = new UserInfo(req.body);
-
-
+        const invoiceController= new InvoiceController(Invoice, User, req.session);
         const invoiceInfo = new InvoiceInfo(req.body);
 
-        const apiResponseStep1 = invoiceController.getInvoiceFromUserInput(invoiceInfo);
+        const userController = new UserController(User,req.session);
+
+        const apiResponseGetNewInvoice = invoiceController.getInvoiceFromUserInput(invoiceInfo);
         res.set("Access-Control-Allow-Origin", "http://localhost:5000");   // Enable CORS in dev environment.
 
-        if (apiResponseStep1.success) {
-            invoiceController.addNewInvoice(apiResponseStep1.extras.invoice, function (err, apiResponseStep2) {
-                return res.send(apiResponseStep2);
+        if (apiResponseGetNewInvoice.success) {
+            invoiceController.addNewInvoice(apiResponseGetNewInvoice.extras.invoice, function (err,apiResponseAddNewInvoice) {
+                if(apiResponseAddNewInvoice.success) {
+                    //push to existing array?
+                    const newInvoiceId = [apiResponseAddNewInvoice.extras.invoiceId];
+                    userController.updateInvoicesId(newInvoiceId,function (err,apiResponseUpdateInvoicesId) {
+                        return res.send(apiResponseAddNewInvoice);
+                    });
+                    //return res.send(apiResponseAddNewInvoice);
+                } else {
+                    return res.send(apiResponseAddNewInvoice);
+                }
             });
         } else {
-            res.send(apiResponseStep1);
+            res.send(apiResponseGetNewInvoice);
         }
-
-
     });
 
 

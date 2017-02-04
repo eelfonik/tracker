@@ -1,10 +1,14 @@
 import React from 'react';
+import _ from 'lodash';
+import {connect} from 'react-redux';
 import { render } from 'react-dom';
 import classNames from 'classnames';
 import style from './newInvoiceForm.css';
-import formStyle from '../../commonStyles/form.css';
+import formStyle from '../../../../commonStyles/form.css';
 
-export default class NewInvoiceForm extends React.Component {
+import {addNewInvoiceForUser} from '../../../../store/actions';
+
+class NewInvoiceForm extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -15,6 +19,7 @@ export default class NewInvoiceForm extends React.Component {
             currencyUnitsVisibility: false,
             defaultCurrency:'€',
             currentCurrency:'',
+            currency:'',
             taxRate:'',
             sumValid:true,
             client:{
@@ -22,7 +27,7 @@ export default class NewInvoiceForm extends React.Component {
                 address:'',
                 siret:''
             },
-            desc:'',
+            description:'',
             focused: false,
             showSubmitError: false,
             userIsTyping: false
@@ -53,6 +58,7 @@ export default class NewInvoiceForm extends React.Component {
             currencyUnitsVisibility: false,
             defaultCurrency:'€',
             currentCurrency:'',
+            currency:this.state.currentCurrency,
             taxRate:'',
             sumValid: true,
             client:{
@@ -60,7 +66,7 @@ export default class NewInvoiceForm extends React.Component {
                 address:'',
                 siret:''
             },
-            desc:'',
+            description:'',
             focused: false,
             showSubmitError: false,
             userIsTyping: false
@@ -117,30 +123,35 @@ export default class NewInvoiceForm extends React.Component {
             case 'euro':
                 this.setState({
                     currentCurrency:"€",
+                    currency:"€",
                     currencyUnitsVisibility: false
                 });
                 break;
             case 'pound':
                 this.setState({
                     currentCurrency:'£',
+                    currency:'£',
                     currencyUnitsVisibility: false
                 });
                 break;
             case 'yen':
                 this.setState({
                     currentCurrency:'¥',
+                    currency:'¥',
                     currencyUnitsVisibility: false
                 });
                 break;
             case 'dollar':
                 this.setState({
                     currentCurrency:'$',
+                    currency:'$',
                     currencyUnitsVisibility: false
                 });
                 break;
             default:
                 this.setState({
                     currentCurrency:this.state.defaultCurrency,
+                    currency:this.state.defaultCurrency,
                     currencyUnitsVisibility: false
                 });
         }
@@ -179,12 +190,14 @@ export default class NewInvoiceForm extends React.Component {
 
 
     changeDesc(event) {
-        this.setState({desc: event.target.value});
+        this.setState({description: event.target.value});
     }
 
     submitForm(){
         if (this.formValidated()) {
-            this.props.submitData(this.state);
+            const returnedState = _.pick(this.state,['number','date','sum','taxRate','currency','description']);
+            console.debug("returned state", returnedState);
+            this.props.submitData(returnedState);
             this.resetStates();
         } else {
             this.setState({
@@ -337,7 +350,7 @@ export default class NewInvoiceForm extends React.Component {
                         rows="4"
                         placeholder="add descriptions (optional)"
                         onChange={this.changeDesc}
-                        value={this.state.desc}
+                        value={this.state.description}
                     >
                     </textarea>
                 </div>
@@ -348,6 +361,19 @@ export default class NewInvoiceForm extends React.Component {
     }
 }
 
-NewInvoiceForm.propTypes = {
-    submitData: React.PropTypes.func
-};
+// NewInvoiceForm.propTypes = {
+//     submitData: React.PropTypes.func
+// };
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        submitData: (value) => {
+            dispatch(addNewInvoiceForUser(value));
+        }
+    }
+}
+
+export default connect(
+    null,
+    mapDispatchToProps
+)(NewInvoiceForm);

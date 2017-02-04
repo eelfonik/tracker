@@ -3,8 +3,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
 //import style from './userInfo.css';
-import formStyle from '../../commonStyles/form.css';
-import {updateUserInfo} from '../../store/actions';
+import formStyle from '../../../../commonStyles/form.css';
+import {updateUserInfo} from '../../../../store/actions';
 
 
 class UserProfile extends React.Component {

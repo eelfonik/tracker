@@ -20,7 +20,6 @@ class AppLayout extends React.Component {
             // set the current url/path for future redirection (we use a Redux action)
             // then redirect (we use a React Router method)
             //dispatch(setRedirectUrl(currentURL))
-            console.debug("?? redirectUrl", this.props.redirectUrl);
             browserHistory.replace(this.props.redirectUrl)
         }
         //here said it's a bad way to get data from server
@@ -50,7 +49,6 @@ class AppLayout extends React.Component {
     }
 
     render() {
-        console.debug('app page props',this.props);
         const children = this.props.isLoggedIn? this.props.children: <div>please login</div>;
         const mayLogout = this.props.isLoggedIn? <div className={style.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
         const userName = this.props.extras.userProfileModel? this.props.extras.userProfileModel.username:'';
@@ -61,6 +59,7 @@ class AppLayout extends React.Component {
                         <img className={style.logo} src="/img/node.svg"/>
                     </Link>
                     <Link to="/me">Hello {this.capitalizeFirstLetter(userName)}</Link>
+                    <Link to="/me/invoices">My invoices</Link>
                     <Link to="/me/info">Profile</Link>
                     {mayLogout}
                 </header>

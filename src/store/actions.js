@@ -28,6 +28,8 @@ function mapApiMessagesToNotif(msg){
             return "Invoice with same number already exists";
         case 12:
             return "Can't create invoice";
+        case 13:
+            return "Can't create invoice for user";
         default:
             return "";
     }
@@ -65,6 +67,7 @@ export function userLogin(value) {
         }
         axios.post('/api/account/login', data)
             .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
+                console.debug("user login success ",response);
                 dispatch(logIn(response.data.success,response.data.extras));
             })
             .catch((error)=> {
@@ -89,6 +92,7 @@ export function userSignup(value) {
                 //in the case of signup,
                 //if data.success === false, the data.extras will have a msg to identify the problem
                 //if data.success === true, data.extras will contain a userProfileModel with email and username
+                console.debug("user signup success ",response);
                 dispatch(signUp(response.data.success,response.data.extras ));
             })
             .catch((error)=> {
@@ -101,6 +105,7 @@ export function userLogOut() {
     return (dispatch, getState)=>{
         axios.get('/api/account/logout',{})
             .then((response) =>{
+                console.debug("user logout success ",response);
                 dispatch(logout());
                 dispatch(removeInfo());
             })
@@ -140,8 +145,8 @@ export function getUserInfo() {
         dispatch(isFetchingUser());
         return axios.get('/api/user/info')
             .then((res) => {
+                console.debug("get user info success ",res);
                 dispatch(getInfo(res.data.extras));
-                console.debug("let's see what is the data returned", res.data.extras);
             })
             .catch((error)=>{
                 console.log("get user info error!",error);
@@ -159,10 +164,61 @@ export function updateUserInfo(value) {
         }
         axios.post('/api/user/info',userInfo)
             .then((res)=>{
+                console.debug("update user info success ",res);
                 dispatch(updateInfo(res.data.extras.userInfoModel))
             })
             .catch((error)=>{
                 console.log("update user info error!",error);
+            });
+    }
+}
+
+const addNewInvoice = (resData)=>({
+    type:'ADD_NEW_INVOICE',
+    number :resData.number,
+    date :resData.date,
+    sum :resData.sum,
+    taxRate :resData.taxRate,
+    currency :resData.currency,
+    description :resData.description,
+})
+
+export function addNewInvoiceForUser(value){
+    return (dispatch,getState)=>{
+        const newInvoiceInfo = {
+            number :value.number,
+            date :value.date,
+            sum :value.sum,
+            taxRate :value.taxRate,
+            currency :value.currency,
+            description :value.description
+        }
+
+        axios.post('/api/user/invoice',newInvoiceInfo)
+            .then((res)=>{
+                console.debug("add new invoice success ",res);
+                dispatch(addNewInvoice(res.data.extras.invoiceInfoModel))
+            })
+            .catch((error)=>{
+                console.log("add new invoice error!",error);
+            });
+    }
+}
+
+const getInvoices = (resData)=>({
+    type:'GET_USER_INVOICES',
+    invoices :resData
+})
+
+export function getUserInvoices(){
+    return (dispatch,getState)=>{
+        axios.get('/api/user/invoices',{})
+            .then((res)=>{
+                console.debug("get user invoices success ",res);
+                dispatch(getInvoices(res.data.extras.invoices))
+            })
+            .catch((error)=>{
+                console.log("get user invoices error!",error);
             });
     }
 }

@@ -17,12 +17,12 @@ class NewInvoicePreview extends React.Component {
     }
 
     maybeRenderDesc(){
-        if (!!this.props.data.desc) {
+        if (!!this.props.data.description) {
             return (
                 <div className={style.incomeDesc}>
                     <span className={style.smallHeader}>Designation</span>
                     <hr />
-                    {this.props.data.desc}
+                    {this.props.data.description}
                 </div>
             );
         }
@@ -67,9 +67,28 @@ class NewInvoicePreview extends React.Component {
             );
     }
 
+    maybeRenderClient(){
+        if (this.props.data.client) {
+            return(
+                <div className={style.clientInfo}>
+                    <div className={style.header}>Client</div>
+                    <div>{client.name}</div>
+                    <div>{client.address}</div>
+                    {this.maybeRenderSiret()}
+                </div>
+            );
+        } else {
+            return(
+                <div className={style.clientInfo}>
+                    please add client info
+                </div>
+            )
+        }
+    }
+
     render(){
         const invoice = this.props.data;
-        const client = invoice.client;
+        const maybeMail = this.props.profile?this.props.profile.email:'';
         if (invoice.number !== ''){
             return (
                 <div className={style.invoiceWrapper}>
@@ -78,15 +97,10 @@ class NewInvoicePreview extends React.Component {
                             <div className={style.header}>{this.props.name}</div>
                             <div>{this.props.address}</div>
                             <div>{this.props.phone}</div>
-                            <div>{this.props.email}</div>
+                            <div>{maybeMail}</div>
                             <div>SIRET:{this.props.siret}</div>
                         </div>
-                        <div className={style.clientInfo}>
-                            <div className={style.header}>Client</div>
-                            <div>{client.name}</div>
-                            <div>{client.address}</div>
-                            {this.maybeRenderSiret()}
-                        </div>
+                        {this.maybeRenderClient()}
                     </div>
 
                     <div className={style.factureInfo}>
@@ -120,16 +134,17 @@ NewInvoicePreview.propTypes = {
     data: React.PropTypes.object
 };
 
-// const mapStateToProps = (state, ownProps) => ({
-//     name: state.userInfo.name,
-//     address: state.userInfo.address,
-//     siret: state.userInfo.siret,
-//     phone: state.userInfo.phone,
-//     email: state.login.extras.userProfileModel.email
-// });
+const mapStateToProps = (state, ownProps) => ({
+    name: state.userInfo.name,
+    address: state.userInfo.address,
+    siret: state.userInfo.siret,
+    phone: state.userInfo.phone,
+    profile: state.login.extras.userProfileModel
+});
 
-// export default connect(
-//     mapStateToProps,
-// )(NewInvoicePreview);
+
+NewInvoicePreview = connect(
+    mapStateToProps,
+)(NewInvoicePreview);
 
 export default NewInvoicePreview;

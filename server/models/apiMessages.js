@@ -13,5 +13,6 @@ ApiMessages.PASSWORD_CONFIRM_MISMATCH = 10;
 
 ApiMessages.INVOICE_ALREADY_EXISTS = 11;
 ApiMessages.COULD_NOT_CREATE_INVOICE = 12;
+ApiMessages.COULD_NOT_CREATE_INVOICE_FOR_USER = 13;
 
 module.exports = ApiMessages;

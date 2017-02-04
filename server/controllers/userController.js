@@ -1,4 +1,4 @@
-var UserController = function (userModel, invoiceModel, session) {
+function UserController(userModel, session) {
 
     this.ApiResponse = require('../models/apiResponse.js');
     this.ApiMessages = require('../models/apiMessages.js');
@@ -6,7 +6,7 @@ var UserController = function (userModel, invoiceModel, session) {
     this.UserInfo = require('../models/userInfo.js');
     this.InvoiceInfo = require('../models/invoiceInfo.js');
     this.userModel = userModel;
-    this.invoiceModel = invoiceModel;
+    //this.invoiceModel = invoiceModel;
     this.session = session;
     //this.User = require('../models/userSchema.js');
     this.Invoice = require('../models/invoiceSchema');
@@ -22,7 +22,7 @@ UserController.prototype.setSession = function (session) {
 
 UserController.prototype.getInfo = function (callback) {
     var me = this;
-    if (me.session&& me.session.userProfileModel) {
+    //if (this.session && this.session.userProfileModel) {
         me.userModel.findOne({ email: me.session.userProfileModel.email }, function (err,user) {
             if (err) {
                 return callback(err, new me.ApiResponse({
@@ -60,13 +60,7 @@ UserController.prototype.getInfo = function (callback) {
                 }));
             }
         });
-    } else {
-        return callback(new me.ApiResponse({
-            success: false,
-            extras: { session: me.session }
-        }));
-    }
-
+    //}
 };
 
 UserController.prototype.updateInfo = function(userInfo, callback) {
@@ -75,7 +69,7 @@ UserController.prototype.updateInfo = function(userInfo, callback) {
         // add {new:true} to tell mongoose return the updated value
         //http://stackoverflow.com/a/32811548/6849186
         //{upsert: true} is used to tell if there's no existing field, create one
-        me.userModel.findOneAndUpdate({ email: this.session.userProfileModel.email }, {info: userInfo}, {new: true, upsert:true},function (err, user) {
+        me.userModel.findOneAndUpdate({ email: me.session.userProfileModel.email }, {info: userInfo}, {new: true, upsert:true},function (err, user) {
 
             if (err) {
                 return callback(err, new me.ApiResponse({
@@ -110,15 +104,16 @@ UserController.prototype.updateInfo = function(userInfo, callback) {
         });
 };
 
-UserController.prototype.updateInvoicesId = function(userInvoices, callback) {
+UserController.prototype.updateInvoicesId = function(newInvoiceId, callback) {
 
     var me = this;
     //userInvoices should be an array of ids!!
+    //const invoiceIdsArray = ??? should be able to addnew/delete
 
     // add {new:true} to tell mongoose return the updated value
     //http://stackoverflow.com/a/32811548/6849186
     //{upsert: true} is used to tell if there's no existing field, create one
-    me.userModel.findOneAndUpdate({ email: this.session.userProfileModel.email }, {invoices: userInvoices}, {new: true, upsert:true},function (err, user) {
+    me.userModel.findOneAndUpdate({ email: me.session.userProfileModel.email }, {invoices: newInvoiceId}, {new: true, upsert:true},function (err, user) {
 
         if (err) {
             return callback(err, new me.ApiResponse({
@@ -146,5 +141,6 @@ UserController.prototype.updateInvoicesId = function(userInvoices, callback) {
 
     });
 };
+
 
 module.exports = UserController;
