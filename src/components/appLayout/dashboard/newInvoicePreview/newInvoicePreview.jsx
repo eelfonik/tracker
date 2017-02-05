@@ -104,7 +104,7 @@ class NewInvoicePreview extends React.Component {
                     </div>
 
                     <div className={newInvoicePreviewStyle.factureInfo}>
-                        <div><span className={style.smallHeader}>Facture</span> {invoice.number}</div>
+                        <div><span className={newInvoicePreviewStyle.smallHeader}>Facture</span> {invoice.number}</div>
                         <div>{invoice.date}</div>
                     </div>
 
