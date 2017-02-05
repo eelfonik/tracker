@@ -68,7 +68,7 @@ export function userLogin(value) {
         axios.post('/api/account/login', data)
             .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
                 console.debug("user login success ",response);
-                dispatch(logIn(response.data.success,response.data.extras));
+                return dispatch(logIn(response.data.success,response.data.extras))
             })
             .catch((error)=> {
                 console.log("login error!",error);
@@ -93,7 +93,7 @@ export function userSignup(value) {
                 //if data.success === false, the data.extras will have a msg to identify the problem
                 //if data.success === true, data.extras will contain a userProfileModel with email and username
                 console.debug("user signup success ",response);
-                dispatch(signUp(response.data.success,response.data.extras ));
+                return dispatch(signUp(response.data.success,response.data.extras ));
             })
             .catch((error)=> {
                 console.log("signup error!",error);
@@ -143,14 +143,18 @@ const isFetchingUser = ()=>({
 export function getUserInfo() {
     return (dispatch,getState)=>{
         dispatch(isFetchingUser());
-        return axios.get('/api/user/info')
-            .then((res) => {
-                console.debug("get user info success ",res);
-                dispatch(getInfo(res.data.extras));
-            })
-            .catch((error)=>{
-                console.log("get user info error!",error);
-            })
+        const isLoggedIn = getState().login.isLoggedIn;
+        console.debug(isLoggedIn);
+        if (isLoggedIn) {
+            return axios.get('/api/user/info')
+                .then((res) => {
+                    console.debug("get user info success ",res);
+                    dispatch(getInfo(res.data.extras));
+                })
+                .catch((error)=>{
+                    console.log("get user info error!",error);
+                })
+        }
     }
 }
 

@@ -62,6 +62,10 @@ AccountController.prototype.signup = function (newUser, callback) {
                         username: user.username
                     });
 
+                    me.session.userProfileModel = userProfileModel;
+                    me.session.userId = user._id;
+                    me.session.id = me.uuid.v4();
+
                     return callback(err, new me.ApiResponse({
                         success: true,
                         extras: {

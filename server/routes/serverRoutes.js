@@ -167,16 +167,7 @@ router.route('/user/invoice')
 
         if (apiResponseGetNewInvoice.success) {
             invoiceController.addNewInvoice(apiResponseGetNewInvoice.extras.invoice, function (err,apiResponseAddNewInvoice) {
-                if(apiResponseAddNewInvoice.success) {
-                    //push to existing array?
-                    const newInvoiceId = [apiResponseAddNewInvoice.extras.invoiceId];
-                    userController.updateInvoicesId(newInvoiceId,function (err,apiResponseUpdateInvoicesId) {
-                        return res.send(apiResponseAddNewInvoice);
-                    });
-                    //return res.send(apiResponseAddNewInvoice);
-                } else {
-                    return res.send(apiResponseAddNewInvoice);
-                }
+                return res.send(apiResponseAddNewInvoice);
             });
         } else {
             res.send(apiResponseGetNewInvoice);
