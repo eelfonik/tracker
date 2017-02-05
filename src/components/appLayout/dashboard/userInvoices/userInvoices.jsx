@@ -10,7 +10,10 @@ class UserInvoices extends React.Component {
 
     renderInvoiceCard() {
         return this.props.userInvoices.map(invoice=> (
-            <UserInvoiceCard key={invoice.number} invoiceData={invoice} />
+            <UserInvoiceCard
+                key={invoice.number}
+                invoiceData={invoice}
+            />
         ));
     }
 

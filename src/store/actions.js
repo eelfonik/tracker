@@ -200,7 +200,9 @@ export function addNewInvoiceForUser(value){
         axios.post('/api/user/invoice',newInvoiceInfo)
             .then((res)=>{
                 console.debug("add new invoice success ",res);
-                dispatch(addNewInvoice(res.data.extras.invoiceInfoModel))
+                dispatch(addNewInvoice(res.data.extras.invoiceInfoModel));
+                //every time a new invoice is added, should also dispatch getUserInvoices
+                dispatch(getUserInvoices());
             })
             .catch((error)=>{
                 console.log("add new invoice error!",error);
