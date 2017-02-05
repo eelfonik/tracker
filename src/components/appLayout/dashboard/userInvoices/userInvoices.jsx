@@ -2,16 +2,11 @@ import _ from 'lodash';
 import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
-import {getUserInvoices} from '../../../../store/actions';
 //import style from './userInfo.css';
 import formStyle from '../../../../commonStyles/form.css';
 import UserInvoiceCard from '../userInvoiceCard/userInvoiceCard';
 
 class UserInvoices extends React.Component {
-
-    componentDidMount(){
-        this.props.getInvoices();
-    }
 
     renderInvoiceCard() {
         return this.props.userInvoices.map(invoice=> (
@@ -39,13 +34,6 @@ function mapStateToProps(state, ownProps) {
     }
 }
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        getInvoices: ()=>{dispatch(getUserInvoices())}
-    }
-}
-
 export default connect(
-    mapStateToProps,
-    mapDispatchToProps
+    mapStateToProps
 )(UserInvoices);

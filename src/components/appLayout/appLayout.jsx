@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import {connect} from 'react-redux';
 import appStyle from './appLayout.css';
-import {userLogOut,getUserInfo} from '../../store/actions';
+import {userLogOut,getUserInfo, getUserInvoices} from '../../store/actions';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -26,7 +26,8 @@ class AppLayout extends React.Component {
         //http://stackoverflow.com/a/33924707/6849186
         // - we will call this when link to any children component, where only profile need this, it's bad
         // - also we may need this info to every invoice
-        this.props.onStartUp();
+        this.props.getInfo();
+        this.props.getInvoices();
     }
 
     componentDidUpdate() {
@@ -95,7 +96,8 @@ function mapStateToProps(state, ownProps) {
 export default connect(
     mapStateToProps,
     {
-        onStartUp: getUserInfo,
+        getInfo: getUserInfo,
+        getInvoices: getUserInvoices,
         onLogoutClick : userLogOut
     }
     //mapDispatchToProps

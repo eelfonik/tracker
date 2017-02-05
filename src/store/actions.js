@@ -144,7 +144,6 @@ export function getUserInfo() {
     return (dispatch,getState)=>{
         dispatch(isFetchingUser());
         const isLoggedIn = getState().login.isLoggedIn;
-        console.debug(isLoggedIn);
         if (isLoggedIn) {
             return axios.get('/api/user/info')
                 .then((res) => {
@@ -216,13 +215,15 @@ const getInvoices = (resData)=>({
 
 export function getUserInvoices(){
     return (dispatch,getState)=>{
-        axios.get('/api/user/invoices',{})
-            .then((res)=>{
-                console.debug("get user invoices success ",res);
-                dispatch(getInvoices(res.data.extras.invoices))
-            })
-            .catch((error)=>{
-                console.log("get user invoices error!",error);
-            });
+        if (getState().login.isLoggedIn) {
+            axios.get('/api/user/invoices',{})
+                .then((res)=>{
+                    console.debug("get user invoices success ",res);
+                    dispatch(getInvoices(res.data.extras.invoices))
+                })
+                .catch((error)=>{
+                    console.log("get user invoices error!",error);
+                });
+        }
     }
 }
