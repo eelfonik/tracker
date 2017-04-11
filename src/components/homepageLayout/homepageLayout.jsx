@@ -1,7 +1,11 @@
 import React from 'react';
-import { Link, browserHistory } from 'react-router';
+// import { Link, browserHistory } from 'react-router';
+import { Switch, BrowserRouter, Route, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import homepageStyle from './homepageLayout.css';
+import SignupPage from './signupPage/signupPage';
+import LoginPage from './loginPage/loginPage';
+import IndexPage from './indexPage/indexPage';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -37,6 +41,7 @@ class HomeLayout extends React.Component {
     }
 
     render() {
+        const url = this.props.match.url;
         return (
             <div className={homepageStyle.appContainer}>
                 <header className={homepageStyle.header}>
@@ -46,7 +51,11 @@ class HomeLayout extends React.Component {
                     <Link className={homepageStyle.signupLink} to="/signup">sign up</Link>
                     <Link className={homepageStyle.signupLink} to="/login">Login</Link>
                 </header>
-                <div className={homepageStyle.appContent}>{this.props.children}</div>
+                <Switch className={homepageStyle.appContent}>
+                    <Route exact path='/' Component={IndexPage}/>
+                    <Route path='/signup' component={SignupPage}/>
+                    <Route path='/login' component={LoginPage}/>
+                </Switch>
                 {this.maybeRenderNotif()}
                 <footer className={homepageStyle.footer}>
                     <p>
@@ -58,14 +67,15 @@ class HomeLayout extends React.Component {
     }
 }
 
-function mapStateToProps(state, ownProps) {
-    return {
-        isLoggedIn: state.login.isLoggedIn,
-        currentURL: ownProps.location.pathname,
-        notif: state.login.notif,
-        redirectUrl: state.login.redirectUrl,
-        extras: state.login.extras
-    }
-}
+// function mapStateToProps(state, ownProps) {
+//     return {
+//         isLoggedIn: state.login.isLoggedIn,
+//         currentURL: ownProps.location.pathname,
+//         notif: state.login.notif,
+//         redirectUrl: state.login.redirectUrl,
+//         extras: state.login.extras
+//     }
+// }
 
-export default connect(mapStateToProps)(HomeLayout);
+// export default connect(mapStateToProps)(HomeLayout);
+export default HomeLayout;

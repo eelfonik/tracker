@@ -1,8 +1,8 @@
 import React from 'react';
 import { render } from 'react-dom';
 import {connect} from 'react-redux';
-import NewInvoiceForm from './newInvoiceForm/newInvoiceForm';
-import NewInvoicePreview from './newInvoicePreview/newInvoicePreview';
+import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
+import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
 //import AthletePreview from './AthletePreview';
 //import athletes from '../data/athletes';
 import dashboardStyle from './dashboard.css';

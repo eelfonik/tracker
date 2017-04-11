@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link, browserHistory } from 'react-router';
+// import { Link, browserHistory } from 'react-router';
+import { Switch, BrowserRouter, Route, Link } from 'react-router-dom';
+
 import {connect} from 'react-redux';
 import globalStyle from '../../commonStyles/reset.css';
 import font from '../../commonStyles/font.css';
@@ -9,6 +11,10 @@ import {userLogOut,getUserInfo, getUserInvoices} from '../../store/actions';
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 // import '!style!css!../../commonStyles/reset.css';
 //import '!style!css!../../commonStyles/font.css';
+
+import Dashboard from './dashboard/dashboard';
+import UserInfo from './userInfo/userInfo';
+import UserInvoices from './userInvoices/userInvoices';
 
 class AppLayout extends React.Component {
     constructor(props) {
@@ -22,7 +28,7 @@ class AppLayout extends React.Component {
             // set the current url/path for future redirection (we use a Redux action)
             // then redirect (we use a React Router method)
             //dispatch(setRedirectUrl(currentURL))
-            browserHistory.replace(this.props.redirectUrl)
+            BrowserRouter.replace(this.props.redirectUrl)
         }
         //here said it's a bad way to get data from server
         //http://stackoverflow.com/a/33924707/6849186
@@ -39,35 +45,45 @@ class AppLayout extends React.Component {
             // set the current url/path for future redirection (we use a Redux action)
             // then redirect (we use a React Router method)
             //dispatch(setRedirectUrl(currentURL))
-            browserHistory.replace(this.props.redirectUrl)
+            BrowserRouter.replace(this.props.redirectUrl)
         }
     }
 
     componentWillUnmount(){
-        browserHistory.replace(this.props.redirectUrl);
+        BrowserRouter.replace(this.props.redirectUrl);
     }
 
     capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    const 
+
     render() {
-        const children = this.props.isLoggedIn? this.props.children: <div>please login</div>;
+        console.debug("chekc route component props", this.props);
+        const url = this.props.match.url;
         const mayLogout = this.props.isLoggedIn? <div className={appStyle.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
         const userName = this.props.extras.userProfileModel? this.props.extras.userProfileModel.username:'';
         return (
             <div className={appStyle.appContainer}>
                 <header className={appStyle.header}>
-                    <Link to="/">
+                    <Link to='/'>
                         <img className={appStyle.logo} src="/img/node.svg"/>
                     </Link>
-                    <Link to="/me">Hello {this.capitalizeFirstLetter(userName)}</Link>
-                    <Link to="/me/invoices">My invoices</Link>
-                    <Link to="/me/info">Profile</Link>
+                    <Link to={`${url}`}>Hello {this.capitalizeFirstLetter(userName)}</Link>
+                    <Link to={`${url}/invoices`}>My invoices</Link>
+                    <Link to={`${url}/info`}>Profile</Link>
                     {mayLogout}
                 </header>
                 <div className={appStyle.appContent}>
-                    {children}
+                    {this.props.isLoggedIn ?
+                         <Switch className={appStyle.appContent}>
+                            <Route exact path={`${url}`} Component={Dashboard}/>
+                            <Route path={`${url}/invoices`} component={UserInvoices}/>
+                            <Route path={`${url}/info`} component={UserInfo}/>
+                        </Switch> :
+                        <div>please login</div>
+                    }
                 </div>
                 <footer className={appStyle.footer}>
 

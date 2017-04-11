@@ -2,11 +2,12 @@ import React from 'react';
 import _ from 'lodash';
 import {connect} from 'react-redux';
 import { render } from 'react-dom';
+import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import newInvoiceFormStyle from './newInvoiceForm.css';
-import formStyle from '../../../../commonStyles/form.css';
+import formStyle from '../../../commonStyles/form.css';
 
-import {addNewInvoiceForUser} from '../../../../store/actions';
+import {addNewInvoiceForUser} from '../../../store/actions';
 
 class NewInvoiceForm extends React.Component {
     constructor(props) {

@@ -34,10 +34,10 @@ const styleLoader = isProd?ExtractTextPlugin.extract({
 }):styles;
 
 module.exports = {
-    entry: isProd?['./src/app']:[
+    entry: isProd?['./src/index']:[
         'react-hot-loader/patch',
         'webpack-hot-middleware/client',
-        './src/app'
+        './src/index'
     ],
     module: {
         rules: [
