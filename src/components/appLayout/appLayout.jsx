@@ -1,11 +1,13 @@
 import React from 'react';
 import { Link, browserHistory } from 'react-router';
 import {connect} from 'react-redux';
+import globalStyle from '../../commonStyles/reset.css';
+import font from '../../commonStyles/font.css';
 import appStyle from './appLayout.css';
 import {userLogOut,getUserInfo, getUserInvoices} from '../../store/actions';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
-//import '!style!css!../../commonStyles/reset.css';
+// import '!style!css!../../commonStyles/reset.css';
 //import '!style!css!../../commonStyles/font.css';
 
 class AppLayout extends React.Component {
