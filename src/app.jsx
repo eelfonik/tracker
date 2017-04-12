@@ -40,7 +40,7 @@ const PrivateRoute = ({ component: Component, path:path }) => (
 class App extends React.Component {
     render() {
         return (
-            <BrowserRouter onUpdate={() => window.scrollTo(0, 0)}>
+            <BrowserRouter>
                 <Switch>
                     <Route exact path="/" component={HomeLayout}/>
                     <PrivateRoute 

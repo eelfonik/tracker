@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 //this one is for using css modules, which will output a specified css file in output destination
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var isProd = process.env.NODE_ENV === 'production';
 const styles = [
@@ -66,7 +67,7 @@ module.exports = {
     output: {
         path: path.join(__dirname, '/dist'),
         publicPath: '/',
-        filename: 'bundle.js'
+        filename: 'dist/[name].bundle.js',
     },
     devServer: {
         contentBase: './dist',
@@ -74,6 +75,11 @@ module.exports = {
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
+        new HtmlWebpackPlugin({
+            template: 'dist/index.html',
+            filename: 'index.html',
+            inject: 'body',
+        }),
         new webpack.NoEmitOnErrorsPlugin(),
         new ExtractTextPlugin({
             filename: 'style.css',

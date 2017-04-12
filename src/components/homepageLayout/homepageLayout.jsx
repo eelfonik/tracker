@@ -1,11 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 // import { Link, browserHistory } from 'react-router';
 import { Switch, BrowserRouter, Route, Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import homepageStyle from './homepageLayout.css';
 import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
-import IndexPage from './indexPage/indexPage';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -13,22 +13,10 @@ import IndexPage from './indexPage/indexPage';
 
 class HomeLayout extends React.Component {
 
-    componentDidMount() {
-        const { dispatch, currentURL, isLoggedIn, redirectUrl} = this.props;
-
-        if (isLoggedIn) {
-            //see https://medium.com/the-many/adding-login-and-authentication-sections-to-your-react-or-react-native-app-7767fd251bd1#.lcuolmcpq
-            // set the current url/path for future redirection (we use a Redux action)
-            // then redirect (we use a React Router method)
-            //dispatch(setRedirectUrl(currentURL))
-            browserHistory.replace(redirectUrl)
-        }
-    }
-
     componentDidUpdate() {
-        const { dispatch, currentURL, isLoggedIn, redirectUrl} = this.props;
+        const { isLoggedIn } = this.props;
         if (isLoggedIn) {
-            browserHistory.replace(redirectUrl)
+            // browserHistory.replace(redirectUrl)
         }
     }
 
@@ -52,7 +40,9 @@ class HomeLayout extends React.Component {
                     <Link className={homepageStyle.signupLink} to="/login">Login</Link>
                 </header>
                 <Switch className={homepageStyle.appContent}>
-                    <Route exact path='/' Component={IndexPage}/>
+                    <div className="home">
+                        WELCOME!
+                    </div>
                     <Route path='/signup' component={SignupPage}/>
                     <Route path='/login' component={LoginPage}/>
                 </Switch>
@@ -65,6 +55,11 @@ class HomeLayout extends React.Component {
             </div>
         );
     }
+}
+HomeLayout.propTypes = {
+    isLoggedIn: PropTypes.bool,
+    notif: PropTypes.string,
+    extras: PropTypes.object,
 }
 
 // function mapStateToProps(state, ownProps) {

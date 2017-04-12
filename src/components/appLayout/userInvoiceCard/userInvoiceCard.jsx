@@ -53,7 +53,7 @@ class UserInvoiceCard extends React.Component {
 }
 
 UserInvoiceCard.propTypes= {
-    invoiceData: React.PropTypes.object.isRequired,
+    invoiceData: PropTypes.object.isRequired,
 }
 
 export default UserInvoiceCard;

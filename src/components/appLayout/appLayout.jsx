@@ -62,7 +62,6 @@ class AppLayout extends React.Component {
     render() {
         console.debug("chekc route component props", this.props);
         const url = this.props.match.url;
-        const mayLogout = this.props.isLoggedIn? <div className={appStyle.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>:null;
         const userName = this.props.extras.userProfileModel? this.props.extras.userProfileModel.username:'';
         return (
             <div className={appStyle.appContainer}>
@@ -73,17 +72,14 @@ class AppLayout extends React.Component {
                     <Link to={`${url}`}>Hello {this.capitalizeFirstLetter(userName)}</Link>
                     <Link to={`${url}/invoices`}>My invoices</Link>
                     <Link to={`${url}/info`}>Profile</Link>
-                    {mayLogout}
+                    <div className={appStyle.signupLink} onClick={e=>this.props.onLogoutClick()}>Logout</div>
                 </header>
                 <div className={appStyle.appContent}>
-                    {this.props.isLoggedIn ?
-                         <Switch className={appStyle.appContent}>
-                            <Route exact path={`${url}`} Component={Dashboard}/>
-                            <Route path={`${url}/invoices`} component={UserInvoices}/>
-                            <Route path={`${url}/info`} component={UserInfo}/>
-                        </Switch> :
-                        <div>please login</div>
-                    }
+                    <Switch>
+                        <Route exact path={`${url}`} Component={Dashboard}/>
+                        <Route path={`${url}/invoices`} component={UserInvoices}/>
+                        <Route path={`${url}/info`} component={UserInfo}/>
+                    </Switch>
                 </div>
                 <footer className={appStyle.footer}>
 

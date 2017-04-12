@@ -132,7 +132,7 @@ class NewInvoicePreview extends React.Component {
 }
 
 NewInvoicePreview.propTypes = {
-    data: React.PropTypes.object
+    data: PropTypes.object
 };
 
 const mapStateToProps = (state, ownProps) => ({

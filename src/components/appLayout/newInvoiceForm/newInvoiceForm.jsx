@@ -363,7 +363,7 @@ class NewInvoiceForm extends React.Component {
 }
 
 // NewInvoiceForm.propTypes = {
-//     submitData: React.PropTypes.func
+//     submitData: PropTypes.func
 // };
 
 const mapDispatchToProps = (dispatch) => {

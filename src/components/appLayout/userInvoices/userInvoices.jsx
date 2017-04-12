@@ -28,7 +28,7 @@ class UserInvoices extends React.Component {
 }
 
 UserInvoices.propTypes = {
-    userInvoices: React.PropTypes.array.isRequired
+    userInvoices: PropTypes.array.isRequired
 };
 
 

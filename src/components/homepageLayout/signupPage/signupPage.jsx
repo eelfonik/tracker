@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+// import { render } from 'react-dom';
 import {connect} from 'react-redux';
 import {userSignup,resetNotif} from '../../../store/actions';
 import signupPageStyle from './signupPage.css';
@@ -22,9 +22,10 @@ class SignupPage extends React.Component {
         this.formValidated = this.formValidated.bind(this);
     }
 
-    // componentDidMount(){
-    //     this.props.resetNotif();
-    // }
+    componentDidMount(){
+        console.debug("signup page is mounted!");
+        //this.props.resetNotif();
+    }
     componentWillUnmount() {
         this.props.resetNotif();
     }
