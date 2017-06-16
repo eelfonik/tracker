@@ -79,6 +79,7 @@ class SignupPage extends React.Component {
 
 
     render() {
+        console.debug("check signuppage props", this.props);
         return (
             <div className="signup">
                 <div>

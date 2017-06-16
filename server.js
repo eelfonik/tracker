@@ -7,8 +7,8 @@ var app = express();
 var session = require('express-session');
 
 //https://github.com/jdesboeufs/connect-mongo
-const MongoStore = require('connect-mongo')(session);
-const serverRoutes = require('./server/routes/serverRoutes');
+var MongoStore = require('connect-mongo')(session);
+var serverRoutes = require('./server/routes/serverRoutes');
 
 var path = require("path");
 
@@ -42,8 +42,8 @@ if(process.env.NODE_ENV !== 'production') {
     var webpackHotMiddleware = require('webpack-hot-middleware');
     var webpack = require('webpack');
     var webpackConfig = require('./webpack.config');
-    const compiler = webpack(webpackConfig);
-    const middleware = webpackDevMiddleware(compiler, {
+    var compiler = webpack(webpackConfig);
+    var middleware = webpackDevMiddleware(compiler, {
         noInfo: true,
         publicPath: webpackConfig.output.publicPath
     });

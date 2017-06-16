@@ -57,8 +57,6 @@ class AppLayout extends React.Component {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    const 
-
     render() {
         console.debug("chekc route component props", this.props);
         const url = this.props.match.url;
