@@ -3,7 +3,6 @@ import { connect, Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 // import { Router, browserHistory, IndexRoute, Route} from 'react-router';
 import { Link, Redirect, Switch, Route } from 'react-router-dom';
-import { ListeningRouter } from './helpers/listeningRoute';
 import HomeLayout from './components/homepageLayout/homepageLayout';
 import AppLayout from './components/appLayout/appLayout';
 import store from './store/appStore';
@@ -47,7 +46,6 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <ConnectedRouter history={history}>
-        <ListeningRouter>
           <Switch>
             <Route path="/" component={HomeLayout} />
             <PrivateRoute
@@ -56,7 +54,6 @@ class App extends React.Component {
               {...this.props}
             />
           </Switch>
-          </ListeningRouter>
         </ConnectedRouter>
       </Provider>
     );
