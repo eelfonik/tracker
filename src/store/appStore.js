@@ -1,6 +1,8 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducer from './reducer';
+import { ConnectedRouter, routerReducer, routerMiddleware, push } from 'react-router-redux';
+import createHistory from 'history/createBrowserHistory';
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 //const store = createStore(login);
@@ -13,6 +15,11 @@ import reducer from './reducer';
 //or move away from localStorage to cookie?
 //TODO: need to use cookie fallback for safari private mode
 const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : {}
+
+// Create a history of your choosing (we're using a browser history in this case)
+// const history = createHistory();
+// Build the middleware for intercepting and dispatching navigation actions
+// const routeMiddlware = routerMiddleware(history);
 
 const composeEnhancers =
     process.env.NODE_ENV !== 'production' &&
@@ -27,9 +34,9 @@ const enhancer = composeEnhancers(
     // other store enhancers if any
 );
 const store = createStore(
-    reducer,
-    persistedState,
-    enhancer
+  reducer,
+  persistedState,
+  enhancer
 )
 
 store.subscribe(() =>

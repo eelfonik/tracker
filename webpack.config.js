@@ -38,8 +38,8 @@ const styleLoader = isProd ? ExtractTextPlugin.extract({
 module.exports = {
   entry: isProd ? ['./src/index'] : [
     'react-hot-loader/patch',
-    'webpack-hot-middleware/client',
-    './src/index'
+    './src/index',
+    'webpack-hot-middleware/client'
   ],
   module: {
     rules: [
@@ -65,7 +65,7 @@ module.exports = {
     extensions: ['.js', '.jsx', '.css']
   },
   output: {
-    path: path.join(__dirname, '/dist'),
+    path: path.join(__dirname, 'dist'),
     publicPath: '/',
     filename: 'dist/[name].bundle.js',
   },

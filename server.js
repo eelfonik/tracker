@@ -116,8 +116,8 @@ app.use('/api', serverRoutes);
 
 //need to use wild card(*) here to let react-router handle all front-end routing
 //see https://github.com/ReactTraining/react-router/issues/1047#issuecomment-89611557
-app.get('*', function(request, response) {
-    response.sendFile(__dirname + '/dist/index.html');
+app.get('*/', function(request, response) {
+    response.sendFile(__dirname + '/src/index.html');
 });
 
 

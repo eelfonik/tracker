@@ -1,5 +1,11 @@
 .appContainer {
-    margin: 20px;
+    box-sizing: border-box;
+    height: 100vh;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .header {

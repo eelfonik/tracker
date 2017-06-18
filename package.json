@@ -26,6 +26,7 @@
     "express-session": "^1.15.2",
     "extract-text-webpack-plugin": "^2.1.0",
     "fixed-data-table": "^0.6.3",
+    "history": "^4.6.2",
     "html-webpack-plugin": "^2.28.0",
     "lodash": "^4.17.4",
     "mongodb": "^2.2.25",

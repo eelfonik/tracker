@@ -22,91 +22,93 @@
 //     phone:""
 // }
 
+import { routerReducer } from 'react-router-redux';
 import { combineReducers } from 'redux';
 
 export function loginReducer(state = {}, action) {
-    switch (action.type) {
-        case 'LOGIN':
-        case 'SIGNUP':
-            return Object.assign({}, state, {
-                isLoggedIn: action.isLoggedIn,
-                redirectUrl: action.redirectUrl,
-                notif:action.notif,
-                extras: action.extras
-            });
-        case 'LOGOUT':
-            return Object.assign({}, state, {
-                isLoggedIn: false,
-                redirectUrl: '/',
-                notif:'',
-                extras: {},
-            });
-        case 'RESET_NOTIF':
-            return Object.assign({}, state, {
-                notif:''
-            });
-        default:
-            return state
-    }
+  switch (action.type) {
+    case 'LOGIN':
+    case 'SIGNUP':
+      return Object.assign({}, state, {
+        isLoggedIn: action.isLoggedIn,
+        redirectUrl: action.redirectUrl,
+        notif: action.notif,
+        extras: action.extras
+      });
+    case 'LOGOUT':
+      return Object.assign({}, state, {
+        isLoggedIn: false,
+        redirectUrl: '/',
+        notif: '',
+        extras: {},
+      });
+    case 'RESET_NOTIF':
+      return Object.assign({}, state, {
+        notif: ''
+      });
+    default:
+      return state
+  }
 }
 
-export function UserInfoReducer(state = {isFetching:false}, action) {
-    switch (action.type) {
-        case 'FETCHING_USER_INFO':
-        case 'UPDATING_USER_INFO':
-            return Object.assign({},state,{
-                isFetching: true
-            });
-        case 'GET_INFO':
-        case 'UPDATE_INFO':
-            return Object.assign({}, state, {
-                isFetching:false,
-                name: action.name,
-                address: action.address,
-                siret:action.siret,
-                phone: action.phone,
-                invoices: action.invoices
-            });
-        case 'REMOVE_INFO':
-            return {isFetching:false};
-        default:
-            return state
-    }
+export function UserInfoReducer(state = { isFetching: false }, action) {
+  switch (action.type) {
+    case 'FETCHING_USER_INFO':
+    case 'UPDATING_USER_INFO':
+      return Object.assign({}, state, {
+        isFetching: true
+      });
+    case 'GET_INFO':
+    case 'UPDATE_INFO':
+      return Object.assign({}, state, {
+        isFetching: false,
+        name: action.name,
+        address: action.address,
+        siret: action.siret,
+        phone: action.phone,
+        invoices: action.invoices
+      });
+    case 'REMOVE_INFO':
+      return { isFetching: false };
+    default:
+      return state
+  }
 }
 
-export function InvoiceInfoReducer(state={}, action) {
-    switch (action.type) {
-        case 'GET_INVOICE_INFO':
-        case 'ADD_NEW_INVOICE':
-            return Object.assign({}, state, {
-                number :action.number,
-                date :action.date,
-                sum :action.sum,
-                taxRate :action.taxRate,
-                currency :action.currency,
-                description :action.description,
-            });
-        default:
-            return state
-    }
+export function InvoiceInfoReducer(state = {}, action) {
+  switch (action.type) {
+    case 'GET_INVOICE_INFO':
+    case 'ADD_NEW_INVOICE':
+      return Object.assign({}, state, {
+        number: action.number,
+        date: action.date,
+        sum: action.sum,
+        taxRate: action.taxRate,
+        currency: action.currency,
+        description: action.description,
+      });
+    default:
+      return state
+  }
 }
 
-export function UserInvoicesReducer(state={}, action){
-    switch (action.type) {
-        case 'GET_USER_INVOICES':
-            return Object.assign({}, state, {
-                invoices :action.invoices,
-            });
-        default:
-            return state
-    }
+export function UserInvoicesReducer(state = {}, action) {
+  switch (action.type) {
+    case 'GET_USER_INVOICES':
+      return Object.assign({}, state, {
+        invoices: action.invoices,
+      });
+    default:
+      return state
+  }
 }
 
 const reducer = combineReducers({
-    login: loginReducer,
-    userInfo: UserInfoReducer,
-    invoiceInfo: InvoiceInfoReducer,
-    userInvoices: UserInvoicesReducer,
+  router: routerReducer,
+  login: loginReducer,
+  userInfo: UserInfoReducer,
+  invoiceInfo: InvoiceInfoReducer,
+  userInvoices: UserInvoicesReducer,
 })
 
 export default reducer;
