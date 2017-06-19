@@ -1,8 +1,9 @@
 import React from 'react';
 // import { Link, browserHistory } from 'react-router';
-import { Switch, BrowserRouter, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import { connect } from 'react-redux';
+import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
 import globalStyle from '../../commonStyles/reset.css';
 import font from '../../commonStyles/font.css';
 import appStyle from './appLayout.css';
@@ -28,7 +29,7 @@ class AppLayout extends React.Component {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)
       //dispatch(setRedirectUrl(currentURL))
-      BrowserRouter.replace(this.props.redirectUrl)
+      // BrowserRouter.replace(this.props.redirectUrl)
     }
     //here said it's a bad way to get data from server
     //http://stackoverflow.com/a/33924707/6849186
@@ -73,11 +74,13 @@ class AppLayout extends React.Component {
           <div className={appStyle.signupLink} onClick={e => this.props.onLogoutClick()}>Logout</div>
         </header>
         <div className={appStyle.appContent}>
-          <Switch>
-            <Route exact path={`${url}`} Component={Dashboard} />
-            <Route exact path={`${url}/invoices`} component={UserInvoices} />
-            <Route exact path={`${url}/info`} component={UserInfo} />
-          </Switch>
+          <ListeningRouter>
+            <Switch>
+              <Route exact path={`${url}`} Component={Dashboard} />
+              <Route exact path={`${url}/invoices`} component={UserInvoices} />
+              <Route exact path={`${url}/info`} component={UserInfo} />
+            </Switch>
+          </ListeningRouter>
         </div>
         <footer className={appStyle.footer}>
 
@@ -87,7 +90,7 @@ class AppLayout extends React.Component {
   }
 }
 
-// function mapStateToProps(state, ownProps) {
+// const mapStateToProps = (state, ownProps) => {
 //     return {
 //         isLoggedIn: state.login.isLoggedIn,
 //         currentURL: ownProps.location.pathname,

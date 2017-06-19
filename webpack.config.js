@@ -36,6 +36,7 @@ const styleLoader = isProd ? ExtractTextPlugin.extract({
 }) : styles;
 
 module.exports = {
+  devtool: 'source-map',
   entry: isProd ? ['./src/index'] : [
     'react-hot-loader/patch',
     './src/index',

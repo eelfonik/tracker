@@ -3,12 +3,13 @@ import { connect, Provider } from 'react-redux';
 import { ConnectedRouter } from 'react-router-redux';
 // import { Router, browserHistory, IndexRoute, Route} from 'react-router';
 import { Link, Redirect, Switch, Route } from 'react-router-dom';
+// import { ListeningRouter, Switch, Route } from './helpers/listeningRoute';
 import HomeLayout from './components/homepageLayout/homepageLayout';
 import AppLayout from './components/appLayout/appLayout';
 import store from './store/appStore';
-import createHistory from 'history/createBrowserHistory';
+import createBrowserHistory from 'history/createBrowserHistory';
 
-const history = createHistory();
+const history = createBrowserHistory();
 // // good discussion on nested IndexRoute (sort of)
 // // https://github.com/ReactTraining/react-router/issues/1950#issuecomment-166742102
 // const routes = (
@@ -68,5 +69,5 @@ class App extends React.Component {
 //     extras: state.login.extras
 //   }
 // }
-export default App;
 // export default connect(mapStateToProps)(App);
+export default App;

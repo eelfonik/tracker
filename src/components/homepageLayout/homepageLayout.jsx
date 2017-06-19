@@ -103,7 +103,7 @@ HomeLayout.propTypes = {
 const mapStateToProps = (state, ownProps) => {
   return {
     isLoggedIn: state.login.isLoggedIn,
-    currentURL: ownProps.location.pathname,
+    // currentURL: ownProps.location.pathname,
     notif: state.login.notif,
     redirectUrl: state.login.redirectUrl,
     extras: state.login.extras
