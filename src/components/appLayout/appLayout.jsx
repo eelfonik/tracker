@@ -75,8 +75,8 @@ class AppLayout extends React.Component {
         <div className={appStyle.appContent}>
           <Switch>
             <Route exact path={`${url}`} Component={Dashboard} />
-            <Route path={`${url}/invoices`} component={UserInvoices} />
-            <Route path={`${url}/info`} component={UserInfo} />
+            <Route exact path={`${url}/invoices`} component={UserInvoices} />
+            <Route exact path={`${url}/info`} component={UserInfo} />
           </Switch>
         </div>
         <footer className={appStyle.footer}>

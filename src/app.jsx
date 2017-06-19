@@ -47,12 +47,12 @@ class App extends React.Component {
       <Provider store={store}>
         <ConnectedRouter history={history}>
           <Switch>
-            <Route path="/" component={HomeLayout} />
             <PrivateRoute
               path='/me'
               component={AppLayout}
               {...this.props}
             />
+            <Route path="/" component={HomeLayout} />
           </Switch>
         </ConnectedRouter>
       </Provider>

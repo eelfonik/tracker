@@ -6,6 +6,7 @@ import homepageStyle from './homepageLayout.css';
 import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
 import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
+import { userSignup, resetNotif } from '../../store/actions';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -73,14 +74,14 @@ const HomeLayout = (props) => {
       <div className={homepageStyle.appContent}>
         <ListeningRouter>
           <Switch>
+            <Route exact path='/signup' render={() => <SignupPage {...props}/>} />
+            <Route exact path='/login' render={() => <LoginPage {...props}/>} />
             <Route exact path='/' render={() => (
               <div>
                 <h1>WELCOME</h1>
                 <div>Free tracker is a service let you easily track your invoices and payment as a freelancer, enjoy!</div>
               </div>
             )} />
-            <Route exact path='/signup' component={SignupPage} />
-            <Route exact path='/login' component={LoginPage} />
           </Switch>
         </ListeningRouter>
       </div>
