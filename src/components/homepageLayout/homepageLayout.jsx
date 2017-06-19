@@ -6,7 +6,7 @@ import homepageStyle from './homepageLayout.css';
 import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
 import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
-import { userSignup, resetNotif } from '../../store/actions';
+import { userLogin, userSignup, resetNotif } from '../../store/actions';
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -114,6 +114,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onSignupClick: (value) => {
       dispatch(userSignup(value))
+    },
+    onLoginClick: (value) => {
+      dispatch(userLogin(value))
     },
     resetNotif: () => { dispatch(resetNotif()) }
   }

@@ -1,7 +1,6 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import { userLogin, resetNotif, getUserInfo } from '../../../store/actions';
 import loginPageStyle from './loginPage.css';
 import formStyle from '../../../commonStyles/form.css';
 
@@ -73,6 +72,7 @@ class LoginPage extends React.Component {
 
 
   render() {
+    console.debug("check login page props", this.props);
     return (
       <div className="signup">
         <div>
@@ -100,22 +100,4 @@ class LoginPage extends React.Component {
   }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//     console.log(state); // state
-//     console.log(ownProps); // ownProps
-//     return {
-//         number: state
-//     }
-// }
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onLoginClick: (value) => {
-      dispatch(userLogin(value))
-    },
-    resetNotif: () => { dispatch(resetNotif()) }
-  }
-}
-//if we don't use mapStateToProps, we should pass null as 1st argument
-//see http://stackoverflow.com/a/38708606/6849186
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default LoginPage;
