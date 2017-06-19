@@ -68,7 +68,8 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
-    filename: 'dist/[name].bundle.js',
+    filename: '[name].bundle.js',
+    chunkFilename: '[name].chunk-[hash].js',
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),

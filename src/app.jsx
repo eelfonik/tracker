@@ -41,25 +41,21 @@ const PrivateRoute = ({ Component: component, path: path }) => (
   )} />
 )
 
-class App extends React.Component {
-  render() {
-    console.debug("check all props", this.props);
-    return (
-      <Provider store={store}>
-        <ConnectedRouter history={history}>
-          <Switch>
-            <PrivateRoute
-              path='/me'
-              component={AppLayout}
-              {...this.props}
-            />
-            <Route path="/" component={HomeLayout} />
-          </Switch>
-        </ConnectedRouter>
-      </Provider>
-    );
-  }
-}
+const App = () => (
+  <Provider store={store}>
+    <ConnectedRouter history={history}>
+      <Switch>
+        <PrivateRoute
+          path='/me'
+          component={AppLayout}
+          {...this.props}
+        />
+        <Route path="/" component={HomeLayout} />
+      </Switch>
+    </ConnectedRouter>
+  </Provider>
+);
+
 // function mapStateToProps(state, ownProps) {
 //   return {
 //     isLoggedIn: state.login.isLoggedIn,
