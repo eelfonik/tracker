@@ -112,12 +112,8 @@ const mapStateToProps = (state, ownProps) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onSignupClick: (value) => {
-      dispatch(userSignup(value))
-    },
-    onLoginClick: (value) => {
-      dispatch(userLogin(value))
-    },
+    onSignupClick: (value) => { dispatch(userSignup(value)) },
+    onLoginClick: (value) => { dispatch(userLogin(value)) },
     resetNotif: () => { dispatch(resetNotif()) }
   }
 }

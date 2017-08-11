@@ -71,6 +71,11 @@ module.exports = {
     filename: '[name].bundle.js',
     chunkFilename: '[name].chunk-[hash].js',
   },
+  devServer: {
+    hot: true,
+    port: 5000,
+    historyApiFallback: true,
+  },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({

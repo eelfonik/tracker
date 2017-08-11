@@ -28,10 +28,10 @@ const history = createBrowserHistory();
 //         </Route>
 //     </Route>
 // );
-const PrivateRoute = ({ Component: component, path: path }) => (
-  <Route path={path} render={routeProps => (
-    props.isLoggedIn ? (
-      <Component {...routeProps} />
+const PrivateRoute = ({ Component: component, path: path, login: login }) => (
+  <Route path={path} render={props => (
+    props.login.isLoggedIn ? (
+      <Component {...props} />
     ) : (
         <Redirect to={{
           pathname: '/login',
@@ -56,14 +56,4 @@ const App = () => (
   </Provider>
 );
 
-// function mapStateToProps(state, ownProps) {
-//   return {
-//     isLoggedIn: state.login.isLoggedIn,
-//     // currentURL: ownProps.location.pathname,
-//     notif: state.login.notif,
-//     redirectUrl: state.login.redirectUrl,
-//     extras: state.login.extras
-//   }
-// }
-// export default connect(mapStateToProps)(App);
 export default App;
