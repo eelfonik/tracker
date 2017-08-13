@@ -1,9 +1,9 @@
 import React from 'react';
 // import { Link, browserHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
+// import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
 import globalStyle from '../../commonStyles/reset.css';
 import font from '../../commonStyles/font.css';
 import appStyle from './appLayout.css';
@@ -29,7 +29,7 @@ class AppLayout extends React.Component {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)
       //dispatch(setRedirectUrl(currentURL))
-      // BrowserRouter.replace(this.props.redirectUrl)
+      // BrowserRouter.push(this.props.redirectUrl)
     }
     //here said it's a bad way to get data from server
     //http://stackoverflow.com/a/33924707/6849186
@@ -46,13 +46,13 @@ class AppLayout extends React.Component {
       // set the current url/path for future redirection (we use a Redux action)
       // then redirect (we use a React Router method)
       //dispatch(setRedirectUrl(currentURL))
-      BrowserRouter.replace(this.props.redirectUrl)
+      // BrowserRouter.push(this.props.redirectUrl);
     }
   }
 
-  componentWillUnmount() {
-    BrowserRouter.replace(this.props.redirectUrl);
-  }
+  // componentWillUnmount() {
+  //   BrowserRouter.replace(this.props.redirectUrl);
+  // }
 
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -61,8 +61,8 @@ class AppLayout extends React.Component {
   render() {
     console.debug("chekc route component props", this.props);
     const url = this.props.match.url;
-    const userName = this.props.extras.userProfileModel ? this.props.extras.userProfileModel.username : '';
-    return (
+    const userName = this.props.extras && this.props.extras.userProfileModel ? this.props.extras.userProfileModel.username : '';
+    return this.props.isLoggedIn ? (
       <div className={appStyle.appContainer}>
         <header className={appStyle.header}>
           <Link to='/'>
@@ -74,30 +74,29 @@ class AppLayout extends React.Component {
           <div className={appStyle.signupLink} onClick={e => this.props.onLogoutClick()}>Logout</div>
         </header>
         <div className={appStyle.appContent}>
-          <ListeningRouter>
-            <Switch>
-              <Route exact path={`${url}`} Component={Dashboard} />
-              <Route exact path={`${url}/invoices`} component={UserInvoices} />
-              <Route exact path={`${url}/info`} component={UserInfo} />
-            </Switch>
-          </ListeningRouter>
+          <Switch>
+            <Route exact path={`${url}`} Component={Dashboard} />
+            <Route exact path={`${url}/invoices`} component={UserInvoices} />
+            <Route exact path={`${url}/info`} component={UserInfo} />
+          </Switch>
         </div>
         <footer className={appStyle.footer}>
 
         </footer>
       </div>
-    );
+    ) :
+    (<Redirect to="/"/>);
   }
 }
 
-// const mapStateToProps = (state, ownProps) => {
-//     return {
-//         isLoggedIn: state.login.isLoggedIn,
-//         currentURL: ownProps.location.pathname,
-//         redirectUrl: state.login.redirectUrl,
-//         extras: state.login.extras
-//     }
-// }
+const mapStateToProps = (state, ownProps) => {
+    return {
+      isLoggedIn: state.login.isLoggedIn,
+      currentURL: ownProps.location.pathname,
+      redirectUrl: state.login.redirectUrl,
+      extras: state.login.extras
+    }
+}
 
 // const mapDispatchToProps = (dispatch) => ({
 //         onLogoutClick(){
@@ -109,7 +108,7 @@ class AppLayout extends React.Component {
 //that maps the name of callback function(here is `onLogoutClick`), and the action creator function(`userLogout` in this case)
 
 export default connect(
-  null,
+  mapStateToProps,
   {
     getInfo: getUserInfo,
     getInvoices: getUserInvoices,

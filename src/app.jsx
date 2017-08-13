@@ -28,29 +28,12 @@ const history = createBrowserHistory();
 //         </Route>
 //     </Route>
 // );
-const PrivateRoute = ({ Component: component, path: path, login: login }) => (
-  <Route path={path} render={props => (
-    props.login.isLoggedIn ? (
-      <Component {...props} />
-    ) : (
-        <Redirect to={{
-          pathname: '/login',
-          state: { from: routeProps.location }
-        }} />
-      )
-  )} />
-)
-
 const App = () => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Switch>
-        <PrivateRoute
-          path='/me'
-          component={AppLayout}
-          {...this.props}
-        />
-        <Route path="/" component={HomeLayout} />
+        <Route path='/me' component={AppLayout}/>
+        <Route path="/" component={HomeLayout}/>
       </Switch>
     </ConnectedRouter>
   </Provider>
