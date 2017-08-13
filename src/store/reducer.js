@@ -31,14 +31,12 @@ export function loginReducer(state = {}, action) {
     case 'SIGNUP':
       return Object.assign({}, state, {
         isLoggedIn: action.isLoggedIn,
-        redirectUrl: action.redirectUrl,
         notif: action.notif,
         extras: action.extras
       });
     case 'LOGOUT':
       return Object.assign({}, state, {
         isLoggedIn: false,
-        redirectUrl: '/',
         notif: '',
         extras: {},
       });

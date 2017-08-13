@@ -23,43 +23,15 @@ class AppLayout extends React.Component {
   }
 
   componentDidMount() {
-    const { dispatch, currentURL } = this.props;
-
-    if (!this.props.isLoggedIn) {
-      // set the current url/path for future redirection (we use a Redux action)
-      // then redirect (we use a React Router method)
-      //dispatch(setRedirectUrl(currentURL))
-      // BrowserRouter.push(this.props.redirectUrl)
-    }
-    //here said it's a bad way to get data from server
-    //http://stackoverflow.com/a/33924707/6849186
-    // - we will call this when link to any children component, where only profile need this, it's bad
-    // - also we may need this info to every invoice
     this.props.getInfo();
     this.props.getInvoices();
   }
-
-  componentDidUpdate() {
-    const { dispatch, currentURL } = this.props;
-
-    if (!this.props.isLoggedIn) {
-      // set the current url/path for future redirection (we use a Redux action)
-      // then redirect (we use a React Router method)
-      //dispatch(setRedirectUrl(currentURL))
-      // BrowserRouter.push(this.props.redirectUrl);
-    }
-  }
-
-  // componentWillUnmount() {
-  //   BrowserRouter.replace(this.props.redirectUrl);
-  // }
-
+  
   capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   render() {
-    console.debug("chekc route component props", this.props);
     const url = this.props.match.url;
     const userName = this.props.extras && this.props.extras.userProfileModel ? this.props.extras.userProfileModel.username : '';
     return this.props.isLoggedIn ? (
@@ -93,7 +65,6 @@ const mapStateToProps = (state, ownProps) => {
     return {
       isLoggedIn: state.login.isLoggedIn,
       currentURL: ownProps.location.pathname,
-      redirectUrl: state.login.redirectUrl,
       extras: state.login.extras
     }
 }

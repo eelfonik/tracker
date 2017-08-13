@@ -39,7 +39,6 @@ const signUp = (resSuccess, resData) => ({
   type: 'SIGNUP',
   isLoggedIn: resSuccess,
   notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
-  redirectUrl: resSuccess ? '/me' : '/signup',
   extras: resData
 })
 
@@ -47,7 +46,6 @@ const logIn = (resSuccess, resData) => ({
   type: 'LOGIN',
   isLoggedIn: resSuccess,
   notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
-  redirectUrl: resSuccess ? '/me' : '/login',
   extras: resData
 })
 
