@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
+import { userLogin, resetNotif } from 'store/actions';
 import loginPageStyle from './loginPage.css';
 import formStyle from '../../../commonStyles/form.css';
 
@@ -72,7 +73,6 @@ class LoginPage extends React.Component {
 
 
   render() {
-    console.debug("check login page props", this.props);
     return (
       <div className="signup">
         <div>
@@ -100,4 +100,9 @@ class LoginPage extends React.Component {
   }
 }
 
-export default LoginPage;
+const mapDispatchToProps = (dispatch) => ({
+  onLoginClick: (value) => { dispatch(userLogin(value)) },
+  resetNotif: () => { dispatch(resetNotif()) }
+});
+
+export default connect(null, mapDispatchToProps)(LoginPage);

@@ -31,7 +31,6 @@ export const Switch = addLocation(RSwitch);
 
 export const routeReducer = (state, action) => {
   if (action.type === UPDATE_LOCATION) {
-    console.debug("check actions", action);
     return { ...state, location: action.location };
   }
 

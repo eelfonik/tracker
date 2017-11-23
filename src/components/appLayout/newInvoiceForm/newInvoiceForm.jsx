@@ -197,7 +197,6 @@ class NewInvoiceForm extends React.Component {
     submitForm(){
         if (this.formValidated()) {
             const returnedState = _.pick(this.state,['number','date','sum','taxRate','currency','description']);
-            console.debug("returned state", returnedState);
             this.props.submitData(returnedState);
             this.resetStates();
         } else {

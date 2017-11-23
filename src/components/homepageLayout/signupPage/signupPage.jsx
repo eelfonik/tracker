@@ -2,7 +2,8 @@ import React from 'react';
 // import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import signupPageStyle from './signupPage.css';
-import formStyle from '../../../commonStyles/form.css';
+import formStyle from 'commonStyles/form.css';
+import { userSignup, resetNotif } from 'store/actions';
 
 class SignupPage extends React.Component {
   constructor(props) {
@@ -22,8 +23,7 @@ class SignupPage extends React.Component {
   }
 
   componentDidMount() {
-    console.debug("signup page is mounted!");
-    //this.props.resetNotif();
+    this.props.resetNotif();
   }
   componentWillUnmount() {
     this.props.resetNotif();
@@ -37,7 +37,6 @@ class SignupPage extends React.Component {
   }
 
   formValidated() {
-    console.debug("name", this.state.name, !!this.state.name, 'email', this.state.email, !!this.state.email, 'email valid?', this.state.emailValid, 'pw', this.state.pass, !!this.state.pass);
     return !!this.state.name && !!this.state.email && this.state.emailValid && !!this.state.pass;
   }
 
@@ -78,7 +77,6 @@ class SignupPage extends React.Component {
 
 
   render() {
-    console.debug("check signuppage props", this.props);
     return (
       <div className="signup">
         <div>
@@ -113,15 +111,13 @@ class SignupPage extends React.Component {
   }
 }
 
-// const mapDispatchToProps = (dispatch) => {
-//   return {
-//     onSignupClick: (value) => {
-//       dispatch(userSignup(value))
-//     },
-//     resetNotif: () => { dispatch(resetNotif()) }
-//   }
-// }
+const mapDispatchToProps = (dispatch) => ({
+    onSignupClick: (value) => {
+      dispatch(userSignup(value))
+    },
+    resetNotif: () => { dispatch(resetNotif()) }
+});
+
 //if we don't use mapStateToProps, we should pass null as 1st argument
 //see http://stackoverflow.com/a/38708606/6849186
-// export default connect(null, mapDispatchToProps)(SignupPage);
-export default SignupPage;
+export default connect(null, mapDispatchToProps)(SignupPage);

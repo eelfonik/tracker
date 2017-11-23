@@ -65,7 +65,6 @@ export function userLogin(value) {
     }
     axios.post('/api/account/login', data)
       .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-        console.debug("user login success ", response);
         return dispatch(logIn(response.data.success, response.data.extras))
       })
       .catch((error) => {
@@ -90,7 +89,6 @@ export function userSignup(value) {
         //in the case of signup,
         //if data.success === false, the data.extras will have a msg to identify the problem
         //if data.success === true, data.extras will contain a userProfileModel with email and username
-        console.debug("user signup success ", response);
         return dispatch(signUp(response.data.success, response.data.extras));
       })
       .catch((error) => {
@@ -145,7 +143,6 @@ export function getUserInfo() {
     if (isLoggedIn) {
       return axios.get('/api/user/info')
         .then((res) => {
-          console.debug("get user info success ", res);
           dispatch(getInfo(res.data.extras));
         })
         .catch((error) => {
@@ -186,16 +183,7 @@ const addNewInvoice = (resData) => ({
 
 export function addNewInvoiceForUser(value) {
   return (dispatch, getState) => {
-    const newInvoiceInfo = {
-      number: value.number,
-      date: value.date,
-      sum: value.sum,
-      taxRate: value.taxRate,
-      currency: value.currency,
-      description: value.description
-    }
-
-    axios.post('/api/user/invoice', newInvoiceInfo)
+    axios.post('/api/user/invoice', value)
       .then((res) => {
         console.debug("add new invoice success ", res);
         dispatch(addNewInvoice(res.data.extras.invoiceInfoModel));

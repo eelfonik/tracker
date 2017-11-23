@@ -7,7 +7,7 @@ import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 // import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
-import { userLogin, userSignup, resetNotif } from '../../store/actions';
+
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
@@ -29,8 +29,8 @@ const HomeLayout = (props) => {
           <Link className={homepageStyle.signupLink} to='/login'>Login</Link>
         </header>
         <div className={homepageStyle.appContent}>
-          <Route path='/signup' render={() => <SignupPage {...props}/>} />
-          <Route path='/login' render={() => <LoginPage {...props}/>} />
+          <Route path='/signup' component={SignupPage} />
+          <Route path='/login' component={LoginPage} />
           <Route exact path='/' render={() => (
             <div>
               <h1>WELCOME</h1>
@@ -55,20 +55,13 @@ HomeLayout.propTypes = {
 }
 
 const mapStateToProps = (state, ownProps) => {
+  const { login } = state;
   return {
-    isLoggedIn: state.login.isLoggedIn,
+    isLoggedIn: login.isLoggedIn,
     // currentURL: ownProps.location.pathname,
-    notif: state.login.notif,
-    extras: state.login.extras
+    notif: login.notif,
+    extras: login.extras
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onSignupClick: (value) => { dispatch(userSignup(value)) },
-    onLoginClick: (value) => { dispatch(userLogin(value)) },
-    resetNotif: () => { dispatch(resetNotif()) }
-  }
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(HomeLayout);
+export default connect(mapStateToProps)(HomeLayout);

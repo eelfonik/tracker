@@ -3,8 +3,7 @@ import { render } from 'react-dom';
 import {connect} from 'react-redux';
 import NewInvoiceForm from '../newInvoiceForm/newInvoiceForm';
 import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
-//import AthletePreview from './AthletePreview';
-//import athletes from '../data/athletes';
+import { addNewInvoiceForUser } from 'store/actions';
 import dashboardStyle from './dashboard.css';
 
 
@@ -55,20 +54,8 @@ function mapStateToProps(state, ownProps) {
     }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//     submitData(value){
-//             dispatch(addNewInvoiceForUser(value));
-//         }
-// });
-//rather than pass a mapDispatchToProps function to connect,
-//we can pass a **configuration object**
-//that maps the name of callback function(here is `onLogoutClick`), and the action creator function(`userLogout` in this case)
-//NOTE!! that only works with functions has no arguments!!!
+const mapDispatchToProps = (dispatch) => ({
+    submitData: (value) => dispatch(addNewInvoiceForUser(value)),
+});
 
-export default connect(
-    mapStateToProps,
-    // {
-    //     submitData:addNewInvoiceForUser
-    // }
-    // mapDispatchToProps
-)(Dashboard);
+export default connect(mapStateToProps,mapDispatchToProps)(Dashboard);
