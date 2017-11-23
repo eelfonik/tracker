@@ -24,9 +24,10 @@ class LoginPage extends React.Component {
   //see http://stackoverflow.com/a/39608907/6849186
   //moving this part to parent component
 
-  // componentDidMount(){
-  //     this.props.resetNotif();
-  // }
+  componentDidMount(){
+    console.debug("check props", this.props);
+    this.props.resetNotif();
+  }
   componentWillUnmount() {
     this.props.resetNotif();
   }
@@ -95,8 +96,19 @@ class LoginPage extends React.Component {
           />
         </div>
         <button onClick={this.submitData}>submit!</button>
+        {this.props.notif ? <div>{this.props.notif}</div> : null}
       </div>
     );
+  }
+}
+
+const mapStateToProps = (state, ownProps) => {
+  const { login } = state;
+  return {
+    isLoggedIn: login.isLoggedIn,
+    // currentURL: ownProps.location.pathname,
+    notif: login.notif,
+    extras: login.extras
   }
 }
 
@@ -105,4 +117,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetNotif: () => { dispatch(resetNotif()) }
 });
 
-export default connect(null, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
