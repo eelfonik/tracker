@@ -1,52 +1,46 @@
 .formContainer {
-    /*background-color: rgba(0, 234, 107,0.5);*/
-    /*padding: 20px;*/
-    /*border: 1px dashed black;*/
-    /*border-radius: 5px;*/
-    /*box-shadow: 3px 3px 2px #888888;*/
+  /*background-color: rgba(0, 234, 107,0.5);*/
+  /*padding: 20px;*/
+  /*border: 1px dashed black;*/
+  /*border-radius: 5px;*/
+  /*box-shadow: 3px 3px 2px #888888;*/
 }
 
 .taxPercentageSign {
-    line-height: 2;
+  line-height: 2;
 }
 
 .currencyPicker {
-    position:relative;
-    width:4em;
-    margin:0 10px 0 5px;
-    line-height: 2;
+  width: 4em;
+  margin: 0 10px 0 5px;
+  line-height: 2;
+  position: relative;
 }
 
-.currentCurrency {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-    border-radius: 4px;
-    border: 1px solid rgba(0, 234, 107,0.5);
-    & .arrow {
-        background-color:rgba(0, 234, 107,0.5);
-    }
+.currencyPicker::after {
+  content: "";
+  position: absolute;
+  display: block;
+  top:calc(50% - 5px);
+  right:5px;
+  width:0px;
+  height: 0px;
+  border-top: 10px solid rgba(0, 234, 107, 0.5);
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  background-color: white;
 }
+
 .currencyUnitContainer {
-    position: absolute;
-    width: 100%;
-    line-height:1.5;
-    & .currencyUnit {
-          max-height: 0;
-          text-align: center;
-          overflow: hidden;
-          cursor: pointer;
-          border-bottom: 1px solid transparent;
-          border-left: 1px solid transparent;
-          border-right: 1px solid transparent;
-          transition: max-height 0.5s ease, background-color 0.5s ease;
-            &.currencyVisible {
-                max-height: 100px;
-                 border-bottom: 1px solid rgba(0, 234, 107,0.5);
-                 border-left: 1px solid rgba(0, 234, 107,0.5);
-                 border-right: 1px solid rgba(0, 234, 107,0.5);
-                 background-color:white;
-            }
-        }
+  border: 0;
+  appearance: none;
+  width: 100%;
+  padding: 10px;
+  & .currencyUnit {
+    border-bottom: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-right: 1px solid transparent;
+    transition: max-height 0.5s ease, background-color 0.5s ease;
+  }
 }
+

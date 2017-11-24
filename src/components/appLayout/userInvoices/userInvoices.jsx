@@ -1,43 +1,31 @@
-import _ from 'lodash';
-import React from 'react';
-import PropTypes from 'prop-types';
-import { render } from 'react-dom';
-import {connect} from 'react-redux';
+import React from "react";
+import PropTypes from "prop-types";
+import { render } from "react-dom";
+import { connect } from "react-redux";
 //import style from './userInfo.css';
-import formStyle from 'commonStyles/form.css';
-import UserInvoiceCard from '../userInvoiceCard/userInvoiceCard';
+import formStyle from "commonStyles/form.css";
+import UserInvoiceCard from "../userInvoiceCard/userInvoiceCard";
 
 class UserInvoices extends React.Component {
+  renderInvoiceCard() {
+    return this.props.userInvoices.map(invoice => (
+      <UserInvoiceCard key={invoice.number} invoiceData={invoice} />
+    ));
+  }
 
-    renderInvoiceCard() {
-        return this.props.userInvoices.map(invoice=> (
-            <UserInvoiceCard
-                key={invoice.number}
-                invoiceData={invoice}
-            />
-        ));
-    }
-
-    render(){
-        return(
-            <div>
-                {this.renderInvoiceCard()}
-            </div>
-        )
-    }
+  render() {
+    return <div>{this.renderInvoiceCard()}</div>;
+  }
 }
 
 UserInvoices.propTypes = {
-    userInvoices: PropTypes.array.isRequired
+  userInvoices: PropTypes.array.isRequired
 };
 
-
 function mapStateToProps(state, ownProps) {
-    return {
-        userInvoices:state.userInvoices.invoices
-    }
+  return {
+    userInvoices: state.userInvoices.invoices
+  };
 }
 
-export default connect(
-    mapStateToProps
-)(UserInvoices);
+export default connect(mapStateToProps)(UserInvoices);
