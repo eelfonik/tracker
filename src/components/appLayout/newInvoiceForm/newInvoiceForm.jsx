@@ -80,7 +80,7 @@ class NewInvoiceForm extends React.Component {
     );
   }
 
-  changeNumber(event) {
+  changeNumber = (event) => {
     if (this.isNumber(event.target.value) || event.target.value === "") {
       // console.debug("numbers!");
       this.setState({
@@ -94,11 +94,11 @@ class NewInvoiceForm extends React.Component {
     }
   }
 
-  changeDate(event) {
+  changeDate = (event) => {
     this.setState({ date: event.target.value });
   }
 
-  changeSum(event) {
+  changeSum = (event) => {
     if (this.isNumber(event.target.value) || event.target.value === "") {
       this.setState({
         sum: event.target.value,
@@ -117,7 +117,7 @@ class NewInvoiceForm extends React.Component {
     });
   }
 
-  changeTaxRate(event) {
+  changeTaxRate = (event) => {
     if (
       (this.isNumber(event.target.value) &&
         event.target.value >= 0 &&
@@ -130,7 +130,7 @@ class NewInvoiceForm extends React.Component {
     }
   }
 
-  changeClient(field, event) {
+  changeClient = (field, event) => {
     const newClient = { ...this.state.client, [field]: event.target.value };
     this.setState({
       client: newClient
@@ -141,7 +141,7 @@ class NewInvoiceForm extends React.Component {
     this.setState({ description: event.target.value });
   }
 
-  submitForm() {
+  submitForm = () => {
     if (this.formValidated()) {
       const returnedState = R.pick([
         "number",
