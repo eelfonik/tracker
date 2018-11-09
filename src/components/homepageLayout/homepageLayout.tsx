@@ -1,19 +1,26 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import * as React from 'react';
 // import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import homepageStyle from './homepageLayout.css';
 import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
-// import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
 
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 //import '!style!css!../../commonStyles/reset.css';
 //import '!style!css!../../commonStyles/font.css';
 
-const HomeLayout = (props) => {
+export interface HomeProps {
+  isLoggedIn: boolean,
+  notif: string,
+  extras: object,
+  match: {
+    url: string,
+  },
+}
+
+const HomeLayout = (props: HomeProps) => {
   const url = props.match.url;
   return props.isLoggedIn ? (
       <Redirect to="/me" />
@@ -48,13 +55,7 @@ const HomeLayout = (props) => {
   );
 }
 
-HomeLayout.propTypes = {
-  isLoggedIn: PropTypes.bool,
-  notif: PropTypes.string,
-  extras: PropTypes.object,
-}
-
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: {login: object}) => {
   const { login } = state;
   return {
     isLoggedIn: login.isLoggedIn,

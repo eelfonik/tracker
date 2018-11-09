@@ -1,61 +1,29 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
+import { action } from 'typesafe-actions';
 
-function mapApiMessagesToNotif(msg: number) {
-  switch (msg) {
-    case 0:
-      return "Email not found";
-    case 1:
-      return "Invalid Password";
-    case 2:
-      return "Error with database";
-    case 3:
-      return "The famous not found";
-    case 4:
-      return "Email already exists!";
-    case 5:
-      return "Can't create user";
-    case 6:
-      return "Password reset expired :-(";
-    case 7:
-      return "Password reset failed";
-    case 8:
-      return "Password rest email incorrect";
-    case 9:
-      return "Can't reset password";
-    case 10:
-      return "Please enter the same password to confirm";
-    case 11:
-      return "Invoice with same number already exists";
-    case 12:
-      return "Can't create invoice";
-    case 13:
-      return "Can't create invoice for user";
-    default:
-      return "";
-  }
-}
+import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
 
-export const signUp = (resSuccess, resData) => ({
-  type: actions.SIGNUP,
+export const signUp = (resSuccess: boolean, resData: object) => action(actions.SIGNUP, {
   isLoggedIn: resSuccess,
-  notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
+  notif: resSuccess ? '' : mapApiErrorMessagesToNotif(resData.msg),
   extras: resData
 })
 
-export const logIn = (resSuccess, resData) => ({
-  type: actions.LOGIN,
+export const logIn = (resSuccess: boolean, resData: object) => action(actions.LOGIN, {
   isLoggedIn: resSuccess,
-  notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
+  notif: resSuccess ? '' : mapApiErrorMessagesToNotif(resData.msg),
   extras: resData
 })
 
-const logout = () => ({
-  type: actions.LOGOUT
+export const logout = () => action(actions.LOGOUT, {
+  isLoggedIn: false,
+  notif: '',
+  extras: {},
 })
 
-export const resetNotif = () => ({
-  type: actions.RESET_NOTIF
+export const resetNotif = () => action(actions.RESET_NOTIF, {
+  notif: ''
 })
 
 export function userLogin(value) {
@@ -99,7 +67,7 @@ export function userSignup(value) {
 }
 
 export function userLogOut() {
-  return (dispatch, getState) => {
+  return (dispatch) => {
     axios.get('/api/account/logout', {})
       .then((response) => {
         console.debug("user logout success ", response);
@@ -112,8 +80,7 @@ export function userLogOut() {
   }
 }
 
-const getInfo = (resData) => ({
-  type: actions.GET_INFO,
+export const getInfo = (resData) => action(actions.GET_INFO, {
   name: resData.userInfoModel.name,
   address: resData.userInfoModel.address,
   siret: resData.userInfoModel.siret,
@@ -121,20 +88,17 @@ const getInfo = (resData) => ({
   invoices: resData.invoices,
 })
 
-const updateInfo = (resData) => ({
-  type: actions.UPDATE_INFO,
+export const updateInfo = (resData) => action(actions.UPDATE_INFO, {
   name: resData.name,
   address: resData.address,
   siret: resData.siret,
   phone: resData.phone
 })
 
-const removeInfo = () => ({
-  type: actions.REMOVE_INFO,
-})
+export const removeInfo = () => action(actions.REMOVE_INFO)
 
-const isFetchingUser = () => ({
-  type: actions.FETCHING_USER_INFO
+export const isFetchingUser = () => action(actions.FETCHING_USER_INFO, {
+  isFetching: true
 })
 
 export function getUserInfo() {

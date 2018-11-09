@@ -1,7 +1,7 @@
 var UserController = function (userModel, session) {
 
     this.ApiResponse = require('../models/apiResponse.js');
-    this.ApiMessages = require('../models/apiMessages.js');
+    this.ApiMessages = require('../models/apiErrorMessages.js');
     this.UserProfile = require('../models/userProfile.js');
     this.UserInfo = require('../models/userInfo.js');
     this.InvoiceInfo = require('../models/invoiceInfo.js');

@@ -1,7 +1,5 @@
-class UserProfile {
-  constructor({email, username}) {
-    this.email = email,
-    this.username =username
-  }
+const UserProfile = function(ft) {
+  this.email = ft.email,
+  this.username = ft.username
 };
 module.exports = UserProfile;

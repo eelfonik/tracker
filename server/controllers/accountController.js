@@ -5,7 +5,7 @@ class AccountController {
     this.crypto = require("crypto");
     this.uuid = require("uuid");
     this.ApiResponse = require("../models/apiResponse.js");
-    this.ApiMessages = require("../models/apiMessages.js");
+    this.ApiErrorMessages = require("../models/apiErrorMessages.js");
     this.UserProfile = require("../models/userProfile.js");
     this.userModel = userModel;
     this.session = session;
@@ -19,39 +19,20 @@ class AccountController {
     this.session = session;
   };
 
-  createRes = (resType, extras = {}) => {
-    switch (resType) {
-      case "error":
-        return new this.ApiResponse({
-          success: false,
-          extras: { msg: this.ApiMessages.DB_ERROR }
-        });
-      case "duplicate":
-        return new this.ApiResponse({
-          success: false,
-          extras: { msg: this.ApiMessages.EMAIL_ALREADY_EXISTS }
-        });
-      case "userCreate":
-      case "userLoggedIn":
-        return new this.ApiResponse({
-          success: true,
-          extras
-        });
-      case "cannotCreateUser":
-        return new this.ApiResponse({
-          success: false,
-          extras: { msg: this.ApiMessages.COULD_NOT_CREATE_USER }
-        });
-      case 'wrongPassword':
-        return new this.ApiResponse({
-          success: false,
-          extras: { msg: this.ApiMessages.INVALID_PWD }
-        })
-      default:
-        throw new Error(
-          `an error occured when creating response with ${resType}`
-        );
+  createRes = (resType, extras = null) => {
+    if (extras || resType === "success") {
+      return new this.ApiResponse({
+        success: true,
+        extras
+      });
     }
+    if (Object.keys(this.ApiErrorMessages).includes(resType)) {
+      return new this.ApiResponse({
+        success: false,
+        extras: { msg: this.ApiErrorMessages[resType] }
+      });
+    }
+    throw new Error(`an error occured when creating response with ${resType}`);
   };
 
   hashPassword = (password, salt, callback) => {
@@ -64,14 +45,14 @@ class AccountController {
   signup = (newUser, callback) => {
     this.userModel.findOne({ email: newUser.email }, (err, user) => {
       if (err) {
-        return callback(err, this.createRes("error"));
+        return callback(err, this.createRes("DB_ERROR"));
       }
       if (user) {
-        return callback(err, this.createRes("duplicate"));
+        return callback(err, this.createRes("EMAIL_ALREADY_EXISTS"));
       }
       newUser.save((err, user, numberAffected) => {
         if (err) {
-          return callback(err, this.createRes("error"));
+          return callback(err, this.createRes("DB_ERROR"));
         }
         if (numberAffected === 1) {
           //create a userProfileModel from the UserProfile
@@ -86,7 +67,7 @@ class AccountController {
             })
           );
         }
-        return callback(err, this.createRes("cannotCreateUser"));
+        return callback(err, this.createRes("COULD_NOT_CREATE_USER"));
       });
     });
   };
@@ -94,7 +75,7 @@ class AccountController {
   login = (email, password, callback) => {
     this.userModel.findOne({ email: email }, (err, user) => {
       if (err) {
-        return callback(err, this.createRes("error"));
+        return callback(err, this.createRes("DB_ERROR"));
       }
 
       if (user) {
@@ -121,191 +102,116 @@ class AccountController {
               })
             );
           } else {
-            return callback(
-              err,
-              this.createRes('wrongPassword')
-            );
+            return callback(err, this.createRes("INVALID_PWD"));
           }
         });
       } else {
-        return callback(
-          err,
-          new this.ApiResponse({
-            success: false,
-            extras: { msg: this.ApiMessages.EMAIL_NOT_FOUND }
-          })
-        );
+        return callback(err, this.createRes("EMAIL_NOT_FOUND"));
       }
     });
   };
+
+  logout = () => {
+    //fuck it why I thought the delete here was to set on client side-_-
+    //it's used to delete the sessions collection in mongoDB...
+    if (this.session.userProfileModel) delete this.session.userProfileModel;
+    if (this.session.id) delete this.session.id;
+    if (this.session.userId) delete this.session.userId;
+    return;
+  };
+
+  resetPassword = (email, callback) => {
+    this.userModel.findOne({ email: email }, (err, user) => {
+      if (err) {
+        return callback(err, this.createRes("DB_ERROR"));
+      }
+      if (user) {
+        // Save the user's email and a password reset hash in session.
+        var passwordResetHash = this.uuid.v4();
+        this.session.passwordResetHash = passwordResetHash;
+        this.session.emailWhoRequestedPasswordReset = email;
+
+        this.mailer.sendPasswordResetHash(email, passwordResetHash);
+
+        return callback(
+          err,
+          this.createRes("resetPassword", {
+            passwordResetHash: passwordResetHash
+          })
+        );
+      }
+      return callback(err, this.createRes("EMAIL_NOT_FOUND"));
+    });
+  };
+
+  resetPasswordFinal = (
+    email,
+    newPassword,
+    newPasswordConfirm,
+    passwordResetHash,
+    callback
+  ) => {
+    if (!this.session || !this.session.passwordResetHash) {
+      return callback(null, this.createRes("PASSWORD_RESET_EXPIRED"));
+    }
+
+    if (this.session.passwordResetHash !== passwordResetHash) {
+      return callback(null, this.createRes("PASSWORD_RESET_HASH_MISMATCH"));
+    }
+
+    if (this.session.emailWhoRequestedPasswordReset !== email) {
+      return callback(null, this.createRes("PASSWORD_RESET_EMAIL_MISMATCH"));
+    }
+
+    if (newPassword !== newPasswordConfirm) {
+      return callback(null, this.createRes("PASSWORD_CONFIRM_MISMATCH"));
+    }
+
+    const passwordSalt = this.uuid.v4();
+
+    this.hashPassword(newPassword, passwordSalt, (err, passwordHash) => {
+      this.userModel.update(
+        { email: email },
+        { passwordHash: passwordHash, passwordSalt: passwordSalt },
+        (err, numberAffected, raw) => {
+          if (err) {
+            return callback(err, this.createRes("DB_ERROR"));
+          }
+          if (numberAffected < 1) {
+            return callback(err, this.createRes("COULD_NOT_RESET_PASSWORD"));
+          }
+          return callback(err, this.createRes("success"));
+        }
+      );
+    });
+  };
+
+  getUserFromUserRegistration = userRegistrationModel => {
+    if (
+      userRegistrationModel.password !== userRegistrationModel.passwordConfirm
+    ) {
+      this.createRes("PASSWORD_CONFIRM_MISMATCH");
+    }
+
+    const passwordSaltIn = this.uuid.v4();
+    const cryptoIterations = 10000; // Must match iterations used in controller#hashPassword.
+    const cryptoKeyLen = 64; // Must match keyLen used in controller#hashPassword.
+    let passwordHashIn;
+
+    const user = new this.User({
+      email: userRegistrationModel.email,
+      username: userRegistrationModel.username,
+      passwordHash: this.crypto.pbkdf2Sync(
+        userRegistrationModel.password,
+        passwordSaltIn,
+        cryptoIterations,
+        cryptoKeyLen,
+        "sha512"
+      ),
+      passwordSalt: passwordSaltIn
+    });
+    this.createRes("registerSuccess", { user: user });
+  };
 }
 
-AccountController.prototype.logout = function() {
-  //fuck it why I thought the delete here was to set on client side-_-
-  //it's used to delete the sessions collection in mongoDB...
-  if (this.session.userProfileModel) delete this.session.userProfileModel;
-  if (this.session.id) delete this.session.id;
-  if (this.session.userId) delete this.session.userId;
-  return;
-};
-
-AccountController.prototype.resetPassword = function(email, callback) {
-  var me = this;
-  me.userModel.findOne({ email: email }, function(err, user) {
-    if (err) {
-      return callback(
-        err,
-        new me.ApiResponse({
-          success: false,
-          extras: { msg: me.ApiMessages.DB_ERROR }
-        })
-      );
-    }
-
-    if (user) {
-      // Save the user's email and a password reset hash in session.
-      var passwordResetHash = me.uuid.v4();
-      me.session.passwordResetHash = passwordResetHash;
-      me.session.emailWhoRequestedPasswordReset = email;
-
-      me.mailer.sendPasswordResetHash(email, passwordResetHash);
-
-      return callback(
-        err,
-        new me.ApiResponse({
-          success: true,
-          extras: { passwordResetHash: passwordResetHash }
-        })
-      );
-    } else {
-      return callback(
-        err,
-        new me.ApiResponse({
-          success: false,
-          extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-        })
-      );
-    }
-  });
-};
-
-AccountController.prototype.resetPasswordFinal = function(
-  email,
-  newPassword,
-  newPasswordConfirm,
-  passwordResetHash,
-  callback
-) {
-  var me = this;
-  if (!me.session || !me.session.passwordResetHash) {
-    return callback(
-      null,
-      new me.ApiResponse({
-        success: false,
-        extras: { msg: me.ApiMessages.PASSWORD_RESET_EXPIRED }
-      })
-    );
-  }
-
-  if (me.session.passwordResetHash !== passwordResetHash) {
-    return callback(
-      null,
-      new me.ApiResponse({
-        success: false,
-        extras: { msg: me.ApiMessages.PASSWORD_RESET_HASH_MISMATCH }
-      })
-    );
-  }
-
-  if (me.session.emailWhoRequestedPasswordReset !== email) {
-    return callback(
-      null,
-      new me.ApiResponse({
-        success: false,
-        extras: { msg: me.ApiMessages.PASSWORD_RESET_EMAIL_MISMATCH }
-      })
-    );
-  }
-
-  if (newPassword !== newPasswordConfirm) {
-    return callback(
-      null,
-      new me.ApiResponse({
-        success: false,
-        extras: { msg: me.ApiMessages.PASSWORD_CONFIRM_MISMATCH }
-      })
-    );
-  }
-
-  var passwordSalt = this.uuid.v4();
-
-  me.hashPassword(newPassword, passwordSalt, function(err, passwordHash) {
-    me.userModel.update(
-      { email: email },
-      { passwordHash: passwordHash, passwordSalt: passwordSalt },
-      function(err, numberAffected, raw) {
-        if (err) {
-          return callback(
-            err,
-            new me.ApiResponse({
-              success: false,
-              extras: { msg: me.ApiMessages.DB_ERROR }
-            })
-          );
-        }
-
-        if (numberAffected < 1) {
-          return callback(
-            err,
-            new me.ApiResponse({
-              success: false,
-              extras: { msg: me.ApiMessages.COULD_NOT_RESET_PASSWORD }
-            })
-          );
-        } else {
-          return callback(
-            err,
-            new me.ApiResponse({ success: true, extras: null })
-          );
-        }
-      }
-    );
-  });
-};
-
-AccountController.prototype.getUserFromUserRegistration = function(
-  userRegistrationModel
-) {
-  var me = this;
-
-  if (
-    userRegistrationModel.password !== userRegistrationModel.passwordConfirm
-  ) {
-    return new me.ApiResponse({
-      success: false,
-      extras: { msg: me.ApiMessages.PASSWORD_CONFIRM_MISMATCH }
-    });
-  }
-
-  var passwordSaltIn = this.uuid.v4(),
-    cryptoIterations = 10000, // Must match iterations used in controller#hashPassword.
-    cryptoKeyLen = 64, // Must match keyLen used in controller#hashPassword.
-    passwordHashIn;
-
-  var user = new this.User({
-    email: userRegistrationModel.email,
-    username: userRegistrationModel.username,
-    passwordHash: this.crypto.pbkdf2Sync(
-      userRegistrationModel.password,
-      passwordSaltIn,
-      cryptoIterations,
-      cryptoKeyLen,
-      "sha512"
-    ),
-    passwordSalt: passwordSaltIn
-  });
-
-  return new me.ApiResponse({ success: true, extras: { user: user } });
-};
-
-module.exports.AccountController;
+module.exports = AccountController;

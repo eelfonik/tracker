@@ -1,7 +1,7 @@
 var InvoiceController = function(invoiceModel, userModel,session) {
 
     this.ApiResponse = require('../models/apiResponse.js');
-    this.ApiMessages = require('../models/apiMessages.js');
+    this.ApiMessages = require('../models/apiErrorMessages.js');
     this.InvoiceInfo = require('../models/invoiceInfo.js');
     this.ClientProfile = require('../models/clientProfile.js');
     this.userModel = userModel;

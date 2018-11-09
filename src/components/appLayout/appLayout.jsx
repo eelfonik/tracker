@@ -3,7 +3,6 @@ import React from 'react';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 
 import { connect } from 'react-redux';
-// import { ListeningRouter, Switch, Route } from '../../helpers/listeningRoute';
 import globalStyle from 'commonStyles/reset.css';
 import font from 'commonStyles/font.css';
 import appStyle from './appLayout.css';

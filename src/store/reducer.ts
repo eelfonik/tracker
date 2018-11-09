@@ -30,55 +30,52 @@ export type Action = ActionType<typeof actions>;
 
 export function loginReducer(state = {}, action: Action) {
   switch (action.type) {
-    case 'LOGIN':
-    case 'SIGNUP':
-      return Object.assign({}, state, {
-        isLoggedIn: action.isLoggedIn,
-        notif: action.notif,
-        extras: action.extras
-      });
-    case 'LOGOUT':
-      return Object.assign({}, state, {
-        isLoggedIn: false,
-        notif: '',
-        extras: {},
-      });
-    case 'RESET_NOTIF':
-      return Object.assign({}, state, {
-        notif: ''
-      });
+    case getType(actions.logIn):
+    case getType(actions.signUp):
+      return {
+        ...state,
+        ...action.payload
+      };
+    case getType(actions.logout):
+      return {
+        ...state,
+        ...action.payload
+      }
+    case getType(actions.resetNotif):
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state
   }
 }
 
-export function UserInfoReducer(state = { isFetching: false }, action) {
+export function UserInfoReducer(state = { isFetching: false }, action: Action) {
   switch (action.type) {
-    case 'FETCHING_USER_INFO':
-      return Object.assign({}, state, {
-        isFetching: true
-      });
-    case 'GET_INFO':
-    case 'UPDATE_INFO':
-      return Object.assign({}, state, {
+    case getType(actions.isFetchingUser):
+      return {
+        ...state,
+        ...action.payload
+      };
+    case getType(actions.getInfo):
+    case getType(actions.updateInfo):
+      return {
+        ...state,
         isFetching: false,
-        name: action.name,
-        address: action.address,
-        siret: action.siret,
-        phone: action.phone,
-        invoices: action.invoices
-      });
-    case 'REMOVE_INFO':
+        ...action.payload,
+      };
+    case getType(actions.removeInfo):
       return { isFetching: false };
     default:
       return state
   }
 }
 
-export function InvoiceInfoReducer(state = {}, action) {
+export function InvoiceInfoReducer(state = {}, action: Action) {
   switch (action.type) {
-    case 'GET_INVOICE_INFO':
-    case 'ADD_NEW_INVOICE':
+    case getType(actions.GET_INVOICE_INFO):
+    case getType(actions.ADD_NEW_INVOICE):
       return Object.assign({}, state, {
         number: action.number,
         date: action.date,
@@ -92,9 +89,9 @@ export function InvoiceInfoReducer(state = {}, action) {
   }
 }
 
-export function UserInvoicesReducer(state = {}, action) {
+export function UserInvoicesReducer(state = {}, action: Action) {
   switch (action.type) {
-    case 'GET_USER_INVOICES':
+    case getType(actions.GET_USER_INVOICES):
       return Object.assign({}, state, {
         invoices: action.invoices,
       });
