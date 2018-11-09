@@ -13,13 +13,15 @@ class AccountController {
     this.User = require("../models/userSchema.js");
   }
 
-  getSession = () => this.session;
+  getSession() {
+    return this.session;
+  }
 
-  setSession = session => {
+  setSession(session) {
     this.session = session;
   };
 
-  createRes = (resType, extras = null) => {
+  createRes(resType, extras = null) {
     if (extras || resType === "success") {
       return new this.ApiResponse({
         success: true,
@@ -35,14 +37,14 @@ class AccountController {
     throw new Error(`an error occured when creating response with ${resType}`);
   };
 
-  hashPassword = (password, salt, callback) => {
+  hashPassword(password, salt, callback) {
     // We use pbkdf2 to hash and iterate 10k times by default
     const iterations = 10000;
     const keyLen = 64; // 64 bit.
     this.crypto.pbkdf2(password, salt, iterations, keyLen, "sha512", callback);
   };
 
-  signup = (newUser, callback) => {
+  signup(newUser, callback) {
     this.userModel.findOne({ email: newUser.email }, (err, user) => {
       if (err) {
         return callback(err, this.createRes("DB_ERROR"));
@@ -72,7 +74,7 @@ class AccountController {
     });
   };
 
-  login = (email, password, callback) => {
+  login(email, password, callback) {
     this.userModel.findOne({ email: email }, (err, user) => {
       if (err) {
         return callback(err, this.createRes("DB_ERROR"));
@@ -111,7 +113,7 @@ class AccountController {
     });
   };
 
-  logout = () => {
+  logout() {
     //fuck it why I thought the delete here was to set on client side-_-
     //it's used to delete the sessions collection in mongoDB...
     if (this.session.userProfileModel) delete this.session.userProfileModel;
@@ -120,7 +122,7 @@ class AccountController {
     return;
   };
 
-  resetPassword = (email, callback) => {
+  resetPassword(email, callback) {
     this.userModel.findOne({ email: email }, (err, user) => {
       if (err) {
         return callback(err, this.createRes("DB_ERROR"));
@@ -144,13 +146,13 @@ class AccountController {
     });
   };
 
-  resetPasswordFinal = (
+  resetPasswordFinal(
     email,
     newPassword,
     newPasswordConfirm,
     passwordResetHash,
     callback
-  ) => {
+  ) {
     if (!this.session || !this.session.passwordResetHash) {
       return callback(null, this.createRes("PASSWORD_RESET_EXPIRED"));
     }
@@ -186,7 +188,7 @@ class AccountController {
     });
   };
 
-  getUserFromUserRegistration = userRegistrationModel => {
+  getUserFromUserRegistration(userRegistrationModel) {
     if (
       userRegistrationModel.password !== userRegistrationModel.passwordConfirm
     ) {

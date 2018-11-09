@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { connect, Provider } from 'react-redux';
 import { Link, Redirect, Switch, Route } from 'react-router-dom';
+import { hot } from 'react-hot-loader'
 import { ConnectedRouter } from 'connected-react-router'
 import HomeLayout from './components/homepageLayout/homepageLayout';
 import AppLayout from './components/appLayout/appLayout';
@@ -20,4 +21,4 @@ const App = () => (
   </Provider>
 );
 
-export default App;
+export default hot(module)(App)

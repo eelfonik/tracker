@@ -1,39 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
 //this one is for using css modules, which will output a specified css file in output destination
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
-const styles = [
-  { loader: 'style-loader' },
-  {
-    loader:
-    'css-loader',
-    options: {
-      modules: true,
-      importLoaders: 1,
-      localIdentName: '[name]__[local]___[hash:base64:5]'
-    }
-  },
-  { loader: 'postcss-loader' }
-];
-const styleLoader = isProd ? ExtractTextPlugin.extract({
-  fallback: 'style-loader',
-  use: [
-    {
-      loader: 'css-loader',
-      options: {
-        modules: true,
-        importLoaders: 1,
-        localIdentName: '[name]__[local]___[hash:base64:5]'
-      }
-    },
-    {
-      loader: 'postcss-loader'
-    }
-  ]
-}) : styles;
 
 module.exports = {
   devtool: 'source-map',
@@ -59,7 +30,19 @@ module.exports = {
         // as ExtractTextPlugin will prevent HMR working, we only use it on production, not development
         // see https://github.com/webpack/extract-text-webpack-plugin/issues/30#issuecomment-125757853
         test: /\.css$/,
-        use: styleLoader
+        use: [
+          { loader: 'style-loader' },
+          {
+            loader:
+            'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+              localIdentName: '[name]__[local]___[hash:base64:5]'
+            }
+          },
+          { loader: 'postcss-loader' }
+        ]
       }
     ]
   },
@@ -69,7 +52,7 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.tsx', '.css']
+    extensions: ['.js', '.jsx', '.tsx', '.ts', '.css']
   },
   output: {
     path: path.join(__dirname, 'dist'),
@@ -89,10 +72,11 @@ module.exports = {
       filename: 'index.html',
       inject: 'body',
     }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new ExtractTextPlugin({
-      filename: 'style.css',
-      allChunks: true
-    }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: isProd ? '[name].[hash].css': "[name].css",
+      chunkFilename: isProd ? '[id].[hash].css' : "[id].css"
+    })
   ]
 };
