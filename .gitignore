@@ -5,6 +5,7 @@ docker-compose.yml
 npm-debug.log
 .idea
 .vscode
+dist/*
 
 .idea/workspace.xml
 

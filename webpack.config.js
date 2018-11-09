@@ -44,6 +44,7 @@ module.exports = {
   ],
   module: {
     rules: [
+      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
       {
         test: /\.jsx?$/,         // Match both .js and .jsx files
         exclude: /node_modules/,
@@ -62,9 +63,13 @@ module.exports = {
       }
     ]
   },
+  externals: {
+    "react": "React",
+    "react-dom": "ReactDOM"
+  },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.css']
+    extensions: ['.js', '.jsx', '.tsx', '.css']
   },
   output: {
     path: path.join(__dirname, 'dist'),

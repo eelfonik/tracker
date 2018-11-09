@@ -24,8 +24,11 @@
 
 import { routerReducer } from 'react-router-redux';
 import { combineReducers } from 'redux';
+import { ActionType, getType } from 'typesafe-actions';
+import * as actions from './actions'
+export type Action = ActionType<typeof actions>;
 
-export function loginReducer(state = {}, action) {
+export function loginReducer(state = {}, action: Action) {
   switch (action.type) {
     case 'LOGIN':
     case 'SIGNUP':
@@ -52,7 +55,6 @@ export function loginReducer(state = {}, action) {
 export function UserInfoReducer(state = { isFetching: false }, action) {
   switch (action.type) {
     case 'FETCHING_USER_INFO':
-    case 'UPDATING_USER_INFO':
       return Object.assign({}, state, {
         isFetching: true
       });

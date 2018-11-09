@@ -1,6 +1,7 @@
 import axios from 'axios';
+import * as actions from './actionConstants'
 
-function mapApiMessagesToNotif(msg) {
+function mapApiMessagesToNotif(msg: number) {
   switch (msg) {
     case 0:
       return "Email not found";
@@ -35,26 +36,26 @@ function mapApiMessagesToNotif(msg) {
   }
 }
 
-const signUp = (resSuccess, resData) => ({
-  type: 'SIGNUP',
+export const signUp = (resSuccess, resData) => ({
+  type: actions.SIGNUP,
   isLoggedIn: resSuccess,
   notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
   extras: resData
 })
 
-const logIn = (resSuccess, resData) => ({
-  type: 'LOGIN',
+export const logIn = (resSuccess, resData) => ({
+  type: actions.LOGIN,
   isLoggedIn: resSuccess,
   notif: resSuccess ? '' : mapApiMessagesToNotif(resData.msg),
   extras: resData
 })
 
 const logout = () => ({
-  type: 'LOGOUT'
+  type: actions.LOGOUT
 })
 
 export const resetNotif = () => ({
-  type: 'RESET_NOTIF'
+  type: actions.RESET_NOTIF
 })
 
 export function userLogin(value) {
@@ -112,7 +113,7 @@ export function userLogOut() {
 }
 
 const getInfo = (resData) => ({
-  type: 'GET_INFO',
+  type: actions.GET_INFO,
   name: resData.userInfoModel.name,
   address: resData.userInfoModel.address,
   siret: resData.userInfoModel.siret,
@@ -121,7 +122,7 @@ const getInfo = (resData) => ({
 })
 
 const updateInfo = (resData) => ({
-  type: 'UPDATE_INFO',
+  type: actions.UPDATE_INFO,
   name: resData.name,
   address: resData.address,
   siret: resData.siret,
@@ -129,11 +130,11 @@ const updateInfo = (resData) => ({
 })
 
 const removeInfo = () => ({
-  type: 'REMOVE_INFO',
+  type: actions.REMOVE_INFO,
 })
 
 const isFetchingUser = () => ({
-  type: "FETCHING_USER_INFO"
+  type: actions.FETCHING_USER_INFO
 })
 
 export function getUserInfo() {
@@ -172,7 +173,7 @@ export function updateUserInfo(value) {
 }
 
 const addNewInvoice = (resData) => ({
-  type: 'ADD_NEW_INVOICE',
+  type: actions.ADD_NEW_INVOICE,
   number: resData.number,
   date: resData.date,
   sum: resData.sum,
@@ -197,7 +198,7 @@ export function addNewInvoiceForUser(value) {
 }
 
 const getInvoices = (resData) => ({
-  type: 'GET_USER_INVOICES',
+  type: actions.GET_USER_INVOICES,
   invoices: resData
 })
 

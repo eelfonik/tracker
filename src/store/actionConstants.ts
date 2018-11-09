@@ -1,0 +1,11 @@
+export const SIGNUP = 'SIGNUP'
+export const LOGIN = 'LOGIN'
+export const LOGOUT = 'LOGOUT'
+export const RESET_NOTIF = 'RESET_NOTIF'
+
+export const GET_INFO = 'GET_INFO'
+export const UPDATE_INFO = 'UPDATE_INFO'
+export const REMOVE_INFO = 'REMOVE_INFO'
+export const FETCHING_USER_INFO = 'FETCHING_USER_INFO'
+export const ADD_NEW_INVOICE = 'ADD_NEW_INVOICE'
+export const GET_USER_INVOICES = 'GET_USER_INVOICES'

@@ -1,6 +1,7 @@
-var UserProfile = function(ft) {
-    this.email = ft.email,
-        this.username = ft.username
+class UserProfile {
+  constructor({email, username}) {
+    this.email = email,
+    this.username =username
+  }
 };
-
 module.exports = UserProfile;
