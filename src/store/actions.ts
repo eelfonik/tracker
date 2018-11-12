@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
 import { action } from 'typesafe-actions';
+import { ThunkDispatch, ThunkAction } from 'redux-thunk'
 import { LoginReq, LoginRes, UserInfo, UserExtras } from './types'
 
 import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
@@ -28,24 +29,22 @@ export const resetNotif = () => action(actions.RESET_NOTIF, {
   notif: ''
 })
 
-export function userLogin(value: LoginReq) {
-  return (dispatch, getState) => {
+export const userLogin = (value: LoginReq) => 
+  async (dispatch: ThunkDispatch) => {
     const data = {
       email: value.email,
       password: value.pass,
     }
-    axios.post('/api/account/login', data)
-      .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-        return dispatch(logIn(response.data))
-      })
-      .catch((error) => {
-        console.log("login error!", error);
-      });
+    try {
+      const response = await axios.post('/api/account/login', data)
+      return dispatch(logIn(response.data))
+    } catch (error) {
+      console.log("login error!", error);
+    }
   }
-}
 
-export function userSignup(value: LoginReq) {
-  return (dispatch, getState) => {
+export const userSignup = (value: LoginReq) =>
+  async (dispatch: ThunkDispatch) => {
     const data = {
       username: value.name,
       email: value.email,
@@ -54,33 +53,29 @@ export function userSignup(value: LoginReq) {
       passwordConfirm: value.pass
     }
 
-    axios.post('/api/account/signup', data)
-      .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-        //the response.data is what we defined at controllers/serverRoutes.js as callback function
-        //in the case of signup,
-        //if data.success === false, the data.extras will have a msg to identify the problem
-        //if data.success === true, data.extras will contain a userProfileModel with email and username
-        return dispatch(signUp(response.data));
-      })
-      .catch((error) => {
-        console.log("signup error!", error);
-      });
+    try {
+      const response = await axios.post('/api/account/signup', data)
+      //the response.data is what we defined at controllers/serverRoutes.js as callback function
+      //in the case of signup,
+      //if data.success === false, the data.extras will have a msg to identify the problem
+      //if data.success === true, data.extras will contain a userProfileModel with email and username
+      return dispatch(signUp(response.data));
+    } catch (error) {
+      console.log("signup error!", error);
+    }
   }
-}
 
-export function userLogOut() {
-  return (dispatch) => {
-    axios.get('/api/account/logout', {})
-      .then((response) => {
-        console.debug("user logout success ", response);
-        dispatch(logout());
-        dispatch(removeInfo());
-      })
-      .catch((error) => {
-        console.log("logout error!", error);
-      });
+export const userLogOut = () => 
+  async (dispatch: ThunkAction) => {
+    try {
+      const response = await axios.get('/api/account/logout', {})
+      console.debug("user logout success ", response);
+      dispatch(logout());
+      dispatch(removeInfo());
+    } catch (error) {
+      console.log("logout error!", error);
+    }
   }
-}
 
 // ====================user related actions once login==================
 
