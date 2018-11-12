@@ -4,13 +4,12 @@ class AccountController {
   constructor(userModel, session, mailer) {
     this.crypto = require("crypto");
     this.uuid = require("uuid");
-    this.ApiResponse = require("../models/apiResponse.js");
-    this.ApiErrorMessages = require("../models/apiErrorMessages.js");
     this.UserProfile = require("../models/userProfile.js");
     this.userModel = userModel;
     this.session = session;
     this.mailer = mailer;
     this.User = require("../models/userSchema.js");
+    this.createRes = require("../utils/createServerRes.js")
   }
 
   getSession() {
@@ -19,22 +18,6 @@ class AccountController {
 
   setSession(session) {
     this.session = session;
-  };
-
-  createRes(resType, extras = null) {
-    if (extras || resType === "success") {
-      return new this.ApiResponse({
-        success: true,
-        extras
-      });
-    }
-    if (Object.keys(this.ApiErrorMessages).includes(resType)) {
-      return new this.ApiResponse({
-        success: false,
-        extras: { msg: this.ApiErrorMessages[resType] }
-      });
-    }
-    throw new Error(`an error occured when creating response with ${resType}`);
   };
 
   hashPassword(password, salt, callback) {

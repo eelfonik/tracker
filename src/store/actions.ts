@@ -1,19 +1,21 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
 import { action } from 'typesafe-actions';
+import { LoginReq, LoginRes, UserInfo, UserExtras } from './types'
 
 import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
 
-export const signUp = (resSuccess: boolean, resData: object) => action(actions.SIGNUP, {
-  isLoggedIn: resSuccess,
-  notif: resSuccess ? '' : mapApiErrorMessagesToNotif(resData.msg),
-  extras: resData
+// ===============login/signup related actions=================
+export const signUp = ({success, extras} : LoginRes) => action(actions.SIGNUP, {
+  isLoggedIn: success,
+  notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
+  extras
 })
 
-export const logIn = (resSuccess: boolean, resData: object) => action(actions.LOGIN, {
-  isLoggedIn: resSuccess,
-  notif: resSuccess ? '' : mapApiErrorMessagesToNotif(resData.msg),
-  extras: resData
+export const logIn = ({success, extras} : LoginRes) => action(actions.LOGIN, {
+  isLoggedIn: success,
+  notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
+  extras
 })
 
 export const logout = () => action(actions.LOGOUT, {
@@ -26,7 +28,7 @@ export const resetNotif = () => action(actions.RESET_NOTIF, {
   notif: ''
 })
 
-export function userLogin(value) {
+export function userLogin(value: LoginReq) {
   return (dispatch, getState) => {
     const data = {
       email: value.email,
@@ -34,7 +36,7 @@ export function userLogin(value) {
     }
     axios.post('/api/account/login', data)
       .then((response) => {//use arrow function to avoid binding 'this' manually, see https://www.reddit.com/r/javascript/comments/4t6pd9/clean_way_to_setstate_within_axios_promise_in/
-        return dispatch(logIn(response.data.success, response.data.extras))
+        return dispatch(logIn(response.data))
       })
       .catch((error) => {
         console.log("login error!", error);
@@ -42,7 +44,7 @@ export function userLogin(value) {
   }
 }
 
-export function userSignup(value) {
+export function userSignup(value: LoginReq) {
   return (dispatch, getState) => {
     const data = {
       username: value.name,
@@ -58,7 +60,7 @@ export function userSignup(value) {
         //in the case of signup,
         //if data.success === false, the data.extras will have a msg to identify the problem
         //if data.success === true, data.extras will contain a userProfileModel with email and username
-        return dispatch(signUp(response.data.success, response.data.extras));
+        return dispatch(signUp(response.data));
       })
       .catch((error) => {
         console.log("signup error!", error);
@@ -80,7 +82,9 @@ export function userLogOut() {
   }
 }
 
-export const getInfo = (resData) => action(actions.GET_INFO, {
+// ====================user related actions once login==================
+
+export const getInfo = (resData: UserExtras) => action(actions.GET_INFO, {
   name: resData.userInfoModel.name,
   address: resData.userInfoModel.address,
   siret: resData.userInfoModel.siret,
@@ -88,7 +92,7 @@ export const getInfo = (resData) => action(actions.GET_INFO, {
   invoices: resData.invoices,
 })
 
-export const updateInfo = (resData) => action(actions.UPDATE_INFO, {
+export const updateInfo = (resData: UserInfo) => action(actions.UPDATE_INFO, {
   name: resData.name,
   address: resData.address,
   siret: resData.siret,
@@ -117,7 +121,7 @@ export function getUserInfo() {
   }
 }
 
-export function updateUserInfo(value) {
+export function updateUserInfo(value: UserInfo) {
   return (dispatch, getState) => {
     const userInfo = {
       name: value.name,
@@ -136,8 +140,9 @@ export function updateUserInfo(value) {
   }
 }
 
-const addNewInvoice = (resData) => ({
-  type: actions.ADD_NEW_INVOICE,
+// ====================invoices for a given user actions==================
+
+export const addNewInvoice = (resData) => action(actions.ADD_NEW_INVOICE, {
   number: resData.number,
   date: resData.date,
   sum: resData.sum,
@@ -161,8 +166,7 @@ export function addNewInvoiceForUser(value) {
   }
 }
 
-const getInvoices = (resData) => ({
-  type: actions.GET_USER_INVOICES,
+export const getInvoices = (resData) => action(actions.GET_USER_INVOICES, {
   invoices: resData
 })
 

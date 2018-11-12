@@ -6,11 +6,13 @@ import { ConnectedRouter } from 'connected-react-router'
 import HomeLayout from './components/homepageLayout/homepageLayout';
 import AppLayout from './components/appLayout/appLayout';
 import store from './store/appStore';
-import { createBrowserHistory } from 'history';
+import {History} from 'history'
 
-const history = createBrowserHistory();
+interface AppProps {
+  history: History;
+}
 
-const App = () => (
+const App = ({history} : AppProps) => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Switch>

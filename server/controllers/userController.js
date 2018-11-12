@@ -1,146 +1,123 @@
-var UserController = function (userModel, session) {
-
-    this.ApiResponse = require('../models/apiResponse.js');
-    this.ApiMessages = require('../models/apiErrorMessages.js');
-    this.UserProfile = require('../models/userProfile.js');
-    this.UserInfo = require('../models/userInfo.js');
-    this.InvoiceInfo = require('../models/invoiceInfo.js');
+class UserController {
+  constructor(userModel, session) {
+    this.UserProfile = require("../models/userProfile.js");
+    this.UserInfo = require("../models/userInfo.js");
+    this.InvoiceInfo = require("../models/invoiceInfo.js");
     this.userModel = userModel;
     //this.invoiceModel = invoiceModel;
     this.session = session;
     //this.User = require('../models/userSchema.js');
-    this.Invoice = require('../models/invoiceSchema');
-};
+    this.Invoice = require("../models/invoiceSchema");
+    this.createRes = require("../utils/createServerRes.js");
+  }
 
-UserController.prototype.getSession = function () {
+  getSession() {
     return this.session;
-};
+  }
 
-UserController.prototype.setSession = function (session) {
+  setSession(session) {
     this.session = session;
-};
+  }
 
-UserController.prototype.getInfo = function (callback) {
-    var me = this;
+  getInfo(callback) {
     //if (this.session && this.session.userProfileModel) {
-        me.userModel.findOne({ email: me.session.userProfileModel.email }, function (err,user) {
-            if (err) {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.DB_ERROR }
-                }));
-            }
+    this.userModel.findOne(
+      { email: this.session.userProfileModel.email },
+      (err, user) => {
+        if (err) {
+          return callback(err, this.createRes("DB_ERROR"));
+        }
 
-            if (user) {
-                var userInfoModel = new me.UserInfo({
-                    name: user.info.name,
-                    address: user.info.address,
-                    siret:user.info.siret,
-                    phone:user.info.phone,
-                });
+        if (user) {
+          const userInfoModel = new this.UserInfo({
+            name: user.info.name,
+            address: user.info.address,
+            siret: user.info.siret,
+            phone: user.info.phone
+          });
 
-                var invoicesIds = user.invoices;
-                var clientsIds = user.clients;
-                var userId = user._id;
+          const invoicesIds = user.invoices;
+          const clientsIds = user.clients;
+          const userId = user._id;
 
-                return callback(err, new me.ApiResponse({
-                    success: true,
-                    extras: {
-                        userInfoModel: userInfoModel,
-                        invoices: invoicesIds,
-                        clients: clientsIds,
-                        userId:userId
-                    }
-                }));
-
-            } else {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-                }));
-            }
-        });
+          return callback(
+            err,
+            this.createRes("getUserWithInfos", {
+              userInfoModel: userInfoModel,
+              invoices: invoicesIds,
+              clients: clientsIds,
+              userId: userId
+            })
+          );
+        }
+        return callback(err, this.createRes("EMAIL_NOT_FOUND"));
+      }
+    );
     //}
-};
+  }
 
-UserController.prototype.updateInfo = function(userInfo, callback) {
+  updateInfo(userInfo, callback) {
+    // add {new:true} to tell mongoose return the updated value
+    //http://stackoverflow.com/a/32811548/6849186
+    //{upsert: true} is used to tell if there's no existing field, create one
+    this.userModel.findOneAndUpdate(
+      { email: this.session.userProfileModel.email },
+      { info: userInfo },
+      { new: true, upsert: true },
+      (err, user) => {
+        if (err) {
+          return callback(err, this.createRes("DB_ERROR"));
+        }
 
-    var me = this;
-        // add {new:true} to tell mongoose return the updated value
-        //http://stackoverflow.com/a/32811548/6849186
-        //{upsert: true} is used to tell if there's no existing field, create one
-        me.userModel.findOneAndUpdate({ email: me.session.userProfileModel.email }, {info: userInfo}, {new: true, upsert:true},function (err, user) {
+        //if find a user by email
+        if (user) {
+          const userInfoModel = new this.UserInfo({
+            name: user.info.name,
+            address: user.info.address,
+            siret: user.info.siret,
+            phone: user.info.phone
+          });
 
-            if (err) {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.DB_ERROR }
-                }));
-            }
+          return callback(
+            err,
+            this.createRes("updateUserInfo", {
+              userInfoModel: userInfoModel
+            })
+          );
+        }
+        return callback(err, this.createRes("EMAIL_NOT_FOUND"));
+      }
+    );
+  }
 
-            //if find a user by email
-            if (user) {
-                var userInfoModel = new me.UserInfo({
-                    name: user.info.name,
-                    address: user.info.address,
-                    siret:user.info.siret,
-                    phone:user.info.phone
-                });
-
-                return callback(err, new me.ApiResponse({
-                    success: true,
-                    extras: {
-                        userInfoModel: userInfoModel,
-                    }
-                }));
-
-            } else {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-                }));
-            }
-
-        });
-};
-
-UserController.prototype.updateInvoicesId = function(newInvoiceId, callback) {
-
-    var me = this;
+  updateInvoicesId(newInvoiceId, callback) {
     //userInvoices should be an array of ids!!
     //const invoiceIdsArray = ??? should be able to addnew/delete
 
     // add {new:true} to tell mongoose return the updated value
     //http://stackoverflow.com/a/32811548/6849186
     //{upsert: true} is used to tell if there's no existing field, create one
-    me.userModel.findOneAndUpdate({ email: me.session.userProfileModel.email }, {invoices: newInvoiceId}, {new: true, upsert:true},function (err, user) {
-
+    this.userModel.findOneAndUpdate(
+      { email: this.session.userProfileModel.email },
+      { invoices: newInvoiceId },
+      { new: true, upsert: true },
+      (err, user) => {
         if (err) {
-            return callback(err, new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.DB_ERROR }
-            }));
+          return callback(err, this.createRes("DB_ERROR"));
         }
 
         //if find a user by email
         if (user) {
-
-            return callback(err, new me.ApiResponse({
-                success: true,
-                extras: {
-                    userInvoices: user.invoices,
-                }
-            }));
-
+          return callback(
+            err,
+            this.createRes("updateUserInvoice", { userInvoices: user.invoices })
+          );
         } else {
-            return callback(err, new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-            }));
+          return callback(err, this.createRes("EMAIL_NOT_FOUND"));
         }
-
-    });
-};
-
+      }
+    );
+  }
+}
 
 module.exports = UserController;

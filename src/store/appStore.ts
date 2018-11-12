@@ -1,7 +1,10 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
-import reducer from './reducer';
-// import createHistory from 'history/createBrowserHistory';
+import createRootReducer from './reducer';
+import { routerMiddleware } from 'connected-react-router'
+import { createBrowserHistory } from 'history';
+
+const history = createBrowserHistory();
 // Create a Redux store holding the state of your app.
 // Its API is { subscribe, dispatch, getState }.
 //const store = createStore(login);
@@ -29,11 +32,14 @@ const composeEnhancers =
         }) : compose;
 
 const enhancer = composeEnhancers(
-    applyMiddleware(thunk),
+    applyMiddleware(
+      thunk,
+      routerMiddleware(history)
+    ),
     // other store enhancers if any
 );
 const store = createStore(
-  reducer,
+  createRootReducer(history),
   persistedState,
   enhancer
 )

@@ -22,8 +22,9 @@
 //     phone:""
 // }
 
-import { routerReducer } from 'react-router-redux';
+import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux';
+import { History } from 'history'
 import { ActionType, getType } from 'typesafe-actions';
 import * as actions from './actions'
 export type Action = ActionType<typeof actions>;
@@ -74,16 +75,11 @@ export function UserInfoReducer(state = { isFetching: false }, action: Action) {
 
 export function InvoiceInfoReducer(state = {}, action: Action) {
   switch (action.type) {
-    case getType(actions.GET_INVOICE_INFO):
-    case getType(actions.ADD_NEW_INVOICE):
-      return Object.assign({}, state, {
-        number: action.number,
-        date: action.date,
-        sum: action.sum,
-        taxRate: action.taxRate,
-        currency: action.currency,
-        description: action.description,
-      });
+    case getType(actions.addNewInvoice):
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state
   }
@@ -91,17 +87,18 @@ export function InvoiceInfoReducer(state = {}, action: Action) {
 
 export function UserInvoicesReducer(state = {}, action: Action) {
   switch (action.type) {
-    case getType(actions.GET_USER_INVOICES):
-      return Object.assign({}, state, {
-        invoices: action.invoices,
-      });
+    case getType(actions.getInvoices):
+      return {
+        ...state,
+        ...action.payload,
+      };
     default:
       return state
   }
 }
 
-const reducer = combineReducers({
-  router: routerReducer,
+const reducer = (history: History) => combineReducers({
+  router: connectRouter(history),
   login: loginReducer,
   userInfo: UserInfoReducer,
   invoiceInfo: InvoiceInfoReducer,

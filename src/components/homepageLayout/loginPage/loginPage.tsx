@@ -1,11 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import { userLogin, resetNotif } from 'store/actions';
+import { userLogin, resetNotif } from '../../../store/actions';
+import { AppState, LoginState } from '../../../store/types'
 import loginPageStyle from './loginPage.css';
 import formStyle from '../../../commonStyles/form.css';
 
-class LoginPage extends React.Component {
+class LoginPage extends React.Component<LoginState> {
   constructor(props) {
     super(props);
     this.state = {
@@ -13,11 +14,6 @@ class LoginPage extends React.Component {
       emailValid: true,
       pass: '',
     };
-    this.changeMail = this.changeMail.bind(this);
-    this.changePass = this.changePass.bind(this);
-    this.submitData = this.submitData.bind(this);
-    this.isEmail = this.isEmail.bind(this);
-    this.formValidated = this.formValidated.bind(this);
   }
 
   //direct router on front-end after success login using react-router
@@ -32,18 +28,18 @@ class LoginPage extends React.Component {
     this.props.resetNotif();
   }
 
-  isEmail(value) {
+  isEmail(value: string) {
     //test emails
     //see http://stackoverflow.com/a/1373724/6849186
     var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(value);
   }
 
-  formValidated() {
+  formValidated = () => {
     return !!this.state.email && this.state.emailValid && !!this.state.pass;
   }
 
-  changeMail(e) {
+  changeMail = (e) => {
     if (this.isEmail(e.target.value)) {
       this.setState({
         email: e.target.value,
@@ -57,14 +53,14 @@ class LoginPage extends React.Component {
     }
   }
 
-  changePass(e) {
+  changePass = (e) => {
     this.setState({
       pass: e.target.value
     });
   }
 
 
-  submitData() {
+  submitData = () => {
     if (this.formValidated()) {
       this.props.onLoginClick(this.state);
     } else {
@@ -102,7 +98,7 @@ class LoginPage extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: AppState, ownProps) => {
   const { login } = state;
   return {
     isLoggedIn: login.isLoggedIn,

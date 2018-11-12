@@ -1,9 +1,10 @@
-import React from 'react';
+import * as React from 'react';
 // import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import signupPageStyle from './signupPage.css';
 import formStyle from 'commonStyles/form.css';
-import { userSignup, resetNotif } from 'store/actions';
+import { userSignup, resetNotif } from '../../../store/actions';
+import { LoginReq } from '../../../store/types'
 
 class SignupPage extends React.Component {
   constructor(props) {
@@ -14,12 +15,6 @@ class SignupPage extends React.Component {
       emailValid: true,
       pass: '',
     };
-    this.changeName = this.changeName.bind(this);
-    this.changeMail = this.changeMail.bind(this);
-    this.changePass = this.changePass.bind(this);
-    this.submitData = this.submitData.bind(this);
-    this.isEmail = this.isEmail.bind(this);
-    this.formValidated = this.formValidated.bind(this);
   }
 
   componentDidMount() {
@@ -29,24 +24,24 @@ class SignupPage extends React.Component {
     this.props.resetNotif();
   }
 
-  isEmail(value) {
+  isEmail(value: string) {
     //test emails
     //see http://stackoverflow.com/a/1373724/6849186
     const reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return reg.test(value);
   }
 
-  formValidated() {
+  formValidated = () => {
     return !!this.state.name && !!this.state.email && this.state.emailValid && !!this.state.pass;
   }
 
-  changeName(e) {
+  changeName = (e) => {
     this.setState({
       name: e.target.value
     });
   }
 
-  changeMail(e) {
+  changeMail = (e) => {
     if (this.isEmail(e.target.value)) {
       this.setState({
         email: e.target.value,
@@ -60,14 +55,14 @@ class SignupPage extends React.Component {
     }
   }
 
-  changePass(e) {
+  changePass = (e) => {
     this.setState({
       pass: e.target.value
     });
   }
 
 
-  submitData() {
+  submitData = () => {
     if (this.formValidated()) {
       this.props.onSignupClick(this.state);
     } else {
@@ -112,7 +107,7 @@ class SignupPage extends React.Component {
 }
 
 const mapDispatchToProps = (dispatch) => ({
-    onSignupClick: (value) => {
+    onSignupClick: (value: LoginReq) => {
       dispatch(userSignup(value))
     },
     resetNotif: () => { dispatch(resetNotif()) }

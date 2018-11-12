@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import homepageStyle from './homepageLayout.css';
 import SignupPage from './signupPage/signupPage';
 import LoginPage from './loginPage/loginPage';
+import { AppState, LoginState } from '../../store/types'
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 
 // This imported styles globally without running through CSS Modules
@@ -11,16 +12,7 @@ import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 //import '!style!css!../../commonStyles/reset.css';
 //import '!style!css!../../commonStyles/font.css';
 
-export interface HomeProps {
-  isLoggedIn: boolean,
-  notif: string,
-  extras: object,
-  match: {
-    url: string,
-  },
-}
-
-const HomeLayout = (props: HomeProps) => {
+const HomeLayout = (props: LoginState) => {
   const url = props.match.url;
   return props.isLoggedIn ? (
       <Redirect to="/me" />
@@ -55,7 +47,7 @@ const HomeLayout = (props: HomeProps) => {
   );
 }
 
-const mapStateToProps = (state: {login: object}) => {
+const mapStateToProps = (state: AppState) => {
   const { login } = state;
   return {
     isLoggedIn: login.isLoggedIn,

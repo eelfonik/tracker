@@ -1,28 +1,17 @@
 {
   "plugins": [
     "@babel/plugin-proposal-class-properties",
-    "react-hot-loader/babel"
+    "react-hot-loader/babel",
+    "babel-plugin-styled-components"
   ],
   "presets": [
     [
-      "env",
+      "@babel/preset-env",
       {
-        "targets": {
-          "browsers": [
-            "last 2 versions",
-            "ios_saf >= 8",
-            "not IE <= 10",
-            "chrome >= 49",
-            "firefox >= 49",
-            "> 1%"
-          ]
-        },
-        "debug": false,
-        "loose": true,
-        "modules": false,
-        "useBuiltIns": true
+        "useBuiltIns": "entry"
       }
     ],
-    "react"
+    "@babel/preset-typescript",
+    "@babel/preset-react"
   ]
 }

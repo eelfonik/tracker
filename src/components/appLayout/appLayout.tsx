@@ -1,4 +1,4 @@
-import React from 'react';
+import * as React from 'react';
 // import { Link, browserHistory } from 'react-router';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 
@@ -6,7 +6,8 @@ import { connect } from 'react-redux';
 import globalStyle from 'commonStyles/reset.css';
 import font from 'commonStyles/font.css';
 import appStyle from './appLayout.css';
-import { userLogOut, getUserInfo, getUserInvoices } from 'store/actions';
+import { userLogOut, getUserInfo, getUserInvoices } from '../../store/actions';
+import { AppState } from '../../store/types'
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
 // import '!style!css!../../commonStyles/reset.css';
@@ -16,7 +17,7 @@ import Dashboard from './dashboard/dashboard';
 import UserInfo from './userInfo/userInfo';
 import UserInvoices from './userInvoices/userInvoices';
 
-class AppLayout extends React.Component {
+class AppLayout extends React.Component<> {
   constructor(props) {
     super(props);
   }
@@ -60,7 +61,7 @@ class AppLayout extends React.Component {
   }
 }
 
-const mapStateToProps = (state, ownProps) => {
+const mapStateToProps = (state: AppState, ownProps) => {
     return {
       isLoggedIn: state.login.isLoggedIn,
       currentURL: ownProps.location.pathname,
