@@ -1,18 +1,16 @@
 import * as React from 'react';
-import { connect, Provider } from 'react-redux';
+import { Provider } from 'react-redux';
 import { Link, Redirect, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader'
 import { ConnectedRouter } from 'connected-react-router'
-import HomeLayout from './components/homepageLayout/homepageLayout';
+import HomeLayout from './components/homepageLayout';
 import AppLayout from './components/appLayout/appLayout';
 import store from './store/appStore';
-import {History} from 'history'
+import {createBrowserHistory} from 'history'
 
-interface AppProps {
-  history: History;
-}
+const history = createBrowserHistory()
 
-const App = ({history} : AppProps) => (
+const App = () => (
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <Switch>

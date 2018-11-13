@@ -1,10 +1,8 @@
 import * as React from 'react';
-// import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import signupPageStyle from './signupPage.css';
-import formStyle from 'commonStyles/form.css';
-import { userSignup, resetNotif } from '../../../store/actions';
-import { LoginReq } from '../../../store/types'
+import { InputBlock, OneLineInput } from '../commonStyles/form'
+import { userSignup, resetNotif } from '../store/actions';
+import { LoginReq } from '../store/types'
 
 class SignupPage extends React.Component {
   constructor(props) {
@@ -76,30 +74,27 @@ class SignupPage extends React.Component {
       <div className="signup">
         <div>
           Start the tracker
-                </div>
-        <div className={formStyle.input}>
-          <input
-            className={formStyle.onelineInput}
+        </div>
+        <InputBlock>
+          <OneLineInput
             type="text"
             value={this.state.name}
             placeholder="your name"
             onChange={this.changeName}
           />
-          <input
-            className={formStyle.onelineInput}
+          <OneLineInput
             type="text"
             value={this.state.email}
             placeholder="your email"
             onChange={this.changeMail}
           />
-          <input
-            className={formStyle.onelineInput}
+          <OneLineInput
             type="password"
             value={this.state.pass}
             placeholder="your password"
             onChange={this.changePass}
           />
-        </div>
+        </InputBlock>
         <button onClick={this.submitData}>submit!</button>
       </div>
     );

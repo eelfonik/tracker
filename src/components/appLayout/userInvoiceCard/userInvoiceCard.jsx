@@ -5,7 +5,6 @@ import NewInvoicePreview from '../newInvoicePreview/newInvoicePreview';
 
 import {connect} from 'react-redux';
 //import style from './userInfo.css';
-import formStyle from '../../../commonStyles/form.css';
 import userInvoiceCardStyle from './userInvoiceCard.css';
 
 class UserInvoiceCard extends React.Component {

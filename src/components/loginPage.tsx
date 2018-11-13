@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
-import { userLogin, resetNotif } from '../../../store/actions';
-import { AppState, LoginState } from '../../../store/types'
-import loginPageStyle from './loginPage.css';
-import formStyle from '../../../commonStyles/form.css';
+import { userLogin, resetNotif } from '../store/actions';
+import { AppState, LoginState } from '../store/types'
+import { InputBlock, OneLineInput } from '../commonStyles/form'
 
 class LoginPage extends React.Component<LoginState> {
   constructor(props) {
@@ -74,23 +73,21 @@ class LoginPage extends React.Component<LoginState> {
       <div className="signup">
         <div>
           Peek what you've got
-                </div>
-        <div className={formStyle.input}>
-          <input
-            className={formStyle.onelineInput}
+        </div>
+        <InputBlock>
+          <OneLineInput
             type="text"
             value={this.state.email}
             placeholder="your email"
             onChange={this.changeMail}
           />
-          <input
-            className={formStyle.onelineInput}
+          <OneLineInput
             type="password"
             value={this.state.pass}
             placeholder="your password"
             onChange={this.changePass}
           />
-        </div>
+        </InputBlock>
         <button onClick={this.submitData}>submit!</button>
         {this.props.notif ? <div>{this.props.notif}</div> : null}
       </div>

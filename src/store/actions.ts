@@ -44,7 +44,7 @@ export const userLogin = (value: LoginReq) =>
   }
 
 export const userSignup = (value: LoginReq) =>
-  async (dispatch: ThunkDispatch) => {
+  async (dispatch: Dispatch) => {
     const data = {
       username: value.name,
       email: value.email,
