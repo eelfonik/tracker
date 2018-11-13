@@ -38,7 +38,7 @@ export const userLogin = (value: LoginReq) =>
     }
     try {
       const response = await axios.post('/api/account/login', data)
-      return dispatch(logIn(response.data))
+      dispatch(logIn(response.data))
     } catch (error) {
       console.log("login error!", error);
     }
@@ -60,7 +60,7 @@ export const userSignup = (value: LoginReq) =>
       //in the case of signup,
       //if data.success === false, the data.extras will have a msg to identify the problem
       //if data.success === true, data.extras will contain a userProfileModel with email and username
-      return dispatch(signUp(response.data));
+      dispatch(signUp(response.data));
     } catch (error) {
       console.log("signup error!", error);
     }
@@ -101,21 +101,19 @@ export const isFetchingUser = () => action(actions.FETCHING_USER_INFO, {
   isFetching: true
 })
 
-export function getUserInfo() {
-  return (dispatch: Dispatch, getState: Function) => {
+export const getUserInfo = () =>
+  async (dispatch: Dispatch, getState: Function) => {
     dispatch(isFetchingUser());
     const isLoggedIn = getState().login.isLoggedIn;
     if (isLoggedIn) {
-      return axios.get('/api/user/info')
-        .then((res) => {
-          dispatch(getInfo(res.data.extras));
-        })
-        .catch((error) => {
-          console.log("get user info error!", error);
-        })
+      try {
+        const res = await axios.get('/api/user/info')
+        dispatch(getInfo(res.data.extras));
+      } catch (error) {
+        console.log("get user info error!", error);
+      }
     }
   }
-}
 
 export function updateUserInfo(value: UserInfo) {
   return (dispatch: Dispatch) => {
@@ -148,7 +146,7 @@ export const addNewInvoice = (resData) => action(actions.ADD_NEW_INVOICE, {
 })
 
 export function addNewInvoiceForUser(value) {
-  return (dispatch, getState) => {
+  return (dispatch: Dispatch) => {
     axios.post('/api/user/invoice', value)
       .then((res) => {
         console.debug("add new invoice success ", res);
