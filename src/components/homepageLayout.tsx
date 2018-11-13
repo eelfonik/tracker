@@ -1,10 +1,9 @@
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styled from 'styled-components'
 import SignupPage from './signupPage';
 import LoginPage from './loginPage';
-import { AppState, LoginState } from '../store/types'
+import { LoginState, AppState } from '../store/reducer'
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 
 // This imported styles globally without running through CSS Modules
@@ -59,7 +58,6 @@ const AppFooter = styled.footer`
 `
 
 const HomeLayout = (props: LoginState) => {
-  const url = props.match.url;
   return props.isLoggedIn ? (
       <Redirect to="/me" />
     ) :

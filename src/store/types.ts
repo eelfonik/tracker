@@ -14,7 +14,7 @@ export interface LoginExtras {
 }
 
 export interface LoginReq {
-  name?: string
+  name?: string,
   email: string,
   emailValid: boolean,
   pass: string,
@@ -26,7 +26,8 @@ export interface LoginRes {
   extras: LoginExtras,
 }
 
-export interface LoginState {
+// the initial loginState definition
+export interface Login {
   readonly isLoggedIn: boolean,
   readonly notif: string,
   readonly extras: LoginExtras,
@@ -68,11 +69,4 @@ export interface UserInvoicesState {
 
 }
 
-export interface AppState {
-  router: RouterState,
-  login: LoginState,
-  userInfo: UserState,
-  invoiceInfo: InvoiceState,
-  userInvoices: UserInvoicesState,
-}
 

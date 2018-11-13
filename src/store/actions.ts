@@ -1,6 +1,7 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
 import { action } from 'typesafe-actions';
+import {Dispatch} from 'redux'
 import { ThunkDispatch, ThunkAction } from 'redux-thunk'
 import { LoginReq, LoginRes, UserInfo, UserExtras } from './types'
 
@@ -30,7 +31,7 @@ export const resetNotif = () => action(actions.RESET_NOTIF, {
 })
 
 export const userLogin = (value: LoginReq) => 
-  async (dispatch: ThunkDispatch) => {
+  async (dispatch: Dispatch) => {
     const data = {
       email: value.email,
       password: value.pass,
@@ -66,7 +67,7 @@ export const userSignup = (value: LoginReq) =>
   }
 
 export const userLogOut = () => 
-  async (dispatch: ThunkAction) => {
+  async (dispatch: Dispatch) => {
     try {
       const response = await axios.get('/api/account/logout', {})
       console.debug("user logout success ", response);
@@ -101,7 +102,7 @@ export const isFetchingUser = () => action(actions.FETCHING_USER_INFO, {
 })
 
 export function getUserInfo() {
-  return (dispatch, getState) => {
+  return (dispatch: Dispatch, getState: Function) => {
     dispatch(isFetchingUser());
     const isLoggedIn = getState().login.isLoggedIn;
     if (isLoggedIn) {
@@ -117,7 +118,7 @@ export function getUserInfo() {
 }
 
 export function updateUserInfo(value: UserInfo) {
-  return (dispatch, getState) => {
+  return (dispatch: Dispatch) => {
     const userInfo = {
       name: value.name,
       address: value.address,
@@ -166,7 +167,7 @@ export const getInvoices = (resData) => action(actions.GET_USER_INVOICES, {
 })
 
 export function getUserInvoices() {
-  return (dispatch, getState) => {
+  return (dispatch: Dispatch, getState: Function) => {
     if (getState().login.isLoggedIn) {
       axios.get('/api/user/invoices', {})
         .then((res) => {

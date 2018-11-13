@@ -1,11 +1,17 @@
 import * as React from 'react';
+import {Dispatch} from 'redux'
 import { connect } from 'react-redux';
 import { InputBlock, OneLineInput } from '../commonStyles/form'
 import { userSignup, resetNotif } from '../store/actions';
 import { LoginReq } from '../store/types'
 
-class SignupPage extends React.Component {
-  constructor(props) {
+interface SignUpProps {
+  onSignupClick: (value: LoginReq) => void;
+  resetNotif: () => void; 
+} 
+
+class SignupPage extends React.Component<SignUpProps, LoginReq> {
+  constructor(props: SignUpProps) {
     super(props);
     this.state = {
       name: '',
@@ -22,7 +28,7 @@ class SignupPage extends React.Component {
     this.props.resetNotif();
   }
 
-  isEmail(value: string) {
+  isEmail(value: LoginReq['email']) {
     //test emails
     //see http://stackoverflow.com/a/1373724/6849186
     const reg = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -33,29 +39,29 @@ class SignupPage extends React.Component {
     return !!this.state.name && !!this.state.email && this.state.emailValid && !!this.state.pass;
   }
 
-  changeName = (e) => {
+  changeName = (e: React.FormEvent<HTMLInputElement>): void => {
     this.setState({
-      name: e.target.value
+      name: e.currentTarget.value
     });
   }
 
-  changeMail = (e) => {
-    if (this.isEmail(e.target.value)) {
+  changeMail = (e: React.FormEvent<HTMLInputElement>) => {
+    if (this.isEmail(e.currentTarget.value)) {
       this.setState({
-        email: e.target.value,
+        email: e.currentTarget.value,
         emailValid: true
       });
-    } else {
-      this.setState({
-        email: e.target.value,
-        emailValid: false
-      });
+      return;
     }
+    this.setState({
+      email: e.currentTarget.value,
+      emailValid: false
+    });
   }
 
-  changePass = (e) => {
+  changePass = (e: React.FormEvent<HTMLInputElement>) => {
     this.setState({
-      pass: e.target.value
+      pass: e.currentTarget.value
     });
   }
 
@@ -63,9 +69,9 @@ class SignupPage extends React.Component {
   submitData = () => {
     if (this.formValidated()) {
       this.props.onSignupClick(this.state);
-    } else {
-      console.debug("The signUp is not correct");
+      return;
     }
+    console.debug("The signUp is not correct");
   }
 
 
@@ -101,7 +107,7 @@ class SignupPage extends React.Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
     onSignupClick: (value: LoginReq) => {
       dispatch(userSignup(value))
     },

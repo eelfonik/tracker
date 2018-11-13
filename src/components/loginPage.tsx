@@ -1,11 +1,13 @@
 import * as React from 'react';
+import { Dispatch } from 'redux'
 import { render } from 'react-dom';
 import { connect } from 'react-redux';
 import { userLogin, resetNotif } from '../store/actions';
-import { AppState, LoginState } from '../store/types'
+import { LoginState } from '../store/reducer'
+import { LoginReq } from '../store/types'
 import { InputBlock, OneLineInput } from '../commonStyles/form'
 
-class LoginPage extends React.Component<LoginState> {
+class LoginPage extends React.Component<LoginState, LoginReq> {
   constructor(props) {
     super(props);
     this.state = {
@@ -95,7 +97,7 @@ class LoginPage extends React.Component<LoginState> {
   }
 }
 
-const mapStateToProps = (state: AppState, ownProps) => {
+const mapStateToProps = (state: {login: LoginState}, ownProps) => {
   const { login } = state;
   return {
     isLoggedIn: login.isLoggedIn,
@@ -105,7 +107,7 @@ const mapStateToProps = (state: AppState, ownProps) => {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
+const mapDispatchToProps = (dispatch: Dispatch) => ({
   onLoginClick: (value) => { dispatch(userLogin(value)) },
   resetNotif: () => { dispatch(resetNotif()) }
 });

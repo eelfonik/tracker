@@ -5,7 +5,7 @@ import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import appStyle from './appLayout.css';
 import { userLogOut, getUserInfo, getUserInvoices } from '../../store/actions';
-import { AppState } from '../../store/types'
+import { AppState } from '../../store/reducer'
 
 import Dashboard from './dashboard/dashboard';
 import UserInfo from './userInfo/userInfo';

@@ -22,14 +22,16 @@
 //     phone:""
 // }
 
-import { connectRouter } from 'connected-react-router'
+import { connectRouter, RouterState } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
-import { ActionType, getType } from 'typesafe-actions';
+import {Login} from './types'
+import { ActionType, getType, StateType } from 'typesafe-actions';
 import * as actions from './actions'
+
 export type Action = ActionType<typeof actions>;
 
-export function loginReducer(state = {}, action: Action) {
+export function loginReducer(state: Login, action: Action) {
   switch (action.type) {
     case getType(actions.logIn):
     case getType(actions.signUp):
@@ -52,6 +54,8 @@ export function loginReducer(state = {}, action: Action) {
   }
 }
 
+export type LoginState = StateType<typeof loginReducer>;
+
 export function UserInfoReducer(state = { isFetching: false }, action: Action) {
   switch (action.type) {
     case getType(actions.isFetchingUser):
@@ -73,6 +77,8 @@ export function UserInfoReducer(state = { isFetching: false }, action: Action) {
   }
 }
 
+export type UserInfoState = StateType<typeof UserInfoReducer>
+
 export function InvoiceInfoReducer(state = {}, action: Action) {
   switch (action.type) {
     case getType(actions.addNewInvoice):
@@ -84,6 +90,8 @@ export function InvoiceInfoReducer(state = {}, action: Action) {
       return state
   }
 }
+
+export type InvoiceInfoState = StateType<typeof InvoiceInfoReducer>
 
 export function UserInvoicesReducer(state = {}, action: Action) {
   switch (action.type) {
@@ -97,7 +105,9 @@ export function UserInvoicesReducer(state = {}, action: Action) {
   }
 }
 
-const reducer = (history: History) => combineReducers({
+export type UserInvoicesState = StateType<typeof UserInvoicesReducer>
+
+const createRootReducer = (history: History) => combineReducers({
   router: connectRouter(history),
   login: loginReducer,
   userInfo: UserInfoReducer,
@@ -105,4 +115,12 @@ const reducer = (history: History) => combineReducers({
   userInvoices: UserInvoicesReducer,
 })
 
-export default reducer;
+export type AppState = {
+  router: RouterState,
+  login: LoginState,
+  userInfo: UserInfoState,
+  invoiceInfo: UserInfoState,
+  userInvoices: UserInvoicesState,
+};
+
+export default createRootReducer;
