@@ -1,11 +1,12 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
 import { action } from 'typesafe-actions';
-import {Dispatch} from 'redux'
-import { ThunkDispatch, ThunkAction } from 'redux-thunk'
-import { LoginReq, LoginRes, UserInfo, UserExtras } from './types'
+import {Dispatch, Action} from 'redux'
+import { AppState } from './reducer'
+import { LoginReq, LoginRes, UserInfo, UserExtras, InvoiceInfo } from './types'
 
 import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
+import { ThunkDispatch, ThunkAction } from 'redux-thunk';
 
 // ===============login/signup related actions=================
 export const signUp = ({success, extras} : LoginRes) => action(actions.SIGNUP, {
@@ -115,66 +116,54 @@ export const getUserInfo = () =>
     }
   }
 
-export function updateUserInfo(value: UserInfo) {
-  return (dispatch: Dispatch) => {
+export const updateUserInfo = (value: UserInfo) =>
+  async (dispatch: Dispatch) => {
     const userInfo = {
       name: value.name,
       address: value.address,
       siret: value.siret,
       phone: value.phone
     }
-    axios.post('/api/user/info', userInfo)
-      .then((res) => {
-        console.debug("update user info success ", res);
-        dispatch(updateInfo(res.data.extras.userInfoModel))
-      })
-      .catch((error) => {
-        console.log("update user info error!", error);
-      });
+    try {
+      const res = await axios.post('/api/user/info', userInfo)
+      console.debug("update user info success ", res);
+      dispatch(updateInfo(res.data.extras.userInfoModel))
+    } catch(error) {
+      console.log("update user info error!", error);
+    }
   }
-}
 
 // ====================invoices for a given user actions==================
 
-export const addNewInvoice = (resData) => action(actions.ADD_NEW_INVOICE, {
-  number: resData.number,
-  date: resData.date,
-  sum: resData.sum,
-  taxRate: resData.taxRate,
-  currency: resData.currency,
-  description: resData.description,
-})
+export const addNewInvoice = (resData: InvoiceInfo) => action(actions.ADD_NEW_INVOICE, {...resData})
 
-export function addNewInvoiceForUser(value) {
-  return (dispatch: Dispatch) => {
-    axios.post('/api/user/invoice', value)
-      .then((res) => {
-        console.debug("add new invoice success ", res);
-        dispatch(addNewInvoice(res.data.extras.invoiceInfoModel));
-        //every time a new invoice is added, should also dispatch getUserInvoices
-        dispatch(getUserInvoices());
-      })
-      .catch((error) => {
-        console.log("add new invoice error!", error);
-      });
+export const addNewInvoiceForUser = (value: InvoiceInfo) => 
+  async (dispatch: ThunkDispatch<AppState, void, Action>) => {
+    try {
+      const res = await axios.post('/api/user/invoice', value)
+      console.debug("add new invoice success ", res);
+      dispatch(addNewInvoice(res.data.extras.invoiceInfoModel));
+      //every time a new invoice is added, should also dispatch getUserInvoices
+      dispatch(getUserInvoices());
+    } catch(error) {
+      console.log("add new invoice error!", error);
+    }
   }
-}
 
-export const getInvoices = (resData) => action(actions.GET_USER_INVOICES, {
+export const getInvoices = (resData: Array<InvoiceInfo>) => action(actions.GET_USER_INVOICES, {
   invoices: resData
 })
 
-export function getUserInvoices() {
-  return (dispatch: Dispatch, getState: Function) => {
+export const getUserInvoices = () => 
+  async (dispatch: Dispatch, getState: Function) => {
     if (getState().login.isLoggedIn) {
-      axios.get('/api/user/invoices', {})
-        .then((res) => {
-          console.debug("get user invoices success ", res);
-          dispatch(getInvoices(res.data.extras.invoices))
-        })
-        .catch((error) => {
-          console.log("get user invoices error!", error);
-        });
+      try {
+        const res = await axios.get('/api/user/invoices', {})
+        console.debug("get user invoices success ", res);
+        dispatch(getInvoices(res.data.extras.invoices))
+      } catch (error) {
+        console.log("get user invoices error!", error);
+      }
     }
   }
-}
+

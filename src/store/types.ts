@@ -1,33 +1,38 @@
-import { RouterState } from 'connected-react-router'
 
 // ===============login/signup related types=================
-interface UserProfile {
+type UserProfile = {
   email: string,
   username: string,
 }
 
-export interface LoginExtras {
+export type LoginExtras = {
   sessionId?: number,
   userId?: number,
   userProfileModel?: UserProfile,
   msg?: number,
 }
 
-export interface LoginReq {
+export type LoginReq = {
   name?: string,
   email: string,
   emailValid: boolean,
   pass: string,
 }
 
+export type ActionProps = {
+  onLoginClick?: (value: LoginReq) => void,
+  onSignupClick?: (value: LoginReq) => void,
+  resetNotif: () => void 
+}
 
-export interface LoginRes {
+
+export type LoginRes = {
   success: boolean,
   extras: LoginExtras,
 }
 
 // the initial loginState definition
-export interface Login {
+export type Login = {
   readonly isLoggedIn?: boolean,
   readonly notif?: string,
   readonly extras?: LoginExtras,
@@ -38,21 +43,21 @@ export interface Login {
 
 // ====================user related types==================
 
-export interface UserInfo {
+export type UserInfo = {
   name: string,
   address: string,
   siret: string,
   phone: string
 }
 
-export interface UserExtras {
+export type UserExtras = {
   userInfoModel: UserInfo,
   invoices?: Array<number>,
   clients?: Array<number>,
   userId: number,
 }
 
-export interface UserRes {
+export type UserRes = {
   success: boolean,
   extras: UserExtras,
 }
@@ -70,11 +75,34 @@ export interface User extends Partial<UserInfo> {
   clients?: Array<number>,
 }
 
-export interface InvoiceState {
+// ====================invoice related types==================
+export type InvoiceInfo = {
+  _creator?: string,
+  number: number,
+  date : string,
+  sum : number,
+  taxRate : number,
+  currency : string,
+  description : string
+}
+
+type InvoiceExtras = {
+  invoiceInfoModel: InvoiceInfo,
+  invoiceId: number,
+}
+
+export type InvoiceRes = {
+  success: boolean,
+  extras: InvoiceExtras
+}
+
+
+export type Invoice = {
 
 }
 
-export interface UserInvoicesState {
+// ====================all invoices for a certain user related types==================
+export type UserInvoices = {
 
 }
 

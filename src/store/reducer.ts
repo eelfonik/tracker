@@ -119,7 +119,7 @@ export type AppState = {
   router: RouterState,
   login: LoginState,
   userInfo: UserInfoState,
-  invoiceInfo: UserInfoState,
+  invoiceInfo: InvoiceInfoState,
   userInvoices: UserInvoicesState,
 };
 
