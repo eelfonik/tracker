@@ -4,7 +4,7 @@ import { Link, Redirect, Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader'
 import { ConnectedRouter } from 'connected-react-router'
 import HomeLayout from './components/homepageLayout';
-import AppLayout from './components/appLayout/appLayout';
+import AppLayout from './components/appLayout';
 import store from './store/appStore';
 import {createBrowserHistory} from 'history'
 

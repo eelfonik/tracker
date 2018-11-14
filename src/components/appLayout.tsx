@@ -1,16 +1,58 @@
 import * as React from 'react';
 // import { Link, browserHistory } from 'react-router';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
+import styled from 'styled-components'
 
 import { connect } from 'react-redux';
-import appStyle from './appLayout.css';
-import { userLogOut, getUserInfo, getUserInvoices } from '../../store/actions';
-import { AppState } from '../../store/reducer'
+import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
+import { AppState } from '../store/reducer'
+import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
 
 import Dashboard from './dashboard/dashboard';
 import UserInfo from './userInfo/userInfo';
 import UserInvoices from './userInvoices/userInvoices';
 
+const AppContainer = styled.div`
+  margin: 20px;
+`
+
+const AppHeader = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  & a {
+      text-decoration: none;
+      color: color(black alpha(50%));
+  }
+`
+
+const SignUpLink = styled(Link)`
+  text-decoration: none;
+  color: rgba(0, 234, 107,1);
+  border-bottom: 1px solid transparent;
+  &:hover {
+      border-bottom: 1px solid rgba(0, 234, 107,1);
+  }
+`
+
+const LogoImg = styled.img`
+  height:50px;
+  max-width:50px;
+  &:hover {
+      max-width: 100px;
+  }
+  transition: max-width 0.5s ease;
+`
+
+const AppContent = styled.div`
+  margin: 20px 0; 
+`
+
+const AppFooter = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`
 class AppLayout extends React.Component {
   constructor(props) {
     super(props);
@@ -20,35 +62,31 @@ class AppLayout extends React.Component {
     this.props.getInfo();
     this.props.getInvoices();
   }
-  
-  capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  }
 
   render() {
     const url = this.props.match.url;
     const userName = this.props.extras && this.props.extras.userProfileModel ? this.props.extras.userProfileModel.username : '';
     return this.props.isLoggedIn ? (
       <BrowserRouter>
-        <div className={appStyle.appContainer}>
-          <header className={appStyle.header}>
+        <AppContainer>
+          <AppHeader>
             <Link to='/'>
-              <img className={appStyle.logo} src="/img/node.svg" />
+              <LogoImg src="/img/node.svg" />
             </Link>
-            <Link to={`${url}`}>Hello {this.capitalizeFirstLetter(userName)}</Link>
+            <Link to={`${url}`}>Hello {capitalizeFirstLetter(userName)}</Link>
             <Link to={`${url}/invoices`}>My invoices</Link>
             <Link to={`${url}/info`}>Profile</Link>
-            <div className={appStyle.signupLink} onClick={e => this.props.onLogoutClick()}>Logout</div>
-          </header>
-          <div className={appStyle.appContent}>
+            <div onClick={e => this.props.onLogoutClick()}>Logout</div>
+          </AppHeader>
+          <AppContent>
             <Route path={`${url}/invoices`} component={UserInvoices} />
             <Route path={`${url}/info`} component={UserInfo} />
             <Route exact path={`${url}`} component={Dashboard} />
-          </div>
-          <footer className={appStyle.footer}>
+          </AppContent>
+          <AppFooter>
 
-          </footer>
-        </div>
+          </AppFooter>
+        </AppContainer>
       </BrowserRouter>
     ) :
     (<Redirect to="/"/>);

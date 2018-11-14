@@ -11,7 +11,7 @@ import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 //import '!style!css!../../commonStyles/reset.css';
 //import '!style!css!../../commonStyles/font.css';
 
-const AppContainer = styled.div`
+const HomeContainer = styled.div`
   box-sizing: border-box;
   height: 100vh;
   padding: 20px;
@@ -21,7 +21,7 @@ const AppContainer = styled.div`
   justify-content: space-between;
 `
 
-const AppHeader = styled.header`
+const HomeHeader = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -45,11 +45,11 @@ const LogoImg = styled.img`
   transition: max-width 0.5s ease;
 `
 
-const AppContent = styled.div`
+const HomeContent = styled.div`
   margin: 20px 0; 
 `
 
-const AppFooter = styled.footer`
+const HomeFooter = styled.footer`
   font-size: 0.7em;
   & a {
       text-decoration: none;
@@ -63,15 +63,15 @@ const HomeLayout = (props: LoginState) => {
     ) :
     (
     <BrowserRouter>
-      <AppContainer>
-        <AppHeader>
+      <HomeContainer>
+        <HomeHeader>
           <Link to="/">
             <LogoImg src="/img/node.svg" />
           </Link>
           <SignUpLink to='/signup'>sign up</SignUpLink>
           <SignUpLink to='/login'>Login</SignUpLink>
-        </AppHeader>
-        <AppContent>
+        </HomeHeader>
+        <HomeContent>
           <Route path='/signup' component={SignupPage} />
           <Route path='/login' component={LoginPage} />
           <Route exact path='/' render={() => (
@@ -80,13 +80,13 @@ const HomeLayout = (props: LoginState) => {
               <div>Free tracker is a service let you easily track your invoices and payment as a freelancer, enjoy!</div>
             </div>
           )} /> 
-        </AppContent>
-        <AppFooter>
+        </HomeContent>
+        <HomeFooter>
           <p>
             <a href="http://mern.io/" target="_blank" rel="noopener noreferrer">MERN</a> build by hand.
           </p>
-        </AppFooter>
-      </AppContainer>
+        </HomeFooter>
+      </HomeContainer>
     </BrowserRouter>
   );
 }

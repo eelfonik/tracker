@@ -6,7 +6,7 @@ import { AppState } from './reducer'
 import { LoginReq, LoginRes, UserInfo, UserExtras, InvoiceInfo } from './types'
 
 import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
-import { ThunkDispatch, ThunkAction } from 'redux-thunk';
+import { ThunkDispatch } from 'redux-thunk';
 
 // ===============login/signup related actions=================
 export const signUp = ({success, extras} : LoginRes) => action(actions.SIGNUP, {
