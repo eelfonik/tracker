@@ -25,13 +25,13 @@
 import { connectRouter, RouterState } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
-import {Login} from './types'
+import {Login, User} from './types'
 import { ActionType, getType, StateType } from 'typesafe-actions';
 import * as actions from './actions'
 
 export type Action = ActionType<typeof actions>;
 
-export function loginReducer(state: Login, action: Action) {
+export function loginReducer(state: Login = {}, action: Action) {
   switch (action.type) {
     case getType(actions.logIn):
     case getType(actions.signUp):
@@ -56,7 +56,7 @@ export function loginReducer(state: Login, action: Action) {
 
 export type LoginState = StateType<typeof loginReducer>;
 
-export function UserInfoReducer(state = { isFetching: false }, action: Action) {
+export function UserInfoReducer(state: User = { isFetching: false }, action: Action) {
   switch (action.type) {
     case getType(actions.isFetchingUser):
       return {

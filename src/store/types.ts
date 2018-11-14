@@ -28,10 +28,10 @@ export interface LoginRes {
 
 // the initial loginState definition
 export interface Login {
-  readonly isLoggedIn: boolean,
-  readonly notif: string,
-  readonly extras: LoginExtras,
-  readonly match: {
+  readonly isLoggedIn?: boolean,
+  readonly notif?: string,
+  readonly extras?: LoginExtras,
+  readonly match?: {
     url: string,
   },
 }
@@ -57,8 +57,17 @@ export interface UserRes {
   extras: UserExtras,
 }
 
-export interface UserState {
-
+// Partial can extends interface with transformations
+// It's called Mapped types
+// There are 4 build-in definitions can be used:
+// - Partial (turn properties from required to optional)
+// - Readonly (create a readonly version)
+// - Pick
+// - Record
+export interface User extends Partial<UserInfo> {
+  isFetching: boolean,
+  invoices?: Array<number>,
+  clients?: Array<number>,
 }
 
 export interface InvoiceState {
