@@ -1,16 +1,15 @@
 import * as React from 'react';
-// import { Link, browserHistory } from 'react-router';
 import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components'
 
 import { connect } from 'react-redux';
 import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
-import { AppState } from '../store/reducer'
 import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
+import { AppActionProps, AppState, LoginState } from '../store/types'
 
-import Dashboard from './dashboard/dashboard';
-import UserInfo from './userInfo/userInfo';
-import UserInvoices from './userInvoices/userInvoices';
+import Dashboard from './appLayout/dashboard/dashboard';
+import UserInfo from './appLayout/userInfo/userInfo';
+import UserInvoices from './appLayout/userInvoices/userInvoices';
 
 const AppContainer = styled.div`
   margin: 20px;
@@ -26,14 +25,14 @@ const AppHeader = styled.header`
   }
 `
 
-const SignUpLink = styled(Link)`
-  text-decoration: none;
-  color: rgba(0, 234, 107,1);
-  border-bottom: 1px solid transparent;
-  &:hover {
-      border-bottom: 1px solid rgba(0, 234, 107,1);
-  }
-`
+// const SignUpLink = styled(Link)`
+//   text-decoration: none;
+//   color: rgba(0, 234, 107,1);
+//   border-bottom: 1px solid transparent;
+//   &:hover {
+//       border-bottom: 1px solid rgba(0, 234, 107,1);
+//   }
+// `
 
 const LogoImg = styled.img`
   height:50px;
@@ -53,44 +52,42 @@ const AppFooter = styled.footer`
   align-items: center;
   justify-content: space-between;
 `
-class AppLayout extends React.Component {
-  constructor(props) {
-    super(props);
-  }
 
-  componentDidMount() {
-    this.props.getInfo();
-    this.props.getInvoices();
-  }
+type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras'>
 
-  render() {
-    const url = this.props.match.url;
-    const userName = this.props.extras && this.props.extras.userProfileModel ? this.props.extras.userProfileModel.username : '';
-    return this.props.isLoggedIn ? (
-      <BrowserRouter>
-        <AppContainer>
-          <AppHeader>
-            <Link to='/'>
-              <LogoImg src="/img/node.svg" />
-            </Link>
-            <Link to={`${url}`}>Hello {capitalizeFirstLetter(userName)}</Link>
-            <Link to={`${url}/invoices`}>My invoices</Link>
-            <Link to={`${url}/info`}>Profile</Link>
-            <div onClick={e => this.props.onLogoutClick()}>Logout</div>
-          </AppHeader>
-          <AppContent>
-            <Route path={`${url}/invoices`} component={UserInvoices} />
-            <Route path={`${url}/info`} component={UserInfo} />
-            <Route exact path={`${url}`} component={Dashboard} />
-          </AppContent>
-          <AppFooter>
+function AppLayout(props: StateProps & AppActionProps) {
 
-          </AppFooter>
-        </AppContainer>
-      </BrowserRouter>
-    ) :
-    (<Redirect to="/"/>);
-  }
+  React.useEffect(() => {
+    props.getInfo();
+    props.getInvoices();
+  }, [])
+
+  const url = props.match.url;
+  const userName = props.extras && props.extras.userProfileModel ? props.extras.userProfileModel.username : '';
+  return props.isLoggedIn ? (
+    <BrowserRouter>
+      <AppContainer>
+        <AppHeader>
+          <Link to='/'>
+            <LogoImg src="/img/node.svg" />
+          </Link>
+          <Link to={`${url}`}>Hello {capitalizeFirstLetter(userName)}</Link>
+          <Link to={`${url}/invoices`}>My invoices</Link>
+          <Link to={`${url}/info`}>Profile</Link>
+          <div onClick={e => props.onLogoutClick()}>Logout</div>
+        </AppHeader>
+        <AppContent>
+          <Route path={`${url}/invoices`} component={UserInvoices} />
+          <Route path={`${url}/info`} component={UserInfo} />
+          <Route exact path={`${url}`} component={Dashboard} />
+        </AppContent>
+        <AppFooter>
+
+        </AppFooter>
+      </AppContainer>
+    </BrowserRouter>
+  ) :
+  (<Redirect to="/"/>);
 }
 
 const mapStateToProps = (state: AppState, ownProps) => {

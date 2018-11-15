@@ -3,12 +3,14 @@ import { Action } from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { connect } from 'react-redux';
 import { userLogin, resetNotif } from '../store/actions';
-import { AppState, LoginState } from '../store/reducer'
-import { LoginReq, ActionProps } from '../store/types'
+import { AppState, LoginState, LoginReq, LoginActionProps } from '../store/types'
 import { InputBlock, OneLineInput } from '../commonStyles/form'
 import { useLogin } from '../customHooks/useLogin'
 
-type Props = LoginState & ActionProps
+type StateProps = Pick<LoginState, 'isLoggedIn' | 'notif' | 'extras'>
+type DispatchProps = Pick<LoginActionProps, 'onLoginClick' | 'resetNotif'>
+
+type Props = StateProps & DispatchProps
 
 function LoginPage(props: Props) {
   const {
@@ -39,37 +41,36 @@ function LoginPage(props: Props) {
       <InputBlock>
         <OneLineInput
           type="text"
-          value={this.state.email}
+          value={email}
           placeholder="your email"
           onChange={changeMail}
         />
         <OneLineInput
           type="password"
-          value={this.state.pass}
+          value={pass}
           placeholder="your password"
           onChange={changePass}
         />
       </InputBlock>
       <button onClick={submitData}>submit!</button>
-      {this.props.notif ? <div>{this.props.notif}</div> : null}
+      {props.notif ? <div>{props.notif}</div> : null}
     </div>
   );
 }
 
-const mapStateToProps = (state:AppState) => {
-  const { login } = state;
+const mapStateToProps = ({login} : AppState): StateProps => {
+  const {isLoggedIn, notif, extras} = login
   return {
-    isLoggedIn: login.isLoggedIn,
-    // currentURL: ownProps.location.pathname,
-    notif: login.notif,
-    extras: login.extras
+    isLoggedIn,
+    notif,
+    extras
   }
 }
 
 // see the type definition of thunk here https://github.com/DefinitelyTyped/DefinitelyTyped/issues/17829
-const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, void, Action>) => ({
+const mapDispatchToProps = (dispatch: ThunkDispatch<StateProps, void, Action>): DispatchProps => ({
   onLoginClick: (value: LoginReq) => { dispatch(userLogin(value)) },
   resetNotif: () => { dispatch(resetNotif()) }
 });
 
-export default connect<LoginState, ActionProps, void>(mapStateToProps, mapDispatchToProps)(LoginPage);
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

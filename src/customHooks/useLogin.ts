@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { ActionProps } from '../store/types'
+import { LoginActionProps } from '../store/types'
 import isEmail from '../helpers/isEmail'
 
-export function useLogin(resetNotif: ActionProps['resetNotif']) {
+export function useLogin(resetNotif: LoginActionProps['resetNotif']) {
   const [name, setName] = useState('')
   const [email, setMail] = useState('')
   const [emailValid, setValidation] = useState(true)
@@ -26,7 +26,7 @@ export function useLogin(resetNotif: ActionProps['resetNotif']) {
     return () => {
       resetNotif();
     }
-  })
+  },[])
 
   return {
     name,

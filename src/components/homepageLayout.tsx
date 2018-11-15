@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import styled from 'styled-components'
 import SignupPage from './signupPage';
 import LoginPage from './loginPage';
-import { LoginState, AppState } from '../store/reducer'
-import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
+import { LoginState, AppState } from '../store/types'
+import { Link, Redirect, Route, BrowserRouter } from 'react-router-dom';
 
 // This imported styles globally without running through CSS Modules
 // see https://github.com/css-modules/css-modules/pull/65#issuecomment-248280248
@@ -95,7 +95,6 @@ const mapStateToProps = (state: AppState) => {
   const { login } = state;
   return {
     isLoggedIn: login.isLoggedIn,
-    // currentURL: ownProps.location.pathname,
     notif: login.notif,
     extras: login.extras
   }

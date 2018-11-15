@@ -1,4 +1,5 @@
-function mapApiErrorMessagesToNotif(msg: number) : string {
+import { LoginExtras } from '../store/types'
+function mapApiErrorMessagesToNotif(msg: LoginExtras['msg']) : string {
   switch (msg) {
     case 0:
       return "Email not found";

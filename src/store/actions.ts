@@ -2,8 +2,7 @@ import axios from 'axios';
 import * as actions from './actionConstants'
 import { action } from 'typesafe-actions';
 import {Dispatch, Action} from 'redux'
-import { AppState } from './reducer'
-import { LoginReq, LoginRes, UserInfo, UserExtras, InvoiceInfo } from './types'
+import { LoginReq, LoginRes, UserInfo, UserExtras, InvoiceInfo, AppState } from './types'
 
 import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
 import { ThunkDispatch } from 'redux-thunk';

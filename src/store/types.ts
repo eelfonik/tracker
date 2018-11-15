@@ -1,4 +1,25 @@
+import * as actions from './actions'
+import {loginReducer, userInfoReducer, invoiceInfoReducer, userInvoicesReducer} from './reducer'
+import { ActionType, StateType } from 'typesafe-actions';
+import { RouterState } from 'connected-react-router'
 
+export type Action = ActionType<typeof actions>;
+
+export type LoginState = StateType<typeof loginReducer>;
+
+export type UserInfoState = StateType<typeof userInfoReducer>
+
+export type InvoiceInfoState = StateType<typeof invoiceInfoReducer>
+
+export type UserInvoicesState = StateType<typeof userInvoicesReducer>
+
+export type AppState = {
+  router: RouterState,
+  login: LoginState,
+  userInfo: UserInfoState,
+  invoiceInfo: InvoiceInfoState,
+  userInvoices: UserInvoicesState,
+};
 // ===============login/signup related types=================
 type UserProfile = {
   email: string,
@@ -8,7 +29,7 @@ type UserProfile = {
 export type LoginExtras = {
   sessionId?: number,
   userId?: number,
-  userProfileModel?: UserProfile,
+  userProfileModel: UserProfile,
   msg?: number,
 }
 
@@ -19,9 +40,9 @@ export type LoginReq = {
   pass: string,
 }
 
-export type ActionProps = {
-  onLoginClick?: (value: LoginReq) => void,
-  onSignupClick?: (value: LoginReq) => void,
+export type LoginActionProps = {
+  onLoginClick: (value: LoginReq) => void,
+  onSignupClick: (value: LoginReq) => void,
   resetNotif: () => void 
 }
 
@@ -33,10 +54,10 @@ export type LoginRes = {
 
 // the initial loginState definition
 export type Login = {
-  readonly isLoggedIn?: boolean,
-  readonly notif?: string,
-  readonly extras?: LoginExtras,
-  readonly match?: {
+  isLoggedIn: boolean,
+  notif: string,
+  extras: LoginExtras,
+  match?: {
     url: string,
   },
 }
@@ -74,6 +95,14 @@ export interface User extends Partial<UserInfo> {
   invoices?: Array<number>,
   clients?: Array<number>,
 }
+
+export type AppActionProps = {
+  getInfo: () => void,
+  getInvoices: () => void,
+  onLogoutClick: () => void
+}
+
+
 
 // ====================invoice related types==================
 export type InvoiceInfo = {

@@ -1,14 +1,12 @@
 import * as React from 'react';
-import {Action} from 'redux'
 import { ThunkDispatch } from 'redux-thunk'
 import { connect } from 'react-redux';
 import { InputBlock, OneLineInput } from '../commonStyles/form'
 import { userSignup, resetNotif } from '../store/actions';
-import { LoginReq, ActionProps } from '../store/types'
-import { AppState } from '../store/reducer'
+import { LoginReq, LoginActionProps, AppState, Action } from '../store/types'
 import { useLogin } from '../customHooks/useLogin'
 
-function SignupPage(props: ActionProps) {
+function SignupPage(props: Pick<LoginActionProps, 'onSignupClick' | 'resetNotif'>) {
   const {
     name,
     email,
@@ -39,19 +37,19 @@ function SignupPage(props: ActionProps) {
       <InputBlock>
         <OneLineInput
           type="text"
-          value={this.state.name}
+          value={name}
           placeholder="your name"
           onChange={changeName}
         />
         <OneLineInput
           type="text"
-          value={this.state.email}
+          value={email}
           placeholder="your email"
           onChange={changeMail}
         />
         <OneLineInput
           type="password"
-          value={this.state.pass}
+          value={pass}
           placeholder="your password"
           onChange={changePass}
         />

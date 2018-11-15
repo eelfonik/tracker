@@ -22,16 +22,32 @@
 //     phone:""
 // }
 
-import { connectRouter, RouterState } from 'connected-react-router'
+import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
 import {Login, User} from './types'
-import { ActionType, getType, StateType } from 'typesafe-actions';
+import { getType } from 'typesafe-actions';
 import * as actions from './actions'
+import {Action} from './types'
 
-export type Action = ActionType<typeof actions>;
+const initialLoginState = {
+  isLoggedIn: false,
+  notif: '',
+  extras: {
+    sessionId: undefined,
+    userProfileModel: {
+      email: '',
+      username: ''
+    },
+    userId: undefined,
+    msg: undefined
+  },
+  match: {
+    url: '',
+  },
+}
 
-export function loginReducer(state: Login = {}, action: Action) {
+export function loginReducer(state: Login = initialLoginState, action: Action): Login {
   switch (action.type) {
     case getType(actions.logIn):
     case getType(actions.signUp):
@@ -39,24 +55,27 @@ export function loginReducer(state: Login = {}, action: Action) {
         ...state,
         ...action.payload
       };
-    case getType(actions.logout):
-      return {
-        ...state,
-        ...action.payload
-      }
     case getType(actions.resetNotif):
       return {
         ...state,
         ...action.payload,
       };
+    case getType(actions.logout):
+      return initialLoginState
     default:
-      return state
+      return initialLoginState
   }
 }
 
-export type LoginState = StateType<typeof loginReducer>;
+const initialUserInfoState = {
+  isFetching: false,
+  name: '',
+  address: '',
+  siret: '',
+  phone: ''
+}
 
-export function UserInfoReducer(state: User = { isFetching: false }, action: Action) {
+export function userInfoReducer(state: User = initialUserInfoState, action: Action) {
   switch (action.type) {
     case getType(actions.isFetchingUser):
       return {
@@ -71,15 +90,13 @@ export function UserInfoReducer(state: User = { isFetching: false }, action: Act
         ...action.payload,
       };
     case getType(actions.removeInfo):
-      return { isFetching: false };
+      return initialUserInfoState
     default:
-      return state
+      return initialUserInfoState
   }
 }
 
-export type UserInfoState = StateType<typeof UserInfoReducer>
-
-export function InvoiceInfoReducer(state = {}, action: Action) {
+export function invoiceInfoReducer(state = {}, action: Action) {
   switch (action.type) {
     case getType(actions.addNewInvoice):
       return {
@@ -91,9 +108,7 @@ export function InvoiceInfoReducer(state = {}, action: Action) {
   }
 }
 
-export type InvoiceInfoState = StateType<typeof InvoiceInfoReducer>
-
-export function UserInvoicesReducer(state = {}, action: Action) {
+export function userInvoicesReducer(state = {}, action: Action) {
   switch (action.type) {
     case getType(actions.getInvoices):
       return {
@@ -105,22 +120,12 @@ export function UserInvoicesReducer(state = {}, action: Action) {
   }
 }
 
-export type UserInvoicesState = StateType<typeof UserInvoicesReducer>
-
 const createRootReducer = (history: History) => combineReducers({
   router: connectRouter(history),
-  login: loginReducer,
-  userInfo: UserInfoReducer,
-  invoiceInfo: InvoiceInfoReducer,
-  userInvoices: UserInvoicesReducer,
+  loginInfo: loginReducer,
+  userInfo: userInfoReducer,
+  invoiceInfo: invoiceInfoReducer,
+  userInvoices: userInvoicesReducer,
 })
-
-export type AppState = {
-  router: RouterState,
-  login: LoginState,
-  userInfo: UserInfoState,
-  invoiceInfo: InvoiceInfoState,
-  userInvoices: UserInvoicesState,
-};
 
 export default createRootReducer;
