@@ -57,7 +57,7 @@ export type Login = {
   isLoggedIn: boolean,
   notif: string,
   extras: LoginExtras,
-  match?: {
+  match: {
     url: string,
   },
 }
@@ -65,10 +65,10 @@ export type Login = {
 // ====================user related types==================
 
 export type UserInfo = {
-  name: string,
-  address: string,
-  siret: string,
-  phone: string
+  name?: string,
+  address?: string,
+  siret?: string,
+  phone?: string
 }
 
 export type UserExtras = {
@@ -96,10 +96,11 @@ export interface User extends Partial<UserInfo> {
   clients?: Array<number>,
 }
 
-export type AppActionProps = {
+export type UserActionProps = {
   getInfo: () => void,
   getInvoices: () => void,
-  onLogoutClick: () => void
+  onLogoutClick: () => void,
+  onUpdateClick: (value: UserInfo) => void
 }
 
 
@@ -126,13 +127,13 @@ export type InvoiceRes = {
 }
 
 
-export type Invoice = {
-
+export interface Invoice extends Partial<InvoiceInfo>{
+  invoiceId?: number,
 }
 
 // ====================all invoices for a certain user related types==================
 export type UserInvoices = {
-
+  invoices: Array<InvoiceInfo>
 }
 
 

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Provider } from 'react-redux';
-import { Link, Redirect, Switch, Route } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { hot } from 'react-hot-loader'
 import { ConnectedRouter } from 'connected-react-router'
 import HomeLayout from './components/homepageLayout';

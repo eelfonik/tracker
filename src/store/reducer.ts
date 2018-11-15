@@ -25,10 +25,9 @@
 import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
-import {Login, User} from './types'
 import { getType } from 'typesafe-actions';
 import * as actions from './actions'
-import {Action} from './types'
+import {Action, Login, User, Invoice, UserInvoices} from './types'
 
 const initialLoginState = {
   isLoggedIn: false,
@@ -75,7 +74,7 @@ const initialUserInfoState = {
   phone: ''
 }
 
-export function userInfoReducer(state: User = initialUserInfoState, action: Action) {
+export function userInfoReducer(state: User = initialUserInfoState, action: Action): User {
   switch (action.type) {
     case getType(actions.isFetchingUser):
       return {
@@ -96,7 +95,7 @@ export function userInfoReducer(state: User = initialUserInfoState, action: Acti
   }
 }
 
-export function invoiceInfoReducer(state = {}, action: Action) {
+export function invoiceInfoReducer(state: Invoice = {}, action: Action) {
   switch (action.type) {
     case getType(actions.addNewInvoice):
       return {
@@ -108,7 +107,11 @@ export function invoiceInfoReducer(state = {}, action: Action) {
   }
 }
 
-export function userInvoicesReducer(state = {}, action: Action) {
+const initialUserInvoicesState = {
+  invoices: []
+}
+
+export function userInvoicesReducer(state: UserInvoices = initialUserInvoicesState, action: Action) {
   switch (action.type) {
     case getType(actions.getInvoices):
       return {

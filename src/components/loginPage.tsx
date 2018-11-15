@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 import { userLogin, resetNotif } from '../store/actions';
 import { AppState, LoginState, LoginReq, LoginActionProps } from '../store/types'
 import { InputBlock, OneLineInput } from '../commonStyles/form'
-import { useLogin } from '../customHooks/useLogin'
+import { useLoginForm } from '../customHooks/useLoginForm'
 
 type StateProps = Pick<LoginState, 'isLoggedIn' | 'notif' | 'extras'>
 type DispatchProps = Pick<LoginActionProps, 'onLoginClick' | 'resetNotif'>
@@ -19,7 +19,7 @@ function LoginPage(props: Props) {
     pass,
     changeMail,
     changePass
-  } = useLogin(props.resetNotif)
+  } = useLoginForm(props.resetNotif)
 
   const formValidated = () => {
     return !!email && emailValid && !!pass;

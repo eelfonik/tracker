@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { InputBlock, OneLineInput } from '../commonStyles/form'
 import { userSignup, resetNotif } from '../store/actions';
 import { LoginReq, LoginActionProps, AppState, Action } from '../store/types'
-import { useLogin } from '../customHooks/useLogin'
+import { useLoginForm } from '../customHooks/useLoginForm'
 
 function SignupPage(props: Pick<LoginActionProps, 'onSignupClick' | 'resetNotif'>) {
   const {
@@ -15,7 +15,7 @@ function SignupPage(props: Pick<LoginActionProps, 'onSignupClick' | 'resetNotif'
     changeMail,
     changePass,
     changeName
-  } = useLogin(props.resetNotif)
+  } = useLoginForm(props.resetNotif)
 
   const formValidated = () => {
     return !!name && !!email && emailValid && !!pass;

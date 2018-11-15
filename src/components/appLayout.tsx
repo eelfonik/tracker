@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link, Redirect, Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Link, Redirect, Route, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components'
 
 import { connect } from 'react-redux';
@@ -7,9 +7,9 @@ import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
 import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
 import { AppActionProps, AppState, LoginState } from '../store/types'
 
-import Dashboard from './appLayout/dashboard/dashboard';
-import UserInfo from './appLayout/userInfo/userInfo';
-import UserInvoices from './appLayout/userInvoices/userInvoices';
+import Dashboard from './dashboard';
+import UserInfo from './userInfo';
+import UserInvoices from './userInvoices';
 
 const AppContainer = styled.div`
   margin: 20px;
@@ -53,7 +53,7 @@ const AppFooter = styled.footer`
   justify-content: space-between;
 `
 
-type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras'>
+type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras' | 'match'>
 
 function AppLayout(props: StateProps & AppActionProps) {
 
@@ -90,7 +90,7 @@ function AppLayout(props: StateProps & AppActionProps) {
   (<Redirect to="/"/>);
 }
 
-const mapStateToProps = (state: AppState, ownProps) => {
+const mapStateToProps = (state: AppState, ownProps: any) => {
     return {
       isLoggedIn: state.login.isLoggedIn,
       currentURL: ownProps.location.pathname,
