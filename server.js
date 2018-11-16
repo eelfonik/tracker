@@ -12,6 +12,8 @@ const serverRoutes = require('./server/routes/serverRoutes');
 
 const path = require("path");
 
+const isProd = process.env.NODE_ENV === 'production';
+
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 let db;
 // for deploy on heroku || local dev
@@ -37,7 +39,7 @@ mongoose.connect(uri, function (err, database) {
 });
 
 // using webpack-dev-server and middleware in development environment
-if(process.env.NODE_ENV !== 'production') {
+if(!isProd) {
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
 
@@ -102,10 +104,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //     });
 // });
 
-// views is directory for all template files
-// app.set('views', path.join(__dirname, 'dist/views'));
-// app.set('view engine', 'ejs');
-//
 // app.get('/', function(request, response) {
 //   response.render('pages/index');
 // });

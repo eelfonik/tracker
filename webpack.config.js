@@ -1,9 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
-//this one is for using css modules, which will output a specified css file in output destination
-// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-// as moved to styled-components, we don't need to use that :)
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+process.env.NODE_ENV = 'development'
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -45,10 +44,6 @@ module.exports = {
       // }
     ]
   },
-  externals: {
-    "react": "React",
-    "react-dom": "ReactDOM"
-  },
   optimization: {
     // Automatically split vendor and commons
     // https://twitter.com/wSokra/status/969633336732905474
@@ -83,11 +78,5 @@ module.exports = {
       filename: 'index.html',
       inject: 'body',
     }),
-    // new MiniCssExtractPlugin({
-    //   // Options similar to the same options in webpackOptions.output
-    //   // both options are optional
-    //   filename: isProd ? '[name].[hash].css': "[name].css",
-    //   chunkFilename: isProd ? '[id].[hash].css' : "[id].css"
-    // })
   ]
 };
