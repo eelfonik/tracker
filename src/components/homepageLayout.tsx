@@ -58,6 +58,7 @@ const HomeFooter = styled.footer`
 `
 
 const HomeLayout = (props: LoginState) => {
+  console.log({props})
   return props.isLoggedIn ? (
       <Redirect to="/me" />
     ) :
@@ -92,11 +93,11 @@ const HomeLayout = (props: LoginState) => {
 }
 
 const mapStateToProps = (state: AppState) => {
-  const { login } = state;
+  const { loginInfo } = state;
   return {
-    isLoggedIn: login.isLoggedIn,
-    notif: login.notif,
-    extras: login.extras
+    isLoggedIn: loginInfo.isLoggedIn,
+    notif: loginInfo.notif,
+    extras: loginInfo.extras
   }
 }
 

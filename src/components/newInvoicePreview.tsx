@@ -158,7 +158,7 @@ const mapStateToProps = (state: AppState) => ({
   address: state.userInfo.address,
   siret: state.userInfo.siret,
   phone: state.userInfo.phone,
-  profile: state.login.extras.userProfileModel
+  profile: state.loginInfo.extras.userProfileModel
 });
 
 export default connect(mapStateToProps)(NewInvoicePreview);

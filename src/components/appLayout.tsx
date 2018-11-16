@@ -92,9 +92,9 @@ function AppLayout(props: StateProps & UserActionProps) {
 
 const mapStateToProps = (state: AppState, ownProps: any) => {
     return {
-      isLoggedIn: state.login.isLoggedIn,
+      isLoggedIn: state.loginInfo.isLoggedIn,
       currentURL: ownProps.location.pathname,
-      extras: state.login.extras
+      extras: state.loginInfo.extras
     }
 }
 

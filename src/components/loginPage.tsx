@@ -54,8 +54,8 @@ function LoginPage(props: Props) {
   );
 }
 
-const mapStateToProps = ({login} : AppState): StateProps => {
-  const {isLoggedIn, notif, extras} = login
+const mapStateToProps = ({loginInfo} : AppState): StateProps => {
+  const {isLoggedIn, notif, extras} = loginInfo
   return {
     isLoggedIn,
     notif,

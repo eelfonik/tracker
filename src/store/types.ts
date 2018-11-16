@@ -15,7 +15,7 @@ export type UserInvoicesState = StateType<typeof userInvoicesReducer>
 
 export type AppState = {
   router: RouterState,
-  login: LoginState,
+  loginInfo: LoginState,
   userInfo: UserInfoState,
   invoiceInfo: InvoiceInfoState,
   userInvoices: UserInvoicesState,

@@ -25,8 +25,7 @@
 import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
-import { getType } from 'typesafe-actions';
-import * as actions from './actions'
+import * as actions from './actionConstants'
 import {Action, Login, User, Invoice, UserInvoices} from './types'
 
 const initialLoginState = {
@@ -48,18 +47,18 @@ const initialLoginState = {
 
 export function loginReducer(state: Login = initialLoginState, action: Action): Login {
   switch (action.type) {
-    case getType(actions.logIn):
-    case getType(actions.signUp):
+    case actions.LOGIN:
+    case actions.SIGNUP:
       return {
         ...state,
         ...action.payload
       };
-    case getType(actions.resetNotif):
+    case actions.RESET_NOTIF:
       return {
         ...state,
         ...action.payload,
       };
-    case getType(actions.logout):
+    case actions.LOGOUT:
       return initialLoginState
     default:
       return state
@@ -72,19 +71,19 @@ const initialUserInfoState = {
 
 export function userInfoReducer(state: User = initialUserInfoState, action: Action): User {
   switch (action.type) {
-    case getType(actions.isFetchingUser):
+    case actions.FETCHING_USER_INFO:
       return {
         ...state,
         ...action.payload
       };
-    case getType(actions.getInfo):
-    case getType(actions.updateInfo):
+    case actions.GET_INFO:
+    case actions.UPDATE_INFO:
       return {
         ...state,
         isFetching: false,
         ...action.payload,
       };
-    case getType(actions.removeInfo):
+    case actions.REMOVE_INFO:
       return initialUserInfoState
     default:
       return state
@@ -93,7 +92,7 @@ export function userInfoReducer(state: User = initialUserInfoState, action: Acti
 
 export function invoiceInfoReducer(state: Invoice = {}, action: Action) {
   switch (action.type) {
-    case getType(actions.addNewInvoice):
+    case actions.ADD_NEW_INVOICE:
       return {
         ...state,
         ...action.payload,
@@ -109,7 +108,7 @@ const initialUserInvoicesState = {
 
 export function userInvoicesReducer(state: UserInvoices = initialUserInvoicesState, action: Action) {
   switch (action.type) {
-    case getType(actions.getInvoices):
+    case actions.GET_USER_INVOICES:
       return {
         ...state,
         ...action.payload,
