@@ -13,6 +13,7 @@
       }
     }
   },
+  "plugins": ["react-hooks"],
   "ecmaFeatures": {
     "jsx": true,
     "es6": true,
@@ -22,6 +23,7 @@
     "space-before-function-paren": 0,
     "react/prefer-stateless-function": 0,
     "import/no-unresolved": 0,
-    "max-len": 0
+    "max-len": 0,
+    "react-hooks/rules-of-hooks": "error"
   }
 }

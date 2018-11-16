@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { connect } from 'react-redux';
 import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
 import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
-import { AppActionProps, AppState, LoginState } from '../store/types'
+import { UserActionProps, AppState, LoginState } from '../store/types'
 
 import Dashboard from './dashboard';
 import UserInfo from './userInfo';
@@ -55,7 +55,7 @@ const AppFooter = styled.footer`
 
 type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras' | 'match'>
 
-function AppLayout(props: StateProps & AppActionProps) {
+function AppLayout(props: StateProps & UserActionProps) {
 
   React.useEffect(() => {
     props.getInfo();

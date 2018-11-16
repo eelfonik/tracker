@@ -16,7 +16,8 @@ const history = createBrowserHistory();
 // should consider other solutions http://stackoverflow.com/a/35327035/6849186
 //or move away from localStorage to cookie?
 //TODO: need to use cookie fallback for safari private mode
-const persistedState = localStorage.getItem('reduxState') ? JSON.parse(localStorage.getItem('reduxState')) : {}
+const maybeItem = localStorage.getItem('reduxState')
+const persistedState = maybeItem ? JSON.parse(maybeItem) : {}
 
 // Create a history of your choosing (we're using a browser history in this case)
 // const history = createHistory();

@@ -62,16 +62,12 @@ export function loginReducer(state: Login = initialLoginState, action: Action): 
     case getType(actions.logout):
       return initialLoginState
     default:
-      return initialLoginState
+      return state
   }
 }
 
 const initialUserInfoState = {
-  isFetching: false,
-  name: '',
-  address: '',
-  siret: '',
-  phone: ''
+  isFetching: false
 }
 
 export function userInfoReducer(state: User = initialUserInfoState, action: Action): User {
@@ -91,7 +87,7 @@ export function userInfoReducer(state: User = initialUserInfoState, action: Acti
     case getType(actions.removeInfo):
       return initialUserInfoState
     default:
-      return initialUserInfoState
+      return state
   }
 }
 

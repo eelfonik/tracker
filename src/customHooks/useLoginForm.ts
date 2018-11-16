@@ -4,9 +4,12 @@ import { useFormField } from './useFormField'
 import isEmail from '../helpers/isEmail'
 
 export function useLoginForm(resetNotif: LoginActionProps['resetNotif']) {
-  const [name, changeName] = useFormField('')
+  const [name, changeName, nameValid] = useFormField('')
   const [email, changeMail, emailValid] = useFormField('', isEmail)
-  const [pass, changePass] = useFormField('')
+  const [pass, changePass, passValid] = useFormField('')
+
+  const loginValid = emailValid && passValid
+  const signUpValid = loginValid && nameValid
 
   useEffect(() => {
     resetNotif();
@@ -18,10 +21,11 @@ export function useLoginForm(resetNotif: LoginActionProps['resetNotif']) {
   return {
     name,
     email,
-    emailValid,
     pass,
     changeName,
     changeMail,
-    changePass
+    changePass,
+    loginValid,
+    signUpValid,
   }
 }

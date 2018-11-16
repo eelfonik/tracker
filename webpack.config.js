@@ -1,7 +1,8 @@
 const webpack = require('webpack');
 const path = require('path');
 //this one is for using css modules, which will output a specified css file in output destination
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// as moved to styled-components, we don't need to use that :)
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -26,29 +27,39 @@ module.exports = {
         ],
         include: path.join(__dirname, 'src')
       },
-      {
-        // as ExtractTextPlugin will prevent HMR working, we only use it on production, not development
-        // see https://github.com/webpack/extract-text-webpack-plugin/issues/30#issuecomment-125757853
-        test: /\.css$/,
-        use: [
-          { loader: 'style-loader' },
-          {
-            loader:
-            'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
-            }
-          },
-          { loader: 'postcss-loader' }
-        ]
-      }
+      // {
+      //   test: /\.css$/,
+      //   use: [
+      //     { loader: 'style-loader' },
+      //     {
+      //       loader:
+      //       'css-loader',
+      //       options: {
+      //         modules: true,
+      //         importLoaders: 1,
+      //         localIdentName: '[name]__[local]___[hash:base64:5]'
+      //       }
+      //     },
+      //     { loader: 'postcss-loader' }
+      //   ]
+      // }
     ]
   },
   externals: {
     "react": "React",
     "react-dom": "ReactDOM"
+  },
+  optimization: {
+    // Automatically split vendor and commons
+    // https://twitter.com/wSokra/status/969633336732905474
+    // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
+    splitChunks: {
+      chunks: 'all',
+      name: 'vendors',
+    },
+    // Keep the runtime chunk seperated to enable long term caching
+    // https://twitter.com/wSokra/status/969679223278505985
+    runtimeChunk: true,
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
@@ -72,11 +83,11 @@ module.exports = {
       filename: 'index.html',
       inject: 'body',
     }),
-    new MiniCssExtractPlugin({
-      // Options similar to the same options in webpackOptions.output
-      // both options are optional
-      filename: isProd ? '[name].[hash].css': "[name].css",
-      chunkFilename: isProd ? '[id].[hash].css' : "[id].css"
-    })
+    // new MiniCssExtractPlugin({
+    //   // Options similar to the same options in webpackOptions.output
+    //   // both options are optional
+    //   filename: isProd ? '[name].[hash].css': "[name].css",
+    //   chunkFilename: isProd ? '[id].[hash].css' : "[id].css"
+    // })
   ]
 };

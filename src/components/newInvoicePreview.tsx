@@ -1,164 +1,116 @@
 import * as React from "react";
 import { connect } from "react-redux";
-import styled, {css} from 'styled-components'
-import {AppState} from '../store/types'
+import styled, { css } from "styled-components";
+import { AppState, UserInfo, UserProfile, InvoiceInfoState, InvoiceInfo } from "../store/types";
 
 const InvoiceWrapper = styled.div`
   padding: 20px;
   border: 1px dashed black;
   box-shadow: 3px 3px 2px #888888;
-`
+`;
 
 const VerticalBase = css`
   display: flex;
   justify-content: space-between;
   margin-bottom: 30px;
-`
+`;
 
 const InvoiceHeader = styled.div`
- ${VerticalBase}
- align-items: flex-end;
+  ${VerticalBase}
+  align-items: flex-end;
   & .headerInfo,
-  & .clientInfo {}
-`
+  & .clientInfo {
+  }
+`;
 
 const Header = styled.div`
-  font-size:1.5em;
+  font-size: 1.5em;
   font-weight: 700;
   color: rgb(0, 234, 107);
-`
+`;
 
 const SmallHeader = styled.span`
   font-size: 1.1em;
   font-weight: 700;
-`
+`;
 
 const FactureInfo = styled.div`
-  composes: verticalBase;
+  ${VerticalBase}
   align-items: center;
-`
+`;
 
 const IncomeInfo = styled.div`
-  composes: verticalBase;
+  ${VerticalBase}
   align-items: flex-start;
   & .incomeDesc {
-      margin-right:10px;
+    margin-right: 10px;
   }
   & .incomeSum {
-      min-width: 8em;
+    min-width: 8em;
   }
-`
+`;
 
 const TaxAdditionalText = styled.div`
   font-size: 0.6em;
   margin: 10px 0;
-`
+`;
 
-function NewInvoicePreview(props) {
+type Props = {
+  profile: UserProfile,
+  data: InvoiceInfoState
+}
 
-  const maybeRenderSiret = () => {
-    if (!!props.data.client.siret) {
-      return <div>SIRET: {props.data.client.siret}</div>;
-    }
-  }
+function NewInvoicePreview(props: UserInfo & Props) {
+  const invoice = props.data;
+  const maybeMail = props.profile ? props.profile.email : "";
 
-  const maybeRenderDesc = () => {
-    if (!!props.data.description) {
-      return (
-        <div className='incomeDesc'>
-          <SmallHeader>
-            Designation
-          </SmallHeader>
-          <hr />
-          {props.data.description}
-        </div>
-      );
-    }
-  }
+  const taxIsZeroOrUndefined = (taxRate: InvoiceInfo['taxRate']) => {
+    return parseFloat(taxRate) === 0 || taxRate === "";
+  };
 
-  const taxIsZeroOrUndefined = () => {
-    return (
-      parseFloat(props.data.taxRate) === 0 ||
-      props.data.taxRate === ""
-    );
-  }
-
-  const calcTva = () => {
-    if (!taxIsZeroOrUndefined()) {
+  const calcTva = (sum: InvoiceInfo['sum'], taxRate: InvoiceInfo['taxRate']) => {
+    if (!taxIsZeroOrUndefined(taxRate)) {
       return parseFloat(
         (
-          parseFloat(props.data.sum) *
-          parseFloat(props.data.taxRate) /
+          (parseFloat(sum) * parseFloat(taxRate)) /
           100
         ).toFixed(2)
       );
     }
-    return 0
-  }
+    return 0;
+  };
 
-  const calcSum = () => {
-    return parseFloat(parseFloat(props.data.sum).toFixed(2));
-  }
+  const calcSum = (sum: InvoiceInfo['sum']) => {
+    return parseFloat(parseFloat(sum).toFixed(2));
+  };
 
-  const maybeRenderAdditionalTaxText = () => {
-    if (taxIsZeroOrUndefined()) {
-      return (
-        <TaxAdditionalText>
-          TVA non applicable, article 239B du code général des impôts
-        </TaxAdditionalText>
-      );
-    } else {
-      return (
-        <TaxAdditionalText>
-          TVA {props.data.taxRate}% : {calcTva()}{" "}
-          {props.data.currency}
-        </TaxAdditionalText>
-      );
-    }
-  }
-
-  const renderTotal = () => {
-    const total = taxIsZeroOrUndefined()
-      ? calcSum()
-      : calcSum() + calcTva();
+  const renderTotal = ({taxRate, sum, currency}: Pick<InvoiceInfo, 'taxRate' | 'sum' | 'currency'>) => {
+    const total = taxIsZeroOrUndefined(taxRate) ? calcSum(sum) : calcSum(sum) + calcTva(sum, taxRate);
     return (
       <div>
         <SmallHeader>TOTAL</SmallHeader>
         <hr />
-        {total} {props.data.currency}
+        {total} {currency}
       </div>
     );
-  }
+  };
 
-  const maybeRenderClient = () => {
-    if (props.data.client) {
-      return (
-        <div className='clientInfo'>
-          <Header>Client</Header>
-          <div>{props.data.client.name}</div>
-          <div>{props.data.client.address}</div>
-          {maybeRenderSiret()}
-        </div>
-      );
-    } else {
-      return (
-        <div className='clientInfo'>
-          please add client info
-        </div>
-      );
-    }
-  }
-  const invoice = props.data;
-  const maybeMail = props.profile ? props.profile.email : "";
+  const maybeRenderClient = () => !!invoice.client ? 
+    <div className="clientInfo">
+      <Header>Client</Header>
+      <div>{invoice.client.name}</div>
+      <div>{invoice.client.address}</div>
+      {!!invoice.client.siret && <div>SIRET: {invoice.client.siret}</div>}
+    </div> :
+    <div className="clientInfo">please add client info</div>
 
   if (invoice.number !== "") {
+    const {taxRate, sum, currency, description} = invoice
     return (
       <InvoiceWrapper>
         <InvoiceHeader>
-          <div className='headerInfo'>
-            <Header>
-              {props.name}
-            </Header>
+          <div className="headerInfo">
+            <Header>{props.name}</Header>
             <div>{props.address}</div>
             <div>{props.phone}</div>
             <div>{maybeMail}</div>
@@ -169,27 +121,31 @@ function NewInvoicePreview(props) {
 
         <FactureInfo>
           <div>
-            <SmallHeader>
-              Facture
-            </SmallHeader>{" "}
-            {invoice.number}
+            <SmallHeader>Facture</SmallHeader> {invoice.number}
           </div>
           <div>{invoice.date}</div>
         </FactureInfo>
 
         <IncomeInfo>
-          {maybeRenderDesc()}
-          <div className='incomeSum'>
-            <SmallHeader>
-              Montant HT
-            </SmallHeader>
+          {!!description &&
+            <div className="incomeDesc">
+              <SmallHeader>Designation</SmallHeader>
+              <hr />
+              {description}
+            </div>}
+          <div className="incomeSum">
+            <SmallHeader>Montant HT</SmallHeader>
             <hr />
-            {calcSum()} {invoice.currency}
-            {maybeRenderAdditionalTaxText()}
+            {sum && calcSum(sum)} {currency}
+            <TaxAdditionalText>
+              {taxRate && taxIsZeroOrUndefined(taxRate) ?
+                "TVA non applicable, article 239B du code général des impôts" :
+                `TVA ${taxRate}% : ${ sum && taxRate && calcTva(sum, taxRate)} ${currency}`
+              }
+            </TaxAdditionalText>
           </div>
         </IncomeInfo>
-
-        <div>{renderTotal()}</div>
+        <div>{sum && taxRate && currency && renderTotal({sum, taxRate, currency})}</div>
       </InvoiceWrapper>
     );
   } else {
@@ -204,6 +160,5 @@ const mapStateToProps = (state: AppState) => ({
   phone: state.userInfo.phone,
   profile: state.login.extras.userProfileModel
 });
-
 
 export default connect(mapStateToProps)(NewInvoicePreview);

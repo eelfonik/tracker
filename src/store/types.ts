@@ -19,9 +19,9 @@ export type AppState = {
   userInfo: UserInfoState,
   invoiceInfo: InvoiceInfoState,
   userInvoices: UserInvoicesState,
-};
+}
 // ===============login/signup related types=================
-type UserProfile = {
+export type UserProfile = {
   email: string,
   username: string,
 }
@@ -36,7 +36,7 @@ export type LoginExtras = {
 export type LoginReq = {
   name?: string,
   email: string,
-  emailValid: boolean,
+  emailValid?: boolean,
   pass: string,
 }
 
@@ -108,12 +108,13 @@ export type UserActionProps = {
 // ====================invoice related types==================
 export type InvoiceInfo = {
   _creator?: string,
-  number: number,
+  number: string,
   date : string,
-  sum : number,
-  taxRate : number,
+  sum : string,
+  taxRate : string,
   currency : string,
-  description : string
+  description : string,
+  client: Client,
 }
 
 type InvoiceExtras = {
@@ -132,6 +133,11 @@ export interface Invoice extends Partial<InvoiceInfo>{
 }
 
 // ====================all invoices for a certain user related types==================
+export type Client = {
+  name: string,
+  address: string,
+  siret?: string,
+}
 export type UserInvoices = {
   invoices: Array<InvoiceInfo>
 }

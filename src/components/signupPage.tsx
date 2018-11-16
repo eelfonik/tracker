@@ -10,20 +10,16 @@ function SignupPage(props: Pick<LoginActionProps, 'onSignupClick' | 'resetNotif'
   const {
     name,
     email,
-    emailValid,
     pass,
     changeMail,
     changePass,
-    changeName
+    changeName,
+    signUpValid,
   } = useLoginForm(props.resetNotif)
 
-  const formValidated = () => {
-    return !!name && !!email && emailValid && !!pass;
-  }
-
   const submitData = () => {
-    if (formValidated()) {
-      props.onSignupClick({name, email, pass, emailValid});
+    if (signUpValid) {
+      props.onSignupClick({name, email, pass});
       return;
     }
     console.debug("The signUp is not correct");

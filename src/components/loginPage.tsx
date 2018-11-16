@@ -15,19 +15,15 @@ type Props = StateProps & DispatchProps
 function LoginPage(props: Props) {
   const {
     email,
-    emailValid,
     pass,
     changeMail,
-    changePass
+    changePass,
+    loginValid,
   } = useLoginForm(props.resetNotif)
 
-  const formValidated = () => {
-    return !!email && emailValid && !!pass;
-  }
-
   const submitData = () => {
-    if (formValidated()) {
-      props.onLoginClick({email, pass, emailValid});
+    if (loginValid) {
+      props.onLoginClick({email, pass});
     } else {
       console.debug("The login is not correct");
     }
