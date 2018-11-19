@@ -3,7 +3,7 @@
 class AccountController {
   constructor(userModel, session, mailer) {
     this.crypto = require("crypto");
-    this.uuid = require("uuid");
+    this.uuid = require("uuid/v4");
     this.UserProfile = require("../models/userProfile.js");
     this.userModel = userModel;
     this.session = session;
@@ -11,14 +11,6 @@ class AccountController {
     this.User = require("../models/userSchema.js");
     this.createRes = require("../utils/createServerRes.js")
   }
-
-  getSession() {
-    return this.session;
-  }
-
-  setSession(session) {
-    this.session = session;
-  };
 
   hashPassword(password, salt, callback) {
     // We use pbkdf2 to hash and iterate 10k times by default
@@ -35,24 +27,21 @@ class AccountController {
       if (user) {
         return callback(err, this.createRes("EMAIL_ALREADY_EXISTS"));
       }
-      newUser.save((err, user, numberAffected) => {
+      newUser.save((err, user) => {
         if (err) {
           return callback(err, this.createRes("DB_ERROR"));
         }
-        if (numberAffected === 1) {
-          //create a userProfileModel from the UserProfile
-          const userProfileModel = new this.UserProfile(user);
-          this.session.userProfileModel = userProfileModel;
-          this.session.userId = user._id;
-          this.session.id = this.uuid.v4();
-          return callback(
-            err,
-            this.createRes("userCreated", {
-              userProfileModel: userProfileModel
-            })
-          );
-        }
-        return callback(err, this.createRes("COULD_NOT_CREATE_USER"));
+        //create a userProfileModel from the UserProfile
+        const userProfileModel = new this.UserProfile(user);
+        this.session.userProfileModel = userProfileModel;
+        this.session.userId = user._id;
+        console.log('session?', this.session);
+        return callback(
+          err,
+          this.createRes("userCreated", {
+            userProfileModel: userProfileModel
+          })
+        );
       });
     });
   };
@@ -65,6 +54,7 @@ class AccountController {
 
       if (user) {
         this.hashPassword(password, user.passwordSalt, (err, passwordHash) => {
+          console.log("this called back should be triggered", {err, passwordHash}, user);
           if (passwordHash === user.passwordHash) {
             const userProfileModel = new this.UserProfile({
               email: user.email,
@@ -73,8 +63,6 @@ class AccountController {
 
             this.session.userProfileModel = userProfileModel;
             this.session.userId = user._id;
-            this.session.id = this.uuid.v4();
-
             return callback(
               err,
               this.createRes("userLoggedIn", {
@@ -86,9 +74,8 @@ class AccountController {
                 //else go to dashboard
               })
             );
-          } else {
-            return callback(err, this.createRes("INVALID_PWD"));
           }
+          return callback(err, this.createRes("INVALID_PWD"));
         });
       } else {
         return callback(err, this.createRes("EMAIL_NOT_FOUND"));
@@ -99,9 +86,9 @@ class AccountController {
   logout() {
     //fuck it why I thought the delete here was to set on client side-_-
     //it's used to delete the sessions collection in mongoDB...
-    if (this.session.userProfileModel) delete this.session.userProfileModel;
-    if (this.session.id) delete this.session.id;
-    if (this.session.userId) delete this.session.userId;
+    this.session.destroy((err) => {
+      // cannot access session here
+    });
     return;
   };
 
@@ -112,7 +99,7 @@ class AccountController {
       }
       if (user) {
         // Save the user's email and a password reset hash in session.
-        var passwordResetHash = this.uuid.v4();
+        var passwordResetHash = this.uuid();
         this.session.passwordResetHash = passwordResetHash;
         this.session.emailWhoRequestedPasswordReset = email;
 
@@ -152,18 +139,15 @@ class AccountController {
       return callback(null, this.createRes("PASSWORD_CONFIRM_MISMATCH"));
     }
 
-    const passwordSalt = this.uuid.v4();
+    const passwordSalt = this.uuid();
 
     this.hashPassword(newPassword, passwordSalt, (err, passwordHash) => {
       this.userModel.update(
         { email: email },
         { passwordHash: passwordHash, passwordSalt: passwordSalt },
-        (err, numberAffected, raw) => {
+        (err, raw) => {
           if (err) {
             return callback(err, this.createRes("DB_ERROR"));
-          }
-          if (numberAffected < 1) {
-            return callback(err, this.createRes("COULD_NOT_RESET_PASSWORD"));
           }
           return callback(err, this.createRes("success"));
         }
@@ -178,10 +162,9 @@ class AccountController {
       this.createRes("PASSWORD_CONFIRM_MISMATCH");
     }
 
-    const passwordSaltIn = this.uuid.v4();
+    const passwordSaltIn = this.uuid();
     const cryptoIterations = 10000; // Must match iterations used in controller#hashPassword.
     const cryptoKeyLen = 64; // Must match keyLen used in controller#hashPassword.
-    let passwordHashIn;
 
     const user = new this.User({
       email: userRegistrationModel.email,
@@ -195,7 +178,7 @@ class AccountController {
       ),
       passwordSalt: passwordSaltIn
     });
-    this.createRes("registerSuccess", { user: user });
+    return this.createRes("registerSuccess", { user: user });
   };
 }
 

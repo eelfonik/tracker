@@ -108,7 +108,7 @@ InvoiceController.prototype.addNewInvoice = function (newInvoice, callback) {
             }));
         } else {
 
-            newInvoice.save(function (err, invoice, numberAffected) {
+            newInvoice.save(function (err, invoice) {
 
                 if (err) {
                     return callback(err,new me.ApiResponse({
@@ -119,35 +119,25 @@ InvoiceController.prototype.addNewInvoice = function (newInvoice, callback) {
                         }
                     }));
                 }
+                //create a invoiceInfoModel from the InvoiceInfo
+                const invoiceInfoModel = new me.InvoiceInfo({
+                    _creator:invoice._creator,
+                    number: invoice.number,
+                    date : invoice.date,
+                    sum : invoice.sum,
+                    taxRate : invoice.taxRate,
+                    currency : invoice.currency,
+                    description : invoice.description
+                });
 
-                if (numberAffected === 1) {
-                    //create a invoiceInfoModel from the InvoiceInfo
-                    const invoiceInfoModel = new me.InvoiceInfo({
-                        _creator:invoice._creator,
-                        number: invoice.number,
-                        date : invoice.date,
-                        sum : invoice.sum,
-                        taxRate : invoice.taxRate,
-                        currency : invoice.currency,
-                        description : invoice.description
-                    });
-
-                    me.session.invoiceId = invoice._id;
-
-                    return callback(err,new me.ApiResponse({
-                        success: true,
-                        extras: {
-                            invoiceInfoModel: invoiceInfoModel,
-                            invoiceId : me.session.invoiceId
-                        }
-                    }));
-                } else {
-                    return callback(err,new me.ApiResponse({
-                        success: false,
-                        extras: { msg: me.ApiMessages.COULD_NOT_CREATE_INVOICE }
-                    }));
-                }
-
+                me.session.invoiceId = invoice._id;
+                return callback(err,new me.ApiResponse({
+                    success: true,
+                    extras: {
+                        invoiceInfoModel: invoiceInfoModel,
+                        invoiceId : me.session.invoiceId
+                    }
+                }));
             });
         }
 

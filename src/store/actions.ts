@@ -104,7 +104,7 @@ export const isFetchingUser = () => action(actions.FETCHING_USER_INFO, {
 export const getUserInfo = () =>
   async (dispatch: Dispatch, getState: Function) => {
     dispatch(isFetchingUser());
-    const isLoggedIn = getState().login.isLoggedIn;
+    const isLoggedIn = getState().loginInfo.isLoggedIn;
     if (isLoggedIn) {
       try {
         const res = await axios.get('/api/user/info')
@@ -155,7 +155,7 @@ export const getInvoices = (resData: Array<InvoiceInfo>) => action(actions.GET_U
 
 export const getUserInvoices = () => 
   async (dispatch: Dispatch, getState: Function) => {
-    if (getState().login.isLoggedIn) {
+    if (getState().loginInfo.isLoggedIn) {
       try {
         const res = await axios.get('/api/user/invoices', {})
         console.debug("get user invoices success ", res);

@@ -22,7 +22,7 @@ function SignupPage(props: Pick<LoginActionProps, 'onSignupClick' | 'resetNotif'
       props.onSignupClick({name, email, pass});
       return;
     }
-    console.debug("The signUp is not correct");
+    console.error("The signUp is not correct");
   }
 
   return (

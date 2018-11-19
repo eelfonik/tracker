@@ -3,6 +3,7 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const mongodb = require("mongodb");
 const mongoose = require ("mongoose");
+const helmet = require('helmet')
 const app = express();
 const session = require('express-session');
 
@@ -11,6 +12,8 @@ const MongoStore = require('connect-mongo')(session);
 const serverRoutes = require('./server/routes/serverRoutes');
 
 const path = require("path");
+
+process.env.NODE_ENV = "developement"
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -69,7 +72,8 @@ if(!isProd) {
 //     }
 //     console.log("listening at port 3000");
 // });
-
+app.use(helmet())
+app.set('trust proxy', 1)
 app.use(session({
     secret:'foo',
     resave: false,
