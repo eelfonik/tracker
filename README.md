@@ -1,9 +1,10 @@
-# [Express 4](http://expressjs.com/) with React
+# Trackr
 
+Don't fooled by tools. Get the things done.
 
 ## Running Locally
 
-Make sure you have [Node.js](http://nodejs.org/) and the [Heroku Toolbelt](https://toolbelt.heroku.com/) installed.
+Make sure you have [Node.js](http://nodejs.org/) installed.
 
 ```sh
 $ npm install
@@ -15,7 +16,7 @@ App should now be running on [localhost:5000](http://localhost:5000/).
 
 ## Resources
 
-For more information about using Node.js on Heroku, see these Dev Center articles:
+For informations about using Node.js on Heroku, see these Dev Center articles:
 
 - [Getting Started with Node.js on Heroku](https://devcenter.heroku.com/articles/getting-started-with-nodejs)
 - [Heroku Node.js Support](https://devcenter.heroku.com/articles/nodejs-support)
