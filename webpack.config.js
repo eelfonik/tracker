@@ -1,11 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-
+process.env.NODE_ENV === 'development';
 const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  mode: 'development',
   devtool: 'source-map',
   entry: isProd ? ['./src/index'] : [
     'react-hot-loader/patch',

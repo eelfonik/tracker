@@ -21,4 +21,5 @@ const App = () => (
   </Provider>
 );
 
+//TODO: the hot reload is totally broken with hooks...
 export default hot(module)(App)

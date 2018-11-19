@@ -12,10 +12,8 @@ export function useFormField(
 ) : [string, (e: Field) => void, boolean] {
   const [field, setField] = useState(intialValue);
   const [validate, setValidation] = useState(true);
-  console.log({field});
   function changeField(e: Field): void {
     const val = is(String, e) ? e : e.target.value
-    console.log("why it's not working?", is(String, e) ? e:e.target.value);
     setField(transformFunc ? transformFunc(val) : val)
     setValidation(validationFunc(val))
   }
