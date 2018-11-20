@@ -11,14 +11,6 @@ class UserController {
     this.createRes = require("../utils/createServerRes.js");
   }
 
-  getSession() {
-    return this.session;
-  }
-
-  setSession(session) {
-    this.session = session;
-  }
-
   getInfo(callback) {
     //if (this.session && this.session.userProfileModel) {
     this.userModel.findOne(
@@ -49,8 +41,9 @@ class UserController {
               userId: userId
             })
           );
+        } else {
+          return callback(err, this.createRes("EMAIL_NOT_FOUND"));
         }
-        return callback(err, this.createRes("EMAIL_NOT_FOUND"));
       }
     );
     //}

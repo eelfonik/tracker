@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import {AppState} from '../store/types'
 import {InvoiceInfo} from '../store/types'
 import UserInvoiceCard from "./userInvoiceCard";
+import InvoicesTrends from './InvoicesTrends';
 
 function UserInvoices(props: {userInvoices: Array<InvoiceInfo>}) {
   return (
@@ -10,6 +11,7 @@ function UserInvoices(props: {userInvoices: Array<InvoiceInfo>}) {
       {props.userInvoices.map(invoice => (
         <UserInvoiceCard key={invoice.number} invoiceData={invoice} />
       ))}
+      <InvoicesTrends userInvoices={props.userInvoices}/>
     </div>
   )
 }

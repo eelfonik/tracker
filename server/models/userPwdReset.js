@@ -1,4 +1,4 @@
-var UserPasswordReset = function(ft) {
+const UserPasswordReset = function(ft) {
     this.email = ft.email
 };
 module.exports = UserPasswordReset;

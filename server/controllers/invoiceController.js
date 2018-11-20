@@ -1,209 +1,154 @@
-var InvoiceController = function(invoiceModel, userModel,session) {
-
-    this.ApiResponse = require('../models/apiResponse.js');
-    this.ApiMessages = require('../models/apiErrorMessages.js');
-    this.InvoiceInfo = require('../models/invoiceInfo.js');
-    this.ClientProfile = require('../models/clientProfile.js');
+class InvoiceController {
+  constructor(invoiceModel, userModel, session) {
+    this.InvoiceInfo = require("../models/invoiceInfo.js");
+    this.ClientProfile = require("../models/clientProfile.js");
     this.userModel = userModel;
     this.invoiceModel = invoiceModel;
     this.session = session;
-    this.User = require('../models/userSchema.js');
-    this.Invoice = require('../models/invoiceSchema.js');
-};
+    this.User = require("../models/userSchema.js");
+    this.Invoice = require("../models/invoiceSchema.js");
+    this.createRes = require("../utils/createServerRes.js");
+  }
 
-InvoiceController.prototype.getSession = function () {
-    return this.session;
-};
+  getUserInvoices(callback) {
+    this.invoiceModel
+      .find({ _creator: this.session.userId })
+      .exec((err, invoices) => {
+        if (err) {
+          return callback(err, this.createRes("DB_ERROR"));
+        }
+        if (invoices) {
+          return callback(
+            err,
+            this.createRes("getInvoicesSuccess", { invoices })
+          );
+        }
+        return callback(err, this.createRes("EMAIL_NOT_FOUND"));
+      });
+  }
 
-InvoiceController.prototype.setSession = function (session) {
-    this.session = session;
-};
-
-
-InvoiceController.prototype.getUserInvoices = function(callback) {
-    var me = this;
-    //if (this.session && this.session.userId) {
-    //     me.invoiceModel.find({_creator: me.session.userId}).exec(function (err,invoices) {
-    //
-    //     });
-        me.invoiceModel.find({ _creator: me.session.userId }).exec(function (err,invoices) {
-            if (err) {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.DB_ERROR }
-                }));
-            }
-
-            if (invoices) {
-
-                return callback(err, new me.ApiResponse({
-                    success: true,
-                    extras: {
-                        invoices: invoices
-                    }
-                }));
-
-            } else {
-                return callback(err, new me.ApiResponse({
-                    success: false,
-                    extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-                }));
-            }
+  getSingleInvoice(number, callback) {
+    this.invoiceModel.findOne({ number: number }, (err, invoice) => {
+      if (err) {
+        return callback(
+          err, this.createRes('DB_ERROR')
+        );
+      }
+      if (invoice) {
+        const invoiceInfoModel = new this.InvoiceInfo({
+          number: invoice.number,
+          date: invoice.date,
+          sum: invoice.sum,
+          taxRate: invoice.taxRate,
+          currency: invoice.currency,
+          description: invoice.description
         });
-    //}
-};
-
-InvoiceController.prototype.getSingleInvoice = function (number, callback) {
-    var me = this;
-    me.invoiceModel.findOne({ number: number }, function (err, invoice) {
-
-        if (err) {
-            return callback(err, new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.DB_ERROR }
-            }));
-        }
-
-        if (invoice) {
-            const invoiceInfoModel = new me.InvoiceInfo({
-                number: invoice.number,
-                date: invoice.date,
-                sum:invoice.sum,
-                taxRate:invoice.taxRate,
-                currency: invoice.currency,
-                description: invoice.description
-            });
-
-            me.session.invoiceId = invoice._id;
-
-            return callback(err, new me.ApiResponse({
-                success: true,
-                extras: {
-                    invoiceInfoModel: invoiceInfoModel,
-                    invoiceId: me.session.invoiceId
-                }
-            }));
-        }
+  
+        this.session.invoiceId = invoice._id;
+  
+        return callback(
+          err, this.createRes('getSingleInvoiceSuccess', {
+            invoiceInfoModel: invoiceInfoModel,
+            invoiceId: this.session.invoiceId
+          })
+        );
+      }
     });
-};
+  }
 
-InvoiceController.prototype.addNewInvoice = function (newInvoice, callback) {
-    var me = this;
-    me.invoiceModel.findOne({ number: newInvoice.number }, function (err, invoice) {
-
+  addNewInvoice(newInvoice, callback) {
+    this.invoiceModel.findOne({ number: newInvoice.number }, (
+      err,
+      invoice
+    ) => {
+      if (err) {
+        return callback(
+          err, this.createRes('DB_ERROR')
+        );
+      }
+      if (invoice) {
+        return callback(
+          err, this.createRes('INVOICE_ALREADY_EXISTS')
+        );
+      }
+      //nothing wrong, let's create new
+      newInvoice.save((err, invoice) => {
         if (err) {
-            return callback(err,new me.ApiResponse({
-                success: false,
-                extras: {
-                    msg: me.ApiMessages.DB_ERROR,
-                    error: "db not connected on finding"
-                }
-            }));
+          return callback(
+            err, this.createRes('DB_ERROR')
+          );
         }
+        //create a invoiceInfoModel from the InvoiceInfo
+        const invoiceInfoModel = new this.InvoiceInfo({
+          _creator: invoice._creator,
+          number: invoice.number,
+          date: invoice.date,
+          sum: invoice.sum,
+          taxRate: invoice.taxRate,
+          currency: invoice.currency,
+          description: invoice.description
+        });
 
-        if (invoice) {
-            return callback(err,new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.INVOICE_ALREADY_EXISTS }
-            }));
-        } else {
-
-            newInvoice.save(function (err, invoice) {
-
-                if (err) {
-                    return callback(err,new me.ApiResponse({
-                        success: false,
-                        extras: {
-                            msg: me.ApiMessages.DB_ERROR,
-                            error: err
-                        }
-                    }));
-                }
-                //create a invoiceInfoModel from the InvoiceInfo
-                const invoiceInfoModel = new me.InvoiceInfo({
-                    _creator:invoice._creator,
-                    number: invoice.number,
-                    date : invoice.date,
-                    sum : invoice.sum,
-                    taxRate : invoice.taxRate,
-                    currency : invoice.currency,
-                    description : invoice.description
-                });
-
-                me.session.invoiceId = invoice._id;
-                return callback(err,new me.ApiResponse({
-                    success: true,
-                    extras: {
-                        invoiceInfoModel: invoiceInfoModel,
-                        invoiceId : me.session.invoiceId
-                    }
-                }));
-            });
-        }
-
+        this.session.invoiceId = invoice._id;
+        return callback(
+          err, this.createRes('newInvoiceAdded', {
+            invoiceInfoModel: invoiceInfoModel,
+            invoiceId: this.session.invoiceId
+          })
+        );
+      });
     });
-};
+  }
 
-InvoiceController.prototype.updateInvoiceInfo = function(invoiceInfo, callback) {
-
-    var me = this;
+  updateInvoiceInfo(invoiceInfo,callback) {
     // add {new:true} to tell mongoose return the updated value
     //http://stackoverflow.com/a/32811548/6849186
     //{upsert: true} is used to tell if there's no existing field, create one
-    me.invoiceModel.findOneAndUpdate({ _id: me.session.invoiceId }, {info: invoiceInfo}, {new: true, upsert:true},function (err, invoice) {
-
+    this.invoiceModel.findOneAndUpdate(
+      { _id: this.session.invoiceId },
+      { info: invoiceInfo },
+      { new: true, upsert: true },
+      (err, invoice) => {
         if (err) {
-            return callback(err, new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.DB_ERROR }
-            }));
+          return callback(
+            err, this.createRes('DB_ERROR')
+          );
         }
-
         //if find a invoice by number
         if (invoice) {
-            var userInfoModel = new me.UserInfo({
-                name: user.info.name,
-                address: user.info.address,
-                siret:user.info.siret,
-                phone:user.info.phone
-            });
-
-            return callback(err, new me.ApiResponse({
-                success: true,
-                extras: {
-                    userInfoModel: userInfoModel,
-                }
-            }));
-
+          const userInfoModel = new this.UserInfo({
+            name: user.info.name,
+            address: user.info.address,
+            siret: user.info.siret,
+            phone: user.info.phone
+          });
+  
+          return callback(
+            err, this.createRes('invoiceUpdateSuccess', {userInfoModel})
+          );
         } else {
-            return callback(err, new me.ApiResponse({
-                success: false,
-                extras: { msg: me.ApiMessages.EMAIL_NOT_FOUND }
-            }));
+          return callback(
+            err, this.createRes('EMAIL_NOT_FOUND')
+          );
         }
+      }
+    );
+  }
 
+  //TODO: deleteInvoice
+
+  getInvoiceFromUserInput(invoiceInputModel) {
+    const invoice = new this.Invoice({
+      _creator: this.session.userId,
+      number: invoiceInputModel.number,
+      date: invoiceInputModel.date,
+      sum: invoiceInputModel.sum,
+      taxRate: invoiceInputModel.taxRate,
+      currency: invoiceInputModel.currency,
+      description: invoiceInputModel.description
     });
-};
-
-//TODO: InvoiceController.prototype.deleteInvoice
-
-
-InvoiceController.prototype.getInvoiceFromUserInput = function(invoiceInputModel) {
-    const me = this;
-    const invoice = new me.Invoice({
-        _creator:this.session.userId,
-        number:invoiceInputModel.number,
-        date: invoiceInputModel.date,
-        sum: invoiceInputModel.sum,
-        taxRate: invoiceInputModel.taxRate,
-        currency: invoiceInputModel.currency,
-        description: invoiceInputModel.description
-    });
-
-    return new me.ApiResponse({
-        success: true,
-        extras: { invoice:invoice }
-    });
+    return this.createRes('createInvoic', { invoice })
+  } 
 }
 
 module.exports = InvoiceController;

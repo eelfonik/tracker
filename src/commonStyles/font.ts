@@ -3,7 +3,7 @@ import { createGlobalStyle } from 'styled-components'
 const GlobalFont = createGlobalStyle`
 @font-face {
 	font-family: "SourceSansPro";
-	src: url("fonts/SourceSansPro-regular.ttf") format("truetype")
+	src: url("/fonts/SourceSansPro-regular.ttf") format("truetype")
 }
 body,html {
     line-height: 1.5;
