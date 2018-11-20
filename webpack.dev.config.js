@@ -1,13 +1,11 @@
-const webpack = require('webpack');
+const webpack = require('webpack')
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-process.env.NODE_ENV === 'development';
-const isProd = process.env.NODE_ENV === 'production';
 
 module.exports = {
+  mode: 'development',
   devtool: 'source-map',
-  entry: isProd ? ['./src/index'] : [
-    'react-hot-loader/patch',
+  entry: [
     './src/index',
     'webpack-hot-middleware/client'
   ],
@@ -42,21 +40,9 @@ module.exports = {
       // }
     ]
   },
-  optimization: {
-    // Automatically split vendor and commons
-    // https://twitter.com/wSokra/status/969633336732905474
-    // https://medium.com/webpack/webpack-4-code-splitting-chunk-graph-and-the-splitchunks-optimization-be739a861366
-    splitChunks: {
-      chunks: 'all',
-      name: 'vendors',
-    },
-    // Keep the runtime chunk seperated to enable long term caching
-    // https://twitter.com/wSokra/status/969679223278505985
-    runtimeChunk: true,
-  },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.tsx', '.ts', '.css']
+    extensions: ['.js', '.jsx', '.tsx', '.ts']
   },
   output: {
     path: path.join(__dirname, 'dist'),

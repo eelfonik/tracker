@@ -6,14 +6,13 @@ const mongoose = require ("mongoose");
 const helmet = require('helmet')
 const app = express();
 const session = require('express-session');
+const webpack = require('webpack');
 
 //https://github.com/jdesboeufs/connect-mongo
 const MongoStore = require('connect-mongo')(session);
 const serverRoutes = require('./server/routes/serverRoutes');
 
 const path = require("path");
-
-process.env.NODE_ENV = "developement"
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -46,8 +45,7 @@ if(!isProd) {
     const webpackDevMiddleware = require('webpack-dev-middleware');
     const webpackHotMiddleware = require('webpack-hot-middleware');
 
-    const webpack = require('webpack');
-    const webpackConfig = require('./webpack.config');
+    const webpackConfig = require('./webpack.dev.config');
     const compiler = webpack(webpackConfig);
 
     app.use(webpackDevMiddleware(compiler, {
@@ -84,8 +82,6 @@ app.use(session({
 
 app.use(express.static(__dirname + '/public'));
 //app.use(express.static(path.resolve(__dirname, 'public/img')));
-app.use(express.static(__dirname + '/dist'));
-//app.use(express.static(path.resolve(__dirname, 'dist')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));

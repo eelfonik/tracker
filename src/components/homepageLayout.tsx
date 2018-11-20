@@ -34,6 +34,7 @@ const SignUpLink = styled(Link)`
   &:hover {
       border-bottom: 1px solid rgba(0, 234, 107,1);
   }
+  transition: border-bottom 0.5s ease;
 `
 
 const LogoImg = styled.img`
@@ -57,6 +58,13 @@ const HomeFooter = styled.footer`
   }
 `
 
+const Welcome = () => (
+  <div>
+    <h1>WELCOME</h1>
+    <div>Free tracker is a service let you easily track your invoices as a freelancer, enjoy!</div>
+  </div>
+)
+
 const HomeLayout = (props: LoginState) => {
   console.log({props})
   return props.isLoggedIn ? (
@@ -75,12 +83,7 @@ const HomeLayout = (props: LoginState) => {
         <HomeContent>
           <Route path='/signup' component={SignupPage} />
           <Route path='/login' component={LoginPage} />
-          <Route exact path='/' render={() => (
-            <div>
-              <h1>WELCOME</h1>
-              <div>Free tracker is a service let you easily track your invoices and payment as a freelancer, enjoy!</div>
-            </div>
-          )} /> 
+          <Route exact path='/' component={Welcome}/> 
         </HomeContent>
         <HomeFooter>
           <p>
