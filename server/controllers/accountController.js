@@ -54,6 +54,8 @@ class AccountController {
 
       if (user) {
         this.hashPassword(password, user.passwordSalt, (err, passwordHash) => {
+          // Note as crypto.pbkdf2 & crypto.pbkdf2Sync now return value in Buffer format by default
+          // we need to transfer it with .toString('hex') to be consistent when signup/login
           if (passwordHash.toString('hex') === user.passwordHash) {
             const userProfileModel = new this.UserProfile({
               email: user.email,
