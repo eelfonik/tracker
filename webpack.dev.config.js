@@ -7,11 +7,14 @@ module.exports = {
   devtool: 'source-map',
   entry: [
     './src/index',
-    'webpack-hot-middleware/client'
   ],
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: "awesome-typescript-loader",
+      },
       {
         test: /\.jsx?$/,         // Match both .js and .jsx files
         exclude: /node_modules/,
@@ -52,13 +55,18 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    port: 5000,
+    port: 3000,
+    contentBase: path.join(__dirname, 'public'),
+    watchContentBase: true,
     historyApiFallback: true,
+    proxy: {
+      '/api/**': 'http://localhost:5000'
+    }
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
-      template: 'src/index.html',
+      template:  path.resolve(__dirname, 'src/index.html'),
       filename: 'index.html',
       inject: 'body',
     }),

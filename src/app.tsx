@@ -15,7 +15,10 @@ const App = () =>
     <ConnectedRouter history={history}>
       <Switch>
         <Route path='/me' component={AppLayout}/>
-        <Route exact path="/" component={HomeLayout}/>
+        <Route path="/" component={HomeLayout}/>
+        {/* don't use exact here, as all the routes components here are meant to contain other routes components.
+        if we use exact, all sub-routes defined for these components will never match, thus show a blank page on hard reload.
+        Difference between exact path & regular path is https://stackoverflow.com/a/49162423 */}
       </Switch>
     </ConnectedRouter>
   </Provider>
