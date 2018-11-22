@@ -42,6 +42,7 @@ mongoose.connect(uri, function (err, database) {
 // N.B. this part is essentially replacing the webpack-dev-server
 // which is good in some case if you want the server code & client code run on same port during development
 // but to have a more general approch, and make the client/server code serves in seperate ports,
+// you need to start the backend (be it node or other language like python/scala) & front dev server seperately
 // if(!isProd) {
 //   console.log(process.env.NODE_ENV);
 //     const webpackDevMiddleware = require('webpack-dev-middleware');
@@ -59,8 +60,6 @@ mongoose.connect(uri, function (err, database) {
   app.use(express.static(__dirname + '/public'))
   app.use(express.static(path.join(__dirname, '/dist')))
 // }
-
-//const app = new Express();
 
 app.use(helmet())
 app.set('trust proxy', 1)
@@ -90,10 +89,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //             res.status(404).send('Not found')
 //         }
 //     });
-// });
-
-// app.get('/', function(request, response) {
-//   response.render('pages/index');
 // });
 
 // REGISTER OUR ROUTES -------------------------------
