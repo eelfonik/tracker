@@ -20,6 +20,10 @@ export type AppState = {
   invoiceInfo: InvoiceInfoState,
   userInvoices: UserInvoicesState,
 }
+
+// N.B. if we use graphQl (more precisely, the apollo-client), there're tools automatically generate types for typescript
+// see https://github.com/apollographql/apollo-tooling#code-generation
+
 // ===============login/signup related types=================
 export type UserProfile = {
   email: string,
