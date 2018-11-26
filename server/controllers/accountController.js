@@ -90,7 +90,7 @@ class AccountController {
     this.session.destroy((err) => {
       // cannot access session here
     });
-    return;
+    return this.createRes('logoutSuccess', {success: true});
   };
 
   resetPassword(email, callback) {

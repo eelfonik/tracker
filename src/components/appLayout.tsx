@@ -3,9 +3,11 @@ import { Link, Redirect, Route, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components'
 
 import { connect } from 'react-redux';
-import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
 import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
-import { UserActionProps, AppState, LoginState } from '../store/types'
+import { AppState, LoginState } from '../store/types'
+
+import { gql } from 'apollo-boost';
+import { Query, Mutation } from 'react-apollo';
 
 import Dashboard from './dashboard';
 import UserInfo from './userInfo';
@@ -55,37 +57,64 @@ const AppFooter = styled.footer`
 
 type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras' | 'match'>
 
-function AppLayout(props: StateProps & UserActionProps) {
+const GET_USER = gql`
+ query user {
+  success
+  extras
+ }
+`
 
-  React.useEffect(() => {
-    props.getInfo();
-    props.getInvoices();
-  }, [])
+const LOG_OUT = gql`
+ mutation Logout() {
+   logout() {
+    success
+   }
+ }
+`
 
+function AppLayout(props: StateProps) {
   const url = props.match.url;
-  const userName = props.extras && props.extras.userProfileModel ? props.extras.userProfileModel.username : '';
   return props.isLoggedIn ? (
-    <BrowserRouter>
-      <AppContainer>
-        <AppHeader>
-          <Link to='/'>
-            <LogoImg src="/img/node.svg" />
-          </Link>
-          <Link to={`${url}`}>Hello {capitalizeFirstLetter(userName)}</Link>
-          <Link to={`${url}/invoices`}>My invoices</Link>
-          <Link to={`${url}/info`}>Profile</Link>
-          <div onClick={e => props.onLogoutClick()}>Logout</div>
-        </AppHeader>
-        <AppContent>
-          <Route path={`${url}/invoices`} component={UserInvoices} />
-          <Route path={`${url}/info`} component={UserInfo} />
-          <Route exact path={`${url}`} component={Dashboard} />
-        </AppContent>
-        <AppFooter>
-
-        </AppFooter>
-      </AppContainer>
-    </BrowserRouter>
+    <Query query={GET_USER}>
+      {({ data, loading, error }) => {
+        if (loading) {
+          return <div>Loading</div>
+        }
+        if (error) {
+          return <div>sth went wrong</div>
+        }
+        return (
+          <BrowserRouter>
+            <AppContainer>
+              <AppHeader>
+                <Link to='/'>
+                  <LogoImg src="/img/node.svg" />
+                </Link>
+                <Link to={`${url}`}>Hello {capitalizeFirstLetter(data.extras.userProfileModel.username)}</Link>
+                <Link to={`${url}/invoices`}>My invoices</Link>
+                <Link to={`${url}/info`}>Profile</Link>
+                <Mutation mutation={LOG_OUT}>
+                  {(logout, {data}) => (
+                    <div onClick={e => {
+                      e.preventDefault();
+                      logout()
+                    }}>Logout</div>
+                  )}
+                </Mutation>
+              </AppHeader>
+              <AppContent>
+                <Route path={`${url}/invoices`} component={UserInvoices} />
+                <Route path={`${url}/info`} component={UserInfo} />
+                <Route exact path={`${url}`} component={Dashboard} />
+              </AppContent>
+              <AppFooter>
+      
+              </AppFooter>
+            </AppContainer>
+          </BrowserRouter>
+        )
+      }}
+    </Query>
   ) :
   (<Redirect to="/"/>);
 }
@@ -94,7 +123,6 @@ const mapStateToProps = (state: AppState, ownProps: any) => {
     return {
       isLoggedIn: state.loginInfo.isLoggedIn,
       currentURL: ownProps.location.pathname,
-      extras: state.loginInfo.extras
     }
 }
 
@@ -110,10 +138,10 @@ const mapStateToProps = (state: AppState, ownProps: any) => {
 
 export default connect(
   mapStateToProps,
-  {
-    getInfo: getUserInfo,
-    getInvoices: getUserInvoices,
-    onLogoutClick: userLogOut
-  }
+  // {
+  //   getInfo: getUserInfo,
+  //   getInvoices: getUserInvoices,
+  //   onLogoutClick: userLogOut
+  // }
   //mapDispatchToProps
 )(AppLayout);

@@ -1,7 +1,7 @@
 const { gql } = require('apollo-server');
 
 const types = gql`
-type UserInfo {
+type Query {
   # as all query in graphQl is possiblly nullable by default
   # ! means it's not nullable
   invoices: [Invoice]!
@@ -32,10 +32,11 @@ type Client {
   siret: String,
 }
 
-# TODO: mutation means the calls to server ?
+# mutation means modification to data, you can roughly take it as the POST/DELETE of http requests
 type Mutation {
   onLoginClick(value: LoginReq): LoginRes!,
   onSignupClick(value: LoginReq): LoginRes!,
+  onLogoutClick(): void
 }
 
 # N.B. we must use the Input type to indicates it's an Input for Mutation

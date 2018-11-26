@@ -11,13 +11,18 @@ module.exports = {
   module: {
     rules: [
       {
+        test: /\.mjs$/,
+        include: /node_modules/,
+        type: 'javascript/auto'
+      },
+      {
         test: /\.tsx?$/,
         exclude: /node_modules/,
         loader: "awesome-typescript-loader",
       },
       {
         test: /\.jsx?$/,         // Match both .js and .jsx files
-        exclude: /node_modules/,
+        exclude: ["/node_modules/", "/graphql/*", "/server/*"],
         use: [
           {
             loader: 'babel-loader',
@@ -45,7 +50,7 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.tsx', '.ts']
+    extensions: ['.mjs', '.js', '.jsx', '.tsx', '.ts', '.json', '.gql', '.graphql']
   },
   output: {
     path: path.join(__dirname, 'dist'),
