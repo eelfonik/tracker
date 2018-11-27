@@ -26,26 +26,11 @@ import { connectRouter } from 'connected-react-router'
 import { combineReducers } from 'redux';
 import { History } from 'history'
 import * as actions from './actionConstants'
-import {Action, Login, User, Invoice, UserInvoices} from './types'
+import { Action } from './globleContext'
+import {Login, User, Invoice, UserInvoices} from './types'
+import { initialLoginState, initialUserInfoState, initialUserInvoicesState } from './initialState'
 
-const initialLoginState = {
-  isLoggedIn: false,
-  notif: '',
-  extras: {
-    sessionId: undefined,
-    userProfileModel: {
-      email: '',
-      username: ''
-    },
-    userId: undefined,
-    msg: undefined
-  },
-  match: {
-    url: '',
-  },
-}
-
-export function loginReducer(state: Login = initialLoginState, action: Action): Login {
+export function login(state: Login = initialLoginState, action: Action): Login {
   switch (action.type) {
     case actions.LOGIN:
     case actions.SIGNUP:
@@ -65,11 +50,7 @@ export function loginReducer(state: Login = initialLoginState, action: Action): 
   }
 }
 
-const initialUserInfoState = {
-  isFetching: false
-}
-
-export function userInfoReducer(state: User = initialUserInfoState, action: Action): User {
+export function userInfo(state: User = initialUserInfoState, action: Action): User {
   switch (action.type) {
     case actions.FETCHING_USER_INFO:
       return {
@@ -90,7 +71,7 @@ export function userInfoReducer(state: User = initialUserInfoState, action: Acti
   }
 }
 
-export function invoiceInfoReducer(state: Invoice = {}, action: Action) {
+export function invoiceInfo(state: Invoice = {}, action: Action) {
   switch (action.type) {
     case actions.ADD_NEW_INVOICE:
       return {
@@ -102,11 +83,7 @@ export function invoiceInfoReducer(state: Invoice = {}, action: Action) {
   }
 }
 
-const initialUserInvoicesState = {
-  invoices: []
-}
-
-export function userInvoicesReducer(state: UserInvoices = initialUserInvoicesState, action: Action) {
+export function userInvoices(state: UserInvoices = initialUserInvoicesState, action: Action) {
   switch (action.type) {
     case actions.GET_USER_INVOICES:
       return {
@@ -118,12 +95,12 @@ export function userInvoicesReducer(state: UserInvoices = initialUserInvoicesSta
   }
 }
 
-const createRootReducer = (history: History) => combineReducers({
-  router: connectRouter(history),
-  loginInfo: loginReducer,
-  userInfo: userInfoReducer,
-  invoiceInfo: invoiceInfoReducer,
-  userInvoices: userInvoicesReducer,
-})
+// const createRootReducer = (history: History) => combineReducers({
+//   router: connectRouter(history),
+//   loginInfo: login,
+//   userInfo: userInfo,
+//   invoiceInfo: invoiceInfo,
+//   userInvoices: userInvoices,
+// })
 
-export default createRootReducer;
+// export default createRootReducer;

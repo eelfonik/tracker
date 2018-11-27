@@ -50,6 +50,8 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
+    // need to add mjs extension to fix graphql with typescript
+    // see https://github.com/apollographql/apollo-link-state/issues/302#issuecomment-431219631
     extensions: ['.mjs', '.js', '.jsx', '.tsx', '.ts', '.json', '.gql', '.graphql']
   },
   output: {

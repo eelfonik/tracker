@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { connect } from 'react-redux';
 import { capitalizeFirstLetter } from '../helpers/capitalizeFirstLetter'
-import { AppState, LoginState } from '../store/types'
+import { Login } from '../store/types'
 
 import { gql } from 'apollo-boost';
 import { Query, Mutation } from 'react-apollo';
@@ -55,7 +55,7 @@ const AppFooter = styled.footer`
   justify-content: space-between;
 `
 
-type StateProps = Pick<LoginState, 'isLoggedIn' | 'extras' | 'match'>
+type StateProps = Pick<Login, 'isLoggedIn' | 'extras' | 'match'>
 
 const GET_USER = gql`
  query user {
@@ -73,6 +73,7 @@ const LOG_OUT = gql`
 `
 
 function AppLayout(props: StateProps) {
+  const isLoggedIn = React.useContext(LoginContext)
   const url = props.match.url;
   return props.isLoggedIn ? (
     <Query query={GET_USER}>
@@ -119,9 +120,9 @@ function AppLayout(props: StateProps) {
   (<Redirect to="/"/>);
 }
 
-const mapStateToProps = (state: AppState, ownProps: any) => {
+const mapStateToProps = ({loginInfo} : {Login}, ownProps: any) => {
     return {
-      isLoggedIn: state.loginInfo.isLoggedIn,
+      isLoggedIn: loginInfo.isLoggedIn,
       currentURL: ownProps.location.pathname,
     }
 }

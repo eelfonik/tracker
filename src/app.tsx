@@ -4,10 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import HomeLayout from './components/homepageLayout';
 import AppLayout from './components/appLayout';
 
-const LoginContext = React.createContext(false);
-
 function App() {
-  const isLoggedIn = React.useContext(LoginContext)
   return (
     <Switch>
       <Route path='/me' component={AppLayout}/>

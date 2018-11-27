@@ -1,6 +1,5 @@
 import axios from 'axios';
 import * as actions from './actionConstants'
-import { action } from 'typesafe-actions';
 import {Dispatch, Action} from 'redux'
 import { LoginReq, LoginRes, UserInfo, UserExtras, InvoiceInfo, AppState } from './types'
 
@@ -8,25 +7,33 @@ import mapApiErrorMessagesToNotif from '../helpers/mapApiErrorToNotif'
 import { ThunkDispatch } from 'redux-thunk';
 
 // ===============login/signup related actions=================
-export const signUp = ({success, extras} : LoginRes) => action(actions.SIGNUP, {
-  isLoggedIn: success,
-  notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
-  extras
+export const signUp = ({success, extras} : LoginRes) => ({
+  type: actions.SIGNUP,
+  payload: {
+    isLoggedIn: success,
+    notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
+    extras
+  }
 })
 
-export const logIn = ({success, extras} : LoginRes) => action(actions.LOGIN, {
-  isLoggedIn: success,
-  notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
-  extras
+export const logIn = ({success, extras} : LoginRes) => ({
+  type: actions.LOGIN,
+  payload: {
+    isLoggedIn: success,
+    notif: success ? '' : mapApiErrorMessagesToNotif(extras.msg),
+    extras
+  }
 })
 
-export const logout = () => action(actions.LOGOUT, {
+export const logout = () => ({
+  type: actions.LOGOUT,
   isLoggedIn: false,
   notif: '',
   extras: {},
 })
 
-export const resetNotif = () => action(actions.RESET_NOTIF, {
+export const resetNotif = () => ({
+  type: actions.RESET_NOTIF,
   notif: ''
 })
 
@@ -80,7 +87,8 @@ export const userLogOut = () =>
 
 // ====================user related actions once login==================
 
-export const getInfo = (resData: UserExtras) => action(actions.GET_INFO, {
+export const getInfo = (resData: UserExtras) => ({
+  type: actions.GET_INFO,
   name: resData.userInfoModel.name,
   address: resData.userInfoModel.address,
   siret: resData.userInfoModel.siret,
@@ -88,16 +96,20 @@ export const getInfo = (resData: UserExtras) => action(actions.GET_INFO, {
   invoices: resData.invoices,
 })
 
-export const updateInfo = (resData: UserInfo) => action(actions.UPDATE_INFO, {
+export const updateInfo = (resData: UserInfo) => ({
+  type: actions.UPDATE_INFO,
   name: resData.name,
   address: resData.address,
   siret: resData.siret,
   phone: resData.phone
 })
 
-export const removeInfo = () => action(actions.REMOVE_INFO)
+export const removeInfo = () => ({
+  type: actions.REMOVE_INFO
+})
 
-export const isFetchingUser = () => action(actions.FETCHING_USER_INFO, {
+export const isFetchingUser = () => ({
+  type: actions.FETCHING_USER_INFO,
   isFetching: true
 })
 
@@ -134,7 +146,10 @@ export const updateUserInfo = (value: UserInfo) =>
 
 // ====================invoices for a given user actions==================
 
-export const addNewInvoice = (resData: InvoiceInfo) => action(actions.ADD_NEW_INVOICE, {...resData})
+export const addNewInvoice = (resData: InvoiceInfo) => ({
+  type: actions.ADD_NEW_INVOICE, 
+  ...resData
+})
 
 export const addNewInvoiceForUser = (value: InvoiceInfo) => 
   async (dispatch: ThunkDispatch<AppState, void, Action>) => {
@@ -149,7 +164,8 @@ export const addNewInvoiceForUser = (value: InvoiceInfo) =>
     }
   }
 
-export const getInvoices = (resData: Array<InvoiceInfo>) => action(actions.GET_USER_INVOICES, {
+export const getInvoices = (resData: Array<InvoiceInfo>) => ({
+  type: actions.GET_USER_INVOICES,
   invoices: resData
 })
 

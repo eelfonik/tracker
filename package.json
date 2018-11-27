@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
+    "@types/graphql": "^14.0.3",
     "apollo-boost": "^0.1.22",
     "apollo-datasource-rest": "^0.2.0",
     "apollo-server": "^2.2.2",

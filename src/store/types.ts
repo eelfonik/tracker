@@ -1,25 +1,3 @@
-import * as actions from './actions'
-import {loginReducer, userInfoReducer, invoiceInfoReducer, userInvoicesReducer} from './reducer'
-import { ActionType, StateType } from 'typesafe-actions';
-import { RouterState } from 'connected-react-router'
-
-export type Action = ActionType<typeof actions>;
-
-export type LoginState = StateType<typeof loginReducer>;
-
-export type UserInfoState = StateType<typeof userInfoReducer>
-
-export type InvoiceInfoState = StateType<typeof invoiceInfoReducer>
-
-export type UserInvoicesState = StateType<typeof userInvoicesReducer>
-
-export type AppState = {
-  router: RouterState,
-  loginInfo: LoginState,
-  userInfo: UserInfoState,
-  invoiceInfo: InvoiceInfoState,
-  userInvoices: UserInvoicesState,
-}
 
 // N.B. if we use graphQl (more precisely, the apollo-client), there're tools automatically generate types for typescript
 // see https://github.com/apollographql/apollo-tooling#code-generation
