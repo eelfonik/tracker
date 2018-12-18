@@ -1,17 +1,30 @@
 # Trackr
 
-Don't fooled by tools. Get the things done.
+Don't fooled by tools. Get things done.
 
 ## Running Locally
 
-Make sure you have [Node.js](http://nodejs.org/) installed.
+Make sure you have [Node.js](http://nodejs.org/) and [mongodb](https://docs.mongodb.com/manual/tutorial/getting-started/) installed.
 
+start mongo db in a session
 ```sh
-$ npm install
-$ npm start
+mongod
 ```
 
-App should now be running on [localhost:5000](http://localhost:5000/).
+lanuch node server
+```sh
+# install all dependencies
+$ npm install
+# to start the node server
+$ npm run start
+```
+
+launch client environment
+```sh
+$ npm run dev-client
+```
+
+App should now be running on [localhost:3000](http://localhost:3000/).
 
 
 ## Resources
