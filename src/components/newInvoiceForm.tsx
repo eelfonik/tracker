@@ -223,13 +223,11 @@ function NewInvoiceForm(props: DispatchProps) {
 
 const mapDispatchToProps = (
   dispatch: ThunkDispatch<InvoiceInfo, void, Action>
-) => {
-  return {
+) => ({
     submitData: (value: InvoiceInfo) => {
       dispatch(addNewInvoiceForUser(value));
     }
-  };
-};
+  });
 
 export default connect(
   null,

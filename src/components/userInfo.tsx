@@ -1,11 +1,13 @@
 import * as React from "react";
 import { connect } from "react-redux";
+import { Action } from 'redux'
+import { ThunkDispatch } from "redux-thunk";
 import { InputBlock, FormError } from '../commonStyles/form'
-import { updateUserInfo } from "../store/actions";
-import { UserInfoState, AppState, UserActionProps } from '../store/types'
+import { updateUserInfo, getUserInfo } from "../store/actions";
+import { UserInfo, AppState, UserActionProps } from '../store/types'
 import { useUserInfoForm } from '../customHooks/useUserInfoForm'
 
-function UserProfile(props: UserInfoState & UserActionProps) {
+function UserProfile(props: UserInfo & UserActionProps) {
   const {onUpdateClick, name, address, siret, phone} = props
   const {
     nameField,
@@ -80,17 +82,9 @@ const mapStateToProps = (state: AppState) => ({
   ...state.userInfo
 })
 
-// const mapDispatchToProps = (dispatch) => {
-//     return {
-//         onStartUp:()=>{
-//             dispatch(getUserInfo())
-//         },
-//         onUpdateClick: (value) => {
-//             dispatch(updateUserInfo(value))
-//         }
-//     }
-// }
+const mapDispatchToProps = (dispatch: ThunkDispatch<AppState, void, Action>) => ({
+  getInfo:() => dispatch(getUserInfo()),
+  onUpdateClick: (value: UserInfo) => dispatch(updateUserInfo(value))
+});
 
-export default connect(mapStateToProps, {
-  onUpdateClick: updateUserInfo
-})(UserProfile);
+export default connect(mapStateToProps, mapDispatchToProps)(UserProfile);

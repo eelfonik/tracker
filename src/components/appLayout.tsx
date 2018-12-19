@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Link, Redirect, Route, BrowserRouter } from 'react-router-dom';
 import styled from 'styled-components'
+import { Action } from 'redux'
+import { ThunkDispatch } from "redux-thunk";
 
 import { connect } from 'react-redux';
 import { userLogOut, getUserInfo, getUserInvoices } from '../store/actions';
@@ -98,22 +100,23 @@ const mapStateToProps = (state: AppState, ownProps: any) => {
     }
 }
 
-// const mapDispatchToProps = (dispatch) => ({
-//         onLogoutClick(){
-//             dispatch(userLogOut());
-//         }
-// });
+const mapDispatchToProps = (dispatch: ThunkDispatch<StateProps, void, Action>) => ({
+  getInfo: () => dispatch(getUserInfo()),
+  getInvoices: () => dispatch(getUserInvoices()),
+  onLogoutClick: () => dispatch(userLogOut()),
+});
 //rather than pass a mapDispatchToProps function to connect,
 //we can pass a **configuration object**
+// {
+//   getInfo: getUserInfo,
+//   getInvoices: getUserInvoices,
+//   onLogoutClick: userLogOut
+// }
 //that maps the name of callback function(here is `onLogoutClick`), and the action creator function(`userLogout` in this case)
-//NOTE!! that only works with functions has no arguments!!!
+//N.B.1: that only works with functions has no arguments!!!
+// N.B. 2: not working with typescript
 
 export default connect(
   mapStateToProps,
-  {
-    getInfo: getUserInfo,
-    getInvoices: getUserInvoices,
-    onLogoutClick: userLogOut
-  }
-  //mapDispatchToProps
+  mapDispatchToProps
 )(AppLayout);
