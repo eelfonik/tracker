@@ -1,4 +1,3 @@
-import { Dispatch } from 'redux';
 import * as React from 'react';
 import * as states from './initialState'
 import * as reducers from './reducer'
@@ -17,32 +16,19 @@ export type States = typeof initialState
 type Actions = {
   [K in keyof typeof actions]: ReturnType<typeof actions[K]>
 }
+// to get union type from indexed object
+// see https://stackoverflow.com/a/50044130
+export type Action = Actions[keyof Actions]
 type Reducers = {
   [K in keyof typeof reducers]: (state: Pick<States, K> , action: Action) => Pick<States, K>
 }
-
-type Provider<T> = React.ComponentType<{
-  value: T;
-  children?: React.ReactNode;
-}>;
-
-type Consumer<T> = React.ComponentType<{
-  children: (value: T) => React.ReactNode;
-  unstable_observedBits?: number;
-}>
-
-interface Context<T> {
-  Provider: Provider<T>;
-  Consumer: Consumer<T>;
-}
-
 
 // const rootReducer = (initialState: State, action: Action) => {
    
 // }
 
 
-const stateCtx: Context<States> = createContext(initialState);
+const stateCtx = createContext(initialState);
 const dispatchCtx = createContext((() => 0) as React.Dispatch<Action>);
 
 export const Provider = ({ children }: any) => {

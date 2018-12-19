@@ -22,9 +22,9 @@
 //     phone:""
 // }
 
-import { connectRouter } from 'connected-react-router'
-import { combineReducers } from 'redux';
-import { History } from 'history'
+// import { connectRouter } from 'connected-react-router'
+// import { combineReducers } from 'redux';
+// import { History } from 'history'
 import * as actions from './actionConstants'
 import { Action } from './globleContext'
 import {Login, User, Invoice, UserInvoices} from './types'
