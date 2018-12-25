@@ -54,8 +54,9 @@ class AccountController {
 
       if (user) {
         this.hashPassword(password, user.passwordSalt, (err, passwordHash) => {
-          console.log("this called back should be triggered", {err, passwordHash}, user);
-          if (passwordHash === user.passwordHash) {
+          // Note as crypto.pbkdf2 & crypto.pbkdf2Sync now return value in Buffer format by default
+          // we need to transfer it with .toString('hex') to be consistent when signup/login
+          if (passwordHash.toString('hex') === user.passwordHash) {
             const userProfileModel = new this.UserProfile({
               email: user.email,
               username: user.username
@@ -99,7 +100,7 @@ class AccountController {
       }
       if (user) {
         // Save the user's email and a password reset hash in session.
-        var passwordResetHash = this.uuid();
+        const passwordResetHash = this.uuid();
         this.session.passwordResetHash = passwordResetHash;
         this.session.emailWhoRequestedPasswordReset = email;
 
@@ -144,7 +145,7 @@ class AccountController {
     this.hashPassword(newPassword, passwordSalt, (err, passwordHash) => {
       this.userModel.update(
         { email: email },
-        { passwordHash: passwordHash, passwordSalt: passwordSalt },
+        { passwordHash: passwordHash.toString('hex'), passwordSalt: passwordSalt },
         (err, raw) => {
           if (err) {
             return callback(err, this.createRes("DB_ERROR"));
@@ -175,7 +176,7 @@ class AccountController {
         cryptoIterations,
         cryptoKeyLen,
         "sha512"
-      ),
+      ).toString('hex'),
       passwordSalt: passwordSaltIn
     });
     return this.createRes("registerSuccess", { user: user });

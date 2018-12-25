@@ -1,4 +1,4 @@
-var UserLogin = function(ft) {
+const UserLogin = function(ft) {
     this.email = ft.email,
     this.password = ft.password
 };

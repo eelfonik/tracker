@@ -34,6 +34,7 @@ const SignUpLink = styled(Link)`
   &:hover {
       border-bottom: 1px solid rgba(0, 234, 107,1);
   }
+  transition: border-bottom 0.5s ease;
 `
 
 const LogoImg = styled.img`
@@ -57,8 +58,16 @@ const HomeFooter = styled.footer`
   }
 `
 
+const Welcome = () => (
+  <div>
+    <h1>WELCOME</h1>
+    <div>Free tracker is a service let you easily track your invoices as a freelancer, enjoy!</div>
+  </div>
+)
+
 const HomeLayout = (props: LoginState) => {
   console.log({props})
+  const url = props.match.url;
   return props.isLoggedIn ? (
       <Redirect to="/me" />
     ) :
@@ -69,18 +78,13 @@ const HomeLayout = (props: LoginState) => {
           <Link to="/">
             <LogoImg src="/img/node.svg" />
           </Link>
-          <SignUpLink to='/signup'>sign up</SignUpLink>
-          <SignUpLink to='/login'>Login</SignUpLink>
+          <SignUpLink to={`${url}signup`}>sign up</SignUpLink>
+          <SignUpLink to={`${url}login`}>Login</SignUpLink>
         </HomeHeader>
         <HomeContent>
-          <Route path='/signup' component={SignupPage} />
-          <Route path='/login' component={LoginPage} />
-          <Route exact path='/' render={() => (
-            <div>
-              <h1>WELCOME</h1>
-              <div>Free tracker is a service let you easily track your invoices and payment as a freelancer, enjoy!</div>
-            </div>
-          )} /> 
+          <Route path={`${url}signup`} component={SignupPage} />
+          <Route path={`${url}login`} component={LoginPage} />
+          <Route exact path={url} component={Welcome}/> 
         </HomeContent>
         <HomeFooter>
           <p>

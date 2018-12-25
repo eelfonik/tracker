@@ -6,16 +6,13 @@ const mongoose = require ("mongoose");
 const helmet = require('helmet')
 const app = express();
 const session = require('express-session');
+const webpack = require('webpack');
 
 //https://github.com/jdesboeufs/connect-mongo
 const MongoStore = require('connect-mongo')(session);
 const serverRoutes = require('./server/routes/serverRoutes');
 
 const path = require("path");
-
-process.env.NODE_ENV = "developement"
-
-const isProd = process.env.NODE_ENV === 'production';
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 let db;
@@ -42,36 +39,28 @@ mongoose.connect(uri, function (err, database) {
 });
 
 // using webpack-dev-server and middleware in development environment
-if(!isProd) {
-    const webpackDevMiddleware = require('webpack-dev-middleware');
-    const webpackHotMiddleware = require('webpack-hot-middleware');
+// N.B. this part is essentially replacing the webpack-dev-server
+// which is good in some case if you want the server code & client code run on same port during development
+// but to have a more general approch, and make the client/server code serves in seperate ports,
+// you need to start the backend (be it node or other language like python/scala) & front dev server seperately
+// if(!isProd) {
+//   console.log(process.env.NODE_ENV);
+//     const webpackDevMiddleware = require('webpack-dev-middleware');
+//     const webpackHotMiddleware = require('webpack-hot-middleware');
 
-    const webpack = require('webpack');
-    const webpackConfig = require('./webpack.config');
-    const compiler = webpack(webpackConfig);
+//     const webpackConfig = require('./webpack.dev.config');
+//     const compiler = webpack(webpackConfig);
 
-    app.use(webpackDevMiddleware(compiler, {
-        noInfo: true,
-        publicPath: webpackConfig.output.publicPath,
-    }));
-    app.use(webpackHotMiddleware(compiler));
-}
+//     app.use(webpackDevMiddleware(compiler, {
+//         noInfo: true,
+//         publicPath: webpackConfig.output.publicPath,
+//     }));
+//     app.use(webpackHotMiddleware(compiler));
+// } else {
+  app.use(express.static(__dirname + '/public'))
+  app.use(express.static(path.join(__dirname, '/dist')))
+// }
 
-//const app = new Express();
-
-// new WebpackDevServer(webpack(config),{
-//     publicPath: config.output.publicPath,
-//     hot: true,
-//     historyApiFallback: true,
-//     proxy:{
-//       "*":"http:localhost:5000"
-//     }
-// }).listen(3000, 'localhost', function (err, res) {
-//     if (err) {
-//       return console.debug(err);
-//     }
-//     console.log("listening at port 3000");
-// });
 app.use(helmet())
 app.set('trust proxy', 1)
 app.use(session({
@@ -80,12 +69,6 @@ app.use(session({
     saveUninitialized: true,
     store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
-
-
-app.use(express.static(__dirname + '/public'));
-//app.use(express.static(path.resolve(__dirname, 'public/img')));
-app.use(express.static(__dirname + '/dist'));
-//app.use(express.static(path.resolve(__dirname, 'dist')));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -106,10 +89,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //             res.status(404).send('Not found')
 //         }
 //     });
-// });
-
-// app.get('/', function(request, response) {
-//   response.render('pages/index');
 // });
 
 // REGISTER OUR ROUTES -------------------------------

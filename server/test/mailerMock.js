@@ -1,4 +1,4 @@
-var MailerMock = function () {
+const MailerMock = function () {
 };
 
 MailerMock.prototype.sendPasswordResetHash = function (email, passwordResetHash) {
