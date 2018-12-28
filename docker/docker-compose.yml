@@ -1,0 +1,42 @@
+version: '3'
+services:
+  web-dev:
+    build:
+      context: ../
+      dockerfile: docker/Dockerfile.devClient
+      args:
+        port: ${PORT}
+    env_file:
+      - ../.env
+    ports:
+      - ${PORT}:${PORT}
+    networks:
+      - tracker
+  node-dev:
+    build: 
+      context: ../
+      dockerfile: docker/Dockerfile.devServer
+      args:
+        port: ${API_PORT}
+    env_file:
+      - ../.env
+    environment:
+      WAIT_HOSTS: mongo-dev:27017
+    expose:
+      - ${API_PORT}
+    networks:
+      - tracker
+  mongo-dev:
+    image: mongo:4.0
+    env_file:
+      - ../.env
+    volumes:
+      - ".${MONGO_DEV_DATA_DIR}:${MONGO_DEV_DATA_DIR}"
+    expose:
+      - 27017
+    command: "mongod --smallfiles --logpath=${MONGO_LOG_FILE}"
+    networks:
+      - tracker
+
+networks:
+  tracker:

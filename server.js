@@ -16,12 +16,15 @@ const path = require("path");
 
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 let db;
-// for deploy on heroku || local dev
-// see http://stackoverflow.com/a/26855963/6849186
-const uri = process.env.MONGODB_URI || 'mongodb://localhost:27017/tracker';
+// construct mongodb uri from env vars
+const dbName = process.env.NODE_ENV === 'prod' ? 'mongo' : 'mongo-dev';
+const uri = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${dbName}:27017`;
 
 // Connect to the database before starting the application server.
-mongoose.connect(uri, function (err, database) {
+mongoose.connect(uri, {
+  useNewUrlParser: true,
+  dbName: process.env.MONGO_INITDB_DATABASE,
+}, function (err, database) {
     if (err) {
         console.log(err);
         process.exit(1);
@@ -32,7 +35,7 @@ mongoose.connect(uri, function (err, database) {
     console.log("Database connection ready");
 
     // Initialize the app.
-    const server = app.listen(process.env.PORT || 5000, () => {
+    const server = app.listen(process.env.API_PORT || 5000, () => {
         const port = server.address().port;
         console.log("App now running on port", port);
     });

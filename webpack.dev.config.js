@@ -55,13 +55,21 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    port: 3000,
+    host: "0.0.0.0",
+    port: process.env.PORT,
     contentBase: path.join(__dirname, 'public'),
     watchContentBase: true,
     historyApiFallback: true,
     proxy: {
-      '/api/**': 'http://localhost:5000'
-    }
+      '/api/**': {
+        target: {
+          host: "node-dev",
+          protocol: 'http:',
+          port: process.env.API_PORT
+        },
+        ignorePath: true,
+      },
+    },
   },
   plugins: [
     new webpack.HotModuleReplacementPlugin(),
