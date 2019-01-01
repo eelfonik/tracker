@@ -61,7 +61,7 @@ const HomeFooter = styled.footer`
 const Welcome = () => (
   <div>
     <h1>WELCOME</h1>
-    <div>Free tracker is a service let you easily track your invoices as a freelancer, enjoy!</div>
+    <div>Free tracker is a service let you easily track your invoices as not yet another freelancer, enjoy!</div>
   </div>
 )
 

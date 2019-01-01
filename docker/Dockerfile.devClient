@@ -1,6 +1,6 @@
 FROM node:11 as base
 ENV NODE_ENV development
-COPY . /app
-WORKDIR /app
+COPY front /client
+WORKDIR /client
 RUN npm install
 CMD npm run start

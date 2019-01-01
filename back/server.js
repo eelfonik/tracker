@@ -6,7 +6,6 @@ const mongoose = require ("mongoose");
 const helmet = require('helmet')
 const app = express();
 const session = require('express-session');
-const webpack = require('webpack');
 
 //https://github.com/jdesboeufs/connect-mongo
 const MongoStore = require('connect-mongo')(session);
@@ -17,8 +16,9 @@ const path = require("path");
 // Create a database variable outside of the database connection callback to reuse the connection pool in your app.
 let db;
 // construct mongodb uri from env vars
-const dbName = process.env.NODE_ENV === 'prod' ? 'mongo' : 'mongo-dev';
-const uri = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${dbName}:27017`;
+// N.B: the name of mongodb server name available in network is defined in docker composer file
+const serverName = process.env.NODE_ENV === 'prod' ? 'mongo' : 'mongo-dev';
+const uri = `mongodb://${process.env.MONGO_INITDB_ROOT_USERNAME}:${process.env.MONGO_INITDB_ROOT_PASSWORD}@${serverName}:27017`;
 
 // Connect to the database before starting the application server.
 mongoose.connect(uri, {

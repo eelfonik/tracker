@@ -1,12 +1,10 @@
-FROM node:11 as base
+FROM node:11-alpine as base
 ## Add the wait script to the image
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.4.0/wait /wait
 RUN chmod +x /wait
 ENV NODE_ENV development
+COPY back /api
 WORKDIR /api
-COPY server server/
-COPY package*.json ./
-COPY server.js ./
 RUN npm install
 ## Launch the wait tool and then the node backend
 CMD /wait && npm run server

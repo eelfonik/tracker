@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+console.log(process.env.PORT);
 
 module.exports = {
   mode: 'development',
@@ -55,20 +56,15 @@ module.exports = {
   },
   devServer: {
     hot: true,
-    host: "0.0.0.0",
+    host: "0.0.0.0", // it's necessary to tell container using 0.0.0.0 instead of default localhost
     port: process.env.PORT,
     contentBase: path.join(__dirname, 'public'),
     watchContentBase: true,
     historyApiFallback: true,
     proxy: {
-      '/api/**': {
-        target: {
-          host: "node-dev",
-          protocol: 'http:',
-          port: process.env.API_PORT
-        },
-        ignorePath: true,
-      },
+      // use 'node-dev' instead of 'localhost', which is defined by docker-compose file
+      // detailed explaination here https://stackoverflow.com/a/52010893
+      '/api/**': `http://node-dev:${process.env.API_PORT}`,
     },
   },
   plugins: [
@@ -78,5 +74,10 @@ module.exports = {
       filename: 'index.html',
       inject: 'body',
     }),
-  ]
+  ],
+  // this is necessary for the hot reload work inside docker container
+  watchOptions: {
+    aggregateTimeout: 300,
+    poll: 1000
+  }
 };

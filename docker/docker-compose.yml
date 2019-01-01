@@ -8,6 +8,8 @@ services:
         port: ${PORT}
     env_file:
       - ../.env
+    volumes:
+      - node_modules:/front/node_modules
     ports:
       - ${PORT}:${PORT}
     networks:
@@ -22,6 +24,8 @@ services:
       - ../.env
     environment:
       WAIT_HOSTS: mongo-dev:27017
+    volumes:
+      - node_modules:/back/node_modules
     expose:
       - ${API_PORT}
     networks:
@@ -40,3 +44,5 @@ services:
 
 networks:
   tracker:
+volumes:
+  node_modules:
