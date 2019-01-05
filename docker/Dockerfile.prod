@@ -4,9 +4,8 @@ ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.4.0/wait
 RUN chmod +x /wait
 ENV NODE_ENV production
 WORKDIR /app
-COPY package*.json ./
+COPY front/public public/
+COPY front/dist dist/
+COPY back /app
 RUN npm install
-COPY public public/
-COPY src src/
-RUN npm run build
 CMD /wait && npm run server
