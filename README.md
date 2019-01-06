@@ -4,30 +4,39 @@ Don't fooled by tools. Get things done.
 
 ## Running Locally
 
-Make sure you have [Node.js](http://nodejs.org/) and [mongodb](https://docs.mongodb.com/manual/tutorial/getting-started/) installed.
+Make sure you have [Node.js](http://nodejs.org/), [mongodb](https://docs.mongodb.com/manual/tutorial/getting-started/) and [docker](https://www.docker.com/get-started) installed on your local machine.
 
-start mongo db in a session
+From root directory:
+- start the dev server with backend & mongodb
+  ```sh
+  npm run dev
+  ```
+
+  App should now be running on [localhost:3000](http://localhost:3000/).
+- debug 
+  - inspect client side docker container
+  ```sh
+  npm run inspect-client
+  ```
+  - inspect node server docker container
+  ```sh
+  npm run inspect-server
+  ```
+  - inspect mongodb docker container
+  ```sh
+  npm run inspect-db
+  ```
+
+## Build
 ```sh
-mongod
+npm run build
 ```
-
-lanuch node server
-```sh
-# install all dependencies
-$ npm install
-# to start the node server
-$ npm run start
-```
-
-launch client environment
-```sh
-$ npm run dev-client
-```
-
-App should now be running on [localhost:3000](http://localhost:3000/).
-
 
 ## Resources
+
+For docker:
+
+- [Quick start & cheat sheet & docker compose](https://github.com/eelfonik/dev-infra/blob/master/docker.md)
 
 For informations about using Node.js on Heroku, see these Dev Center articles:
 

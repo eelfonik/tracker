@@ -2,7 +2,6 @@
   "name": "free-tracker",
   "version": "0.1.0",
   "description": "Freelance tracker with node",
-  "main": "server.js",
   "scripts": {
     "inspect-client": "docker exec -it $(docker ps -aqf 'name=docker_web-dev_1') /bin/bash",
     "inspect-server": "docker exec -it $(docker ps -aqf 'name=docker_node-dev_1') /bin/sh",
@@ -18,7 +17,9 @@
   },
   "keywords": [
     "node",
-    "express"
+    "express",
+    "docker",
+    "gcp"
   ],
   "license": "MIT"
 }
