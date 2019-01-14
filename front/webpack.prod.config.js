@@ -6,7 +6,11 @@ module.exports = {
   entry: ['./src/index'],
   module: {
     rules: [
-      { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
+      {
+        test: /\.tsx?$/,
+        exclude: /node_modules/,
+        loader: "awesome-typescript-loader"
+      },
       {
         test: /\.jsx?$/,         // Match both .js and .jsx files
         exclude: /node_modules/,
@@ -16,6 +20,19 @@ module.exports = {
           }
         ],
         include: path.join(__dirname, 'src')
+      },
+      {
+        test: /\.(png|jpg|svg)$/,
+        include: path.join(__dirname, 'public'),
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 15000,
+              name: "[name].[ext]",
+            },
+          }
+        ],
       },
     ]
   },
@@ -32,8 +49,11 @@ module.exports = {
     runtimeChunk: true,
   },
   resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.tsx', '.ts', '.css']
+    modules: [path.resolve(__dirname, 'src'), path.resolve(__dirname, 'public'), 'node_modules'],
+    extensions: ['.js', '.jsx', '.tsx', '.ts', '.css'],
+    alias: {
+      img: path.resolve(__dirname, 'public/img/'),
+    },
   },
   output: {
     path: path.join(__dirname, 'dist'),

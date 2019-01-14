@@ -13,7 +13,7 @@ services:
     environment:
       WAIT_HOSTS: mongo:27017
     volumes:
-      - node_modules:/back/node_modules
+      - node_modules:/node_modules
     expose:
       - ${API_PORT}
     networks:
@@ -23,7 +23,7 @@ services:
     env_file:
       - ../.env
     volumes:
-      - ".${MONGO_DEV_DATA_DIR}:${MONGO_DEV_DATA_DIR}"
+      - ".${MONGO_DATA_DIR}:${MONGO_DATA_DIR}"
     expose:
       - 27017
     command: "mongod --smallfiles --logpath=${MONGO_LOG_FILE}"

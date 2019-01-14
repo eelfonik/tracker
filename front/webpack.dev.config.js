@@ -2,6 +2,7 @@ const webpack = require('webpack')
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 console.log(process.env.PORT);
+console.log(path.resolve(__dirname, 'public/img/'));
 
 module.exports = {
   mode: 'development',
@@ -26,6 +27,19 @@ module.exports = {
         ],
         include: path.join(__dirname, 'src')
       },
+      {
+        test: /\.(png|jpg|svg)$/,
+        include: path.join(__dirname, 'public'),
+        use: [
+          {
+            loader: "url-loader",
+            options: {
+              limit: 15000,
+              name: "[name].[ext]",
+            },
+          }
+        ],
+      },
       // {
       //   test: /\.css$/,
       //   use: [
@@ -46,7 +60,10 @@ module.exports = {
   },
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.tsx', '.ts']
+    extensions: ['.js', '.jsx', '.tsx', '.ts'],
+    alias: {
+      img: path.resolve(__dirname, 'public/img/'),
+    },
   },
   output: {
     path: path.join(__dirname, 'dist'),

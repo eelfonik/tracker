@@ -3,9 +3,19 @@ FROM node:11-alpine as base
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.4.0/wait /wait
 RUN chmod +x /wait
 ENV NODE_ENV production
+## set workdir
 WORKDIR /app
-COPY front/public public/
-COPY front/dist dist/
+
+## first build the front
+COPY front front/
+WORKDIR /app/front
+RUN npm install
+RUN npm run build
+
+## Then start the back server
+WORKDIR /app
 COPY back /app
+COPY /app/front/dist dist/
+COPY /app/front/public public/
 RUN npm install
 CMD /wait && npm run server
